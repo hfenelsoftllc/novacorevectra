@@ -10,7 +10,7 @@ export interface FooterProps {
 
 /**
  * Footer component with logo placeholder and links
- * Includes responsive design and organized link sections
+ * Includes responsive design, organized link sections, and enhanced accessibility
  */
 export const Footer: React.FC<FooterProps> = ({ className }) => {
   const currentYear = new Date().getFullYear();
@@ -30,16 +30,24 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
   ];
 
   return (
-    <footer className={cn(
-      'bg-muted/50 border-t mt-auto',
-      className
-    )}>
+    <footer 
+      className={cn(
+        'bg-muted/50 border-t mt-auto',
+        className
+      )}
+      role="contentinfo"
+      aria-label="Site footer"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main footer content */}
         <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company info and logo */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-block mb-4">
+            <Link 
+              href="/" 
+              className="inline-block mb-4 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+              aria-label="NovaCoreVectra - Go to homepage"
+            >
               <Logo size="md" />
             </Link>
             <p className="text-muted-foreground text-sm max-w-md mb-4">
@@ -47,52 +55,59 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
               Empowering organizations to lead the AI era through ethical innovation 
               and world-class strategy.
             </p>
-            <div className="flex space-x-4">
-              {socialLinks.map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  aria-label={link.ariaLabel}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
+            <nav aria-label="Social media links">
+              <ul className="flex space-x-4">
+                {socialLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                      aria-label={link.ariaLabel}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
           {/* Quick Links */}
           <div>
             <h3 className="font-semibold text-foreground mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              {quickLinks.map((link) => (
-                <li key={link.id}>
-                  <Link
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <nav aria-label="Quick navigation links">
+              <ul className="space-y-2">
+                {quickLinks.map((link) => (
+                  <li key={link.id}>
+                    <Link
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
           {/* Legal Links */}
           <div>
             <h3 className="font-semibold text-foreground mb-4">Legal</h3>
-            <ul className="space-y-2">
-              {legalLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <nav aria-label="Legal and policy links">
+              <ul className="space-y-2">
+                {legalLinks.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-muted-foreground hover:text-primary transition-colors text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
         </div>
 

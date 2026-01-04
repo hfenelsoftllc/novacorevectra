@@ -6,8 +6,30 @@ import { AnimatedSectionProps } from '@/types';
 import { cn } from '@/utils';
 
 /**
+ * Hook to detect user's motion preference
+ */
+const useReducedMotion = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
+
+  React.useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      setPrefersReducedMotion(event.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  return prefersReducedMotion;
+};
+
+/**
  * AnimatedSection wrapper component provides consistent animations for page sections
  * Supports custom animation properties and viewport settings
+ * Respects user's motion preferences for accessibility
  * Memoized for performance optimization
  */
 const AnimatedSectionComponent = React.forwardRef<
@@ -27,15 +49,34 @@ const AnimatedSectionComponent = React.forwardRef<
     },
     ref
   ) => {
+    const prefersReducedMotion = useReducedMotion();
+
     const defaultAnimationProps = {
       initial: { opacity: 0, y: 20 },
       animate: { opacity: 1, y: 0 },
       transition: {
-        duration: 0.5, // Reduced duration for better performance
+        duration: prefersReducedMotion ? 0.01 : 0.5, // Respect motion preferences
         ease: [0.25, 0.46, 0.45, 0.94], // Optimized easing curve
       },
       ...animationProps,
     };
+
+    // If user prefers reduced motion, disable animations
+    if (prefersReducedMotion) {
+      return (
+        <section
+          ref={ref as React.RefObject<HTMLElement>}
+          className={cn('relative', className)}
+          role={role}
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
+          tabIndex={-1}
+          {...props}
+        >
+          {children}
+        </section>
+      );
+    }
 
     return (
       <motion.section

@@ -6,6 +6,7 @@ export interface LoadingSpinnerProps extends React.HTMLAttributes<HTMLDivElement
   variant?: 'default' | 'dots' | 'pulse' | 'bars';
   color?: 'primary' | 'secondary' | 'muted';
   text?: string;
+  'aria-label'?: string;
 }
 
 const sizeClasses = {
@@ -23,7 +24,7 @@ const colorClasses = {
 
 /**
  * Loading spinner component with multiple variants and sizes
- * Provides visual feedback during loading states
+ * Provides visual feedback during loading states with proper accessibility
  */
 const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
   ({
@@ -32,13 +33,16 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
     variant = 'default',
     color = 'primary',
     text,
+    'aria-label': ariaLabel,
     ...props
   }, ref) => {
+    const defaultAriaLabel = text || 'Loading content, please wait';
+
     const renderSpinner = () => {
       switch (variant) {
         case 'dots':
           return (
-            <div className="flex space-x-1">
+            <div className="flex space-x-1" aria-hidden="true">
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
@@ -59,15 +63,18 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
 
         case 'pulse':
           return (
-            <div className={cn(
-              'rounded-full bg-current animate-ping',
-              sizeClasses[size]
-            )} />
+            <div 
+              className={cn(
+                'rounded-full bg-current animate-ping',
+                sizeClasses[size]
+              )}
+              aria-hidden="true"
+            />
           );
 
         case 'bars':
           return (
-            <div className="flex space-x-0.5">
+            <div className="flex space-x-0.5" aria-hidden="true">
               {[0, 1, 2, 3].map((i) => (
                 <div
                   key={i}
@@ -88,11 +95,14 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
 
         default:
           return (
-            <div className={cn(
-              'border-2 border-t-transparent rounded-full animate-spin',
-              sizeClasses[size],
-              colorClasses[color]
-            )} />
+            <div 
+              className={cn(
+                'border-2 border-t-transparent rounded-full animate-spin',
+                sizeClasses[size],
+                colorClasses[color]
+              )}
+              aria-hidden="true"
+            />
           );
       }
     };
@@ -104,6 +114,9 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
           'flex flex-col items-center justify-center space-y-2',
           className
         )}
+        role="status"
+        aria-label={ariaLabel || defaultAriaLabel}
+        aria-live="polite"
         {...props}
       >
         <div className={cn(
@@ -114,10 +127,14 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
           {renderSpinner()}
         </div>
         {text && (
-          <span className="text-sm text-muted-foreground font-medium">
+          <span className="text-sm text-muted-foreground font-medium" aria-hidden="true">
             {text}
           </span>
         )}
+        {/* Screen reader text */}
+        <span className="sr-only">
+          {ariaLabel || defaultAriaLabel}
+        </span>
       </div>
     );
   }
