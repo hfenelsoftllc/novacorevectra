@@ -1,0 +1,111 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-04T00:00:00Z",
+  "page": "contact",
+  "meta": {
+    "title": "Contact NovaCoreVectra - AI Solutions & Governance",
+    "description": "Get in touch with our AI experts to discuss your project needs and goals",
+    "keywords": ["contact", "consultation", "AI experts", "get started"]
+  },
+  "hero": {
+    "title": "Get in **Touch**",
+    "subtitle": "Ready to transform your business with responsible AI?",
+    "description": "Our team of AI experts is here to help you navigate your AI journey. Schedule a consultation to discuss your specific needs and goals.",
+    "image": {
+      "src": "/images/contact-consultation.jpg",
+      "alt": "AI consultation meeting",
+      "width": 800,
+      "height": 500
+    }
+  },
+  "sections": [
+    {
+      "id": "contact-options",
+      "type": "contact-grid",
+      "title": "**Multiple Ways** to Connect",
+      "description": "Choose the option that works best for you",
+      "options": [
+        {
+          "type": "consultation",
+          "title": "Schedule Consultation",
+          "description": "Book a 30-minute consultation to discuss your AI strategy and governance needs",
+          "icon": "calendar",
+          "cta": {
+            "text": "Book Consultation",
+            "href": "/contact?type=consultation",
+            "variant": "primary"
+          }
+        },
+        {
+          "type": "demo",
+          "title": "Request Demo",
+          "description": "See our AI solutions in action with a personalized demo",
+          "icon": "play-circle",
+          "cta": {
+            "text": "Request Demo",
+            "href": "/contact?type=demo",
+            "variant": "secondary"
+          }
+        },
+        {
+          "type": "whitepaper",
+          "title": "Download Resources",
+          "description": "Access our latest whitepapers and case studies on AI governance",
+          "icon": "download",
+          "cta": {
+            "text": "Get Resources",
+            "href": "/contact?type=resources",
+            "variant": "secondary"
+          }
+        }
+      ]
+    },
+    {
+      "id": "contact-form",
+      "type": "lead-capture-form",
+      "title": "Send Us a **Message**",
+      "description": "Fill out the form below and we'll get back to you within 24 hours",
+      "variant": "contact",
+      "showProgressiveFields": true
+    },
+    {
+      "id": "contact-info",
+      "type": "contact-info",
+      "title": "**Contact Information**",
+      "description": "Reach out to us directly",
+      "showMap": true
+    },
+    {
+      "id": "faq-section",
+      "type": "faq",
+      "title": "Frequently Asked **Questions**",
+      "description": "Common questions about our services and process",
+      "faqs": [
+        {
+          "question": "How long does a typical AI implementation project take?",
+          "answer": "Project timelines vary based on scope and complexity. Our **Discover** phase typically takes 2-4 weeks, **Design** takes 3-6 weeks, **Deploy** takes 4-12 weeks, and **Operate** is ongoing. We'll provide a detailed timeline during our initial consultation."
+        },
+        {
+          "question": "Do you work with companies of all sizes?",
+          "answer": "Yes, we work with organizations ranging from mid-market companies to large enterprises. Our solutions are scalable and can be tailored to fit your organization's size, budget, and requirements."
+        },
+        {
+          "question": "What industries do you specialize in?",
+          "answer": "We have deep expertise in **Aviation**, **Healthcare**, **Financial Services**, and **Public Sector**. However, our frameworks and methodologies are applicable across many industries."
+        },
+        {
+          "question": "How do you ensure compliance with AI regulations?",
+          "answer": "We are **ISO 42001 certified** and stay current with evolving AI regulations including the EU AI Act, NIST AI RMF, and industry-specific requirements. Compliance is built into every solution we deliver."
+        },
+        {
+          "question": "What kind of ongoing support do you provide?",
+          "answer": "We offer comprehensive ongoing support including performance monitoring, system optimization, compliance maintenance, and regular updates. Our **Operate** phase ensures your AI systems continue to deliver value over time."
+        },
+        {
+          "question": "Can you integrate with our existing systems?",
+          "answer": "Absolutely. We specialize in enterprise integration with ERP, CRM, and other business systems. Our solutions are designed to work within your existing technology ecosystem."
+        }
+      ]
+    }
+  ]
+}

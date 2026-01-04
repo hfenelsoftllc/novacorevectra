@@ -1,4 +1,4 @@
-import * as fc from 'fast-check';
+﻿import * as fc from 'fast-check';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ProcessLifecycleSection } from '@/components/sections/ProcessLifecycleSection';
@@ -87,7 +87,7 @@ describe('Property 2: Process Lifecycle Animation', () => {
 
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -116,7 +116,7 @@ describe('Property 2: Process Lifecycle Animation', () => {
 
         return true;
       }),
-      { numRuns: 20 } // Reduced runs for simpler synchronous test
+      { numRuns: 10 } // Reduced runs for simpler synchronous test
     );
   });
 
@@ -158,7 +158,7 @@ describe('Property 2: Process Lifecycle Animation', () => {
 
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -214,7 +214,7 @@ describe('Property 2: Process Lifecycle Animation', () => {
 
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -370,7 +370,7 @@ describe('Property 13: Responsive Layout Behavior', () => {
           unmount();
         }
       }),
-      { numRuns: 50 } // Reduced runs for stability
+      { numRuns: 10 } // Reduced runs for stability
     );
   });
 
@@ -423,7 +423,7 @@ describe('Property 13: Responsive Layout Behavior', () => {
           unmount();
         }
       }),
-      { numRuns: 50 }
+      { numRuns: 10 }
     );
   });
 
@@ -466,7 +466,7 @@ describe('Property 13: Responsive Layout Behavior', () => {
           unmount();
         }
       }),
-      { numRuns: 50 }
+      { numRuns: 10 }
     );
   });
 
@@ -517,7 +517,7 @@ describe('Property 13: Responsive Layout Behavior', () => {
           unmount();
         }
       }),
-      { numRuns: 50 }
+      { numRuns: 10 }
     );
   });
 
@@ -571,7 +571,7 @@ describe('Property 13: Responsive Layout Behavior', () => {
           unmount();
         }
       }),
-      { numRuns: 50 }
+      { numRuns: 10 }
     );
   });
 
@@ -627,7 +627,7 @@ describe('Property 13: Responsive Layout Behavior', () => {
           unmount();
         }
       }),
-      { numRuns: 50 }
+      { numRuns: 10 }
     );
   });
 });

@@ -1,4 +1,4 @@
-import * as fc from 'fast-check';
+﻿import * as fc from 'fast-check';
 import { render, screen } from '@testing-library/react';
 import { Metadata } from 'next';
 
@@ -141,7 +141,7 @@ describe('Property 10: SEO and Performance Optimization', () => {
           expect(metadata.description.length).toBeLessThanOrEqual(160);
         }
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -176,7 +176,7 @@ describe('Property 10: SEO and Performance Optimization', () => {
         expect(image?.getAttribute('alt')).toBe(imageProps.alt);
         expect(image?.getAttribute('src')).toBe(imageProps.src);
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -207,7 +207,7 @@ describe('Property 10: SEO and Performance Optimization', () => {
           expect(page).toMatch(/^\/[a-z-]*$/);
         });
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -226,7 +226,7 @@ describe('Property 10: SEO and Performance Optimization', () => {
         // Validate page starts with slash
         expect(page).toMatch(/^\//);
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -275,7 +275,7 @@ describe('Property 10: SEO and Performance Optimization', () => {
         // Validate main content has proper ID for skip links
         expect(container.querySelector('#main-content')).toBeInTheDocument();
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 });

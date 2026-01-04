@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { HeroSection, ServicesSection, StandardsSection, CTASection, ErrorBoundary } from '@/components';
+import { PageStructuredData } from '@/components/common';
 
 /**
  * HomePage component - Main landing page with hero section and key content
@@ -29,6 +30,7 @@ const HomePage: React.FC = () => {
 
   return (
     <ErrorBoundary>
+      <PageStructuredData />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -101,6 +103,7 @@ const HomePage: React.FC = () => {
               title='Build AI You Can Trust'
               description='Partner with NovaCoreVectra to transform business processes with governed, enterprise-ready AI.'
               showLeadCapture={true}
+              onAction={handleContactUs}
             />
           </React.Suspense>
         </main>

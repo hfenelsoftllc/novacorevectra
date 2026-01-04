@@ -4,3 +4,5 @@ export * from './ErrorFallback';
 export * from './AccessibilityAnnouncer';
 export * from './AnalyticsProvider';
 export * from './AnalyticsDashboard';
+export * from './StructuredData';
+export * from './PerformanceMonitor';

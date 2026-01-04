@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-04T00:00:00Z",
+  "page": "services",
+  "meta": {
+    "title": "AI Services - NovaCoreVectra",
+    "description": "Comprehensive AI services from strategy to implementation and governance",
+    "keywords": ["AI services", "AI consulting", "AI implementation", "AI governance"]
+  },
+  "hero": {
+    "title": "Comprehensive **AI Services**",
+    "subtitle": "From strategy to implementation and ongoing governance",
+    "description": "Our full-spectrum AI services help organizations harness artificial intelligence while maintaining compliance, transparency, and operational excellence.",
+    "image": {
+      "src": "/images/services-overview.jpg",
+      "alt": "AI services overview",
+      "width": 800,
+      "height": 500
+    }
+  },
+  "sections": [
+    {
+      "id": "services-overview",
+      "type": "services-grid",
+      "title": "Our **Service Offerings**",
+      "description": "End-to-end AI solutions designed for enterprise success",
+      "showDetails": true
+    },
+    {
+      "id": "industry-applications",
+      "type": "industry-variants",
+      "title": "Industry-Specific **Applications**",
+      "description": "See how our services apply to your industry",
+      "showSelector": true,
+      "showCaseStudies": true
+    },
+    {
+      "id": "service-process",
+      "type": "process-lifecycle",
+      "title": "Our **Service Delivery Process**",
+      "description": "How we work with you from discovery to ongoing operations",
+      "showAnimation": true,
+      "showDetails": true
+    },
+    {
+      "id": "standards-compliance",
+      "type": "standards-grid",
+      "title": "**Standards & Compliance**",
+      "description": "Our services are built on industry-leading standards and frameworks"
+    },
+    {
+      "id": "cta-demo",
+      "type": "cta",
+      "variant": "demo",
+      "title": "See Our Services in Action",
+      "description": "Schedule a demo to see how our AI services can transform your operations",
+      "cta": {
+        "text": "Request Demo",
+        "href": "/contact?type=demo",
+        "variant": "primary"
+      }
+    }
+  ]
+}

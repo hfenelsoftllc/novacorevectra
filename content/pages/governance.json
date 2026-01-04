@@ -1,0 +1,125 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-04T00:00:00Z",
+  "page": "governance",
+  "meta": {
+    "title": "AI Governance - NovaCoreVectra",
+    "description": "ISO 42001 compliant AI governance and risk management solutions",
+    "keywords": ["AI governance", "ISO 42001", "AI compliance", "risk management"]
+  },
+  "hero": {
+    "title": "**AI Governance** & Compliance",
+    "subtitle": "ISO 42001 certified governance frameworks for responsible AI",
+    "description": "Ensure your AI systems meet the highest standards of governance, compliance, and risk management with our comprehensive frameworks and ongoing support.",
+    "image": {
+      "src": "/images/governance-framework.jpg",
+      "alt": "AI governance framework",
+      "width": 800,
+      "height": 500
+    }
+  },
+  "sections": [
+    {
+      "id": "governance-overview",
+      "type": "text-content",
+      "title": "Why AI Governance **Matters**",
+      "content": "As AI systems become more prevalent in business operations, proper governance becomes critical for managing risks, ensuring compliance, and maintaining stakeholder trust. Our governance frameworks provide the structure and processes needed for responsible AI deployment.",
+      "highlights": [
+        "**Risk Mitigation**: Identify and manage AI-related risks before they impact your business",
+        "**Regulatory Compliance**: Stay ahead of evolving AI regulations and standards",
+        "**Stakeholder Trust**: Build confidence through transparent and accountable AI practices",
+        "**Operational Excellence**: Optimize AI performance while maintaining governance standards"
+      ]
+    },
+    {
+      "id": "iso-42001-compliance",
+      "type": "compliance-section",
+      "title": "**ISO 42001** Compliance Framework",
+      "description": "Our comprehensive mapping of services to ISO 42001 clauses ensures full compliance",
+      "showFramework": "iso-42001",
+      "showMappings": true,
+      "showDocumentation": true
+    },
+    {
+      "id": "governance-services",
+      "type": "service-cards",
+      "title": "Governance **Services**",
+      "description": "Comprehensive governance solutions for every stage of your AI journey",
+      "services": [
+        {
+          "id": "governance-framework-design",
+          "title": "Governance Framework Design",
+          "description": "Custom AI governance frameworks tailored to your organization's needs and regulatory requirements",
+          "features": [
+            "Policy development",
+            "Risk assessment frameworks",
+            "Compliance monitoring",
+            "Audit preparation"
+          ]
+        },
+        {
+          "id": "risk-management",
+          "title": "AI Risk Management",
+          "description": "Comprehensive risk identification, assessment, and mitigation strategies for AI systems",
+          "features": [
+            "Risk identification",
+            "Impact assessment",
+            "Mitigation strategies",
+            "Ongoing monitoring"
+          ]
+        },
+        {
+          "id": "compliance-monitoring",
+          "title": "Compliance Monitoring",
+          "description": "Continuous monitoring and reporting to ensure ongoing compliance with AI regulations",
+          "features": [
+            "Automated compliance checks",
+            "Regular audits",
+            "Compliance reporting",
+            "Regulatory updates"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "governance-process",
+      "type": "process-steps",
+      "title": "Our Governance **Implementation Process**",
+      "description": "Systematic approach to implementing AI governance in your organization",
+      "steps": [
+        {
+          "title": "Assessment",
+          "description": "Evaluate current AI governance maturity and identify gaps",
+          "duration": "2-3 weeks"
+        },
+        {
+          "title": "Framework Design",
+          "description": "Design custom governance framework aligned with your needs",
+          "duration": "3-4 weeks"
+        },
+        {
+          "title": "Implementation",
+          "description": "Deploy governance processes and train your team",
+          "duration": "4-6 weeks"
+        },
+        {
+          "title": "Monitoring",
+          "description": "Ongoing monitoring and continuous improvement",
+          "duration": "Ongoing"
+        }
+      ]
+    },
+    {
+      "id": "cta-governance",
+      "type": "cta",
+      "variant": "consultation",
+      "title": "Strengthen Your AI Governance",
+      "description": "Schedule a governance assessment to identify opportunities for improvement",
+      "cta": {
+        "text": "Schedule Assessment",
+        "href": "/contact?type=governance",
+        "variant": "primary"
+      }
+    }
+  ]
+}

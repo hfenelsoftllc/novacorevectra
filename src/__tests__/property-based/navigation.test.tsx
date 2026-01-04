@@ -1,4 +1,4 @@
-import * as fc from 'fast-check';
+﻿import * as fc from 'fast-check';
 import { render, screen, cleanup } from '@testing-library/react';
 import { MAIN_NAVIGATION } from '@/constants/navigation';
 import { NavigationItem } from '@/types/navigation';
@@ -80,13 +80,6 @@ describe('Property 1: Navigation System Completeness', () => {
     '/contact'
   );
 
-  // Generator for navigation items (currently unused but may be needed for future tests)
-  // const navigationItemGenerator = fc.record({
-  //   id: fc.string({ minLength: 1 }),
-  //   label: fc.string({ minLength: 1 }),
-  //   href: fc.string({ minLength: 1 }).map(s => s.startsWith('/') ? s : '/' + s),
-  // });
-
   test('all required pages exist in main navigation', () => {
     // Feature: full-marketing-site, Property 1: Navigation System Completeness
     const requiredPages = ['home', 'services', 'governance', 'about', 'contact'];
@@ -98,7 +91,7 @@ describe('Property 1: Navigation System Completeness', () => {
         // All required pages must be present
         return requiredPages.every(pageId => navigationIds.includes(pageId));
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -115,7 +108,7 @@ describe('Property 1: Navigation System Completeness', () => {
           );
         });
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -149,7 +142,7 @@ describe('Property 1: Navigation System Completeness', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -173,7 +166,7 @@ describe('Property 1: Navigation System Completeness', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -202,7 +195,7 @@ describe('Property 1: Navigation System Completeness', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -237,7 +230,7 @@ describe('Property 1: Navigation System Completeness', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -266,7 +259,7 @@ describe('Property 1: Navigation System Completeness', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 });

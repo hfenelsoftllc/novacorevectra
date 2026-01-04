@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-04T00:00:00Z",
+  "site": {
+    "name": "NovaCoreVectra",
+    "tagline": "AI Solutions & Governance",
+    "description": "Leading AI consulting and governance solutions for enterprise",
+    "url": "https://novacorevectra.com",
+    "logo": {
+      "src": "/images/logo.svg",
+      "alt": "NovaCoreVectra Logo",
+      "width": 200,
+      "height": 60
+    },
+    "favicon": "/favicon.ico",
+    "theme": {
+      "primaryColor": "#0066cc",
+      "secondaryColor": "#004499",
+      "accentColor": "#ff6600"
+    }
+  },
+  "contact": {
+    "email": "info@novacorevectra.com",
+    "phone": "+1 (555) 123-4567",
+    "address": {
+      "street": "123 Innovation Drive",
+      "city": "Tech City",
+      "state": "CA",
+      "zip": "94000",
+      "country": "USA"
+    },
+    "social": {
+      "linkedin": "https://linkedin.com/company/novacorevectra",
+      "twitter": "https://twitter.com/novacorevectra"
+    }
+  },
+  "seo": {
+    "defaultTitle": "NovaCoreVectra - AI Solutions & Governance",
+    "defaultDescription": "Leading AI consulting and governance solutions for enterprise",
+    "keywords": ["AI", "artificial intelligence", "governance", "consulting", "enterprise", "ISO 42001"],
+    "author": "NovaCoreVectra",
+    "twitterHandle": "@novacorevectra"
+  }
+}

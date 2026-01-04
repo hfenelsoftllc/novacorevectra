@@ -3,18 +3,21 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { ErrorBoundary, CTASection } from '@/components';
+import { PageStructuredData } from '@/components/common';
 
 /**
  * AboutPage component - Company information and team details
  * Implements page transitions with Framer Motion
  */
 const AboutPage: React.FC = () => {
-  const handleContactTeam = React.useCallback(() => {
-    window.location.href = '/contact';
-  }, []);
+  const aboutBreadcrumbs = [
+    { name: 'Home', url: '/' },
+    { name: 'About', url: '/about' },
+  ];
 
   return (
     <ErrorBoundary>
+      <PageStructuredData breadcrumbs={aboutBreadcrumbs} />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

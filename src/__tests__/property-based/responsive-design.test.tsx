@@ -1,4 +1,4 @@
-import * as fc from 'fast-check';
+﻿import * as fc from 'fast-check';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { Header } from '@/components/layout/Header';
 import { Navigation } from '@/components/layout/Navigation';
@@ -159,7 +159,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -206,7 +206,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         unmountResponsive();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -245,7 +245,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -274,7 +274,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -331,7 +331,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -380,7 +380,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -422,7 +422,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         unmount();
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 });

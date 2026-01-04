@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { ErrorBoundary, ComplianceSection, CTASection } from '@/components';
+import { PageStructuredData } from '@/components/common';
 
 /**
  * GovernancePage component - AI Governance & Compliance page
@@ -10,8 +11,25 @@ import { ErrorBoundary, ComplianceSection, CTASection } from '@/components';
  * Implements page transitions with Framer Motion
  */
 const GovernancePage: React.FC = () => {
+  const governanceBreadcrumbs = [
+    { name: 'Home', url: '/' },
+    { name: 'Governance', url: '/governance' },
+  ];
+
+  const governanceService = {
+    name: 'AI Governance & Compliance',
+    description: 'ISO 42001 compliant AI governance solutions and risk management frameworks',
+    provider: 'NovaCoreVectra',
+    areaServed: ['US', 'CA', 'EU'],
+    serviceType: 'AI Governance',
+  };
+
   return (
     <ErrorBoundary>
+      <PageStructuredData 
+        breadcrumbs={governanceBreadcrumbs}
+        service={governanceService}
+      />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -1,0 +1,57 @@
+{
+  "currentVersion": "1.0.0",
+  "versions": [
+    {
+      "version": "1.0.0",
+      "timestamp": "2024-01-04T00:00:00Z",
+      "author": "system",
+      "description": "Initial content management system implementation",
+      "changes": [
+        "Created content management system",
+        "Separated content from code",
+        "Added rich text formatting support",
+        "Implemented content versioning"
+      ],
+      "files": [
+        "content/config/site.json",
+        "content/pages/home.json",
+        "content/pages/services.json",
+        "content/pages/governance.json",
+        "content/pages/about.json",
+        "content/pages/contact.json"
+      ]
+    }
+  ],
+  "contentMap": {
+    "site": {
+      "currentVersion": "1.0.0",
+      "file": "content/config/site.json",
+      "type": "config"
+    },
+    "page-home": {
+      "currentVersion": "1.0.0",
+      "file": "content/pages/home.json",
+      "type": "page"
+    },
+    "page-services": {
+      "currentVersion": "1.0.0",
+      "file": "content/pages/services.json",
+      "type": "page"
+    },
+    "page-governance": {
+      "currentVersion": "1.0.0",
+      "file": "content/pages/governance.json",
+      "type": "page"
+    },
+    "page-about": {
+      "currentVersion": "1.0.0",
+      "file": "content/pages/about.json",
+      "type": "page"
+    },
+    "page-contact": {
+      "currentVersion": "1.0.0",
+      "file": "content/pages/contact.json",
+      "type": "page"
+    }
+  }
+}

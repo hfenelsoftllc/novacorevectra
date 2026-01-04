@@ -3,12 +3,18 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { ErrorBoundary, CTASection } from '@/components';
+import { PageStructuredData } from '@/components/common';
 
 /**
  * ContactPage component - Contact information and lead capture forms
  * Implements page transitions with Framer Motion
  */
 const ContactPage: React.FC = () => {
+  const contactBreadcrumbs = [
+    { name: 'Home', url: '/' },
+    { name: 'Contact', url: '/contact' },
+  ];
+
   const [formData, setFormData] = React.useState({
     firstName: '',
     lastName: '',
@@ -63,6 +69,7 @@ const ContactPage: React.FC = () => {
 
   return (
     <ErrorBoundary>
+      <PageStructuredData breadcrumbs={contactBreadcrumbs} />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

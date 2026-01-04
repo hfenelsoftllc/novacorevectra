@@ -6,3 +6,7 @@ export * from './processes';
 export * from './industries';
 export * from './compliance';
 export * from './abTests';
+
+// Export content management utilities
+export * from '../utils/contentManager';
+export * from '../hooks/useContent';

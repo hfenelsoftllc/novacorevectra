@@ -1,0 +1,192 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-04T00:00:00Z",
+  "page": "about",
+  "meta": {
+    "title": "About NovaCoreVectra - AI Solutions & Governance",
+    "description": "Learn about our mission, values, and expertise in AI solutions and governance",
+    "keywords": ["about us", "AI expertise", "company mission", "team"]
+  },
+  "hero": {
+    "title": "About **NovaCoreVectra**",
+    "subtitle": "Pioneering responsible AI transformation for enterprise",
+    "description": "We are a team of AI experts, governance specialists, and industry veterans dedicated to helping organizations harness the power of artificial intelligence responsibly and effectively.",
+    "image": {
+      "src": "/images/about-team.jpg",
+      "alt": "NovaCoreVectra team",
+      "width": 800,
+      "height": 500
+    }
+  },
+  "sections": [
+    {
+      "id": "mission-vision",
+      "type": "text-columns",
+      "title": "Our **Mission & Vision**",
+      "columns": [
+        {
+          "title": "Mission",
+          "content": "To empower organizations with **responsible AI solutions** that drive innovation while maintaining the highest standards of governance, compliance, and ethical practice."
+        },
+        {
+          "title": "Vision",
+          "content": "A world where artificial intelligence enhances human potential and organizational capability through **transparent, accountable, and trustworthy** AI systems."
+        }
+      ]
+    },
+    {
+      "id": "core-values",
+      "type": "values-grid",
+      "title": "Our **Core Values**",
+      "description": "The principles that guide everything we do",
+      "values": [
+        {
+          "title": "Transparency",
+          "description": "We believe in open, explainable AI systems that stakeholders can understand and trust",
+          "icon": "eye"
+        },
+        {
+          "title": "Responsibility",
+          "description": "Every AI solution we develop considers ethical implications and societal impact",
+          "icon": "shield"
+        },
+        {
+          "title": "Excellence",
+          "description": "We maintain the highest standards in everything we deliver, from strategy to implementation",
+          "icon": "star"
+        },
+        {
+          "title": "Innovation",
+          "description": "We stay at the forefront of AI technology while ensuring practical, measurable business value",
+          "icon": "lightbulb"
+        },
+        {
+          "title": "Partnership",
+          "description": "We work as an extension of your team, committed to your long-term success",
+          "icon": "handshake"
+        },
+        {
+          "title": "Compliance",
+          "description": "Regulatory compliance and risk management are built into every solution we create",
+          "icon": "check-circle"
+        }
+      ]
+    },
+    {
+      "id": "expertise-areas",
+      "type": "expertise-grid",
+      "title": "Our **Expertise**",
+      "description": "Deep knowledge across AI technologies and industry domains",
+      "areas": [
+        {
+          "category": "AI Technologies",
+          "items": [
+            "Machine Learning & Deep Learning",
+            "Generative AI & Large Language Models",
+            "Computer Vision & NLP",
+            "Retrieval-Augmented Generation (RAG)",
+            "MLOps & AI Lifecycle Management"
+          ]
+        },
+        {
+          "category": "Governance & Compliance",
+          "items": [
+            "ISO 42001 AI Management Systems",
+            "NIST AI Risk Management Framework",
+            "EU AI Act Compliance",
+            "Responsible AI Frameworks",
+            "Risk Assessment & Mitigation"
+          ]
+        },
+        {
+          "category": "Industry Domains",
+          "items": [
+            "Aviation & Aerospace",
+            "Healthcare & Life Sciences",
+            "Financial Services",
+            "Public Sector & Government",
+            "Manufacturing & Supply Chain"
+          ]
+        },
+        {
+          "category": "Enterprise Integration",
+          "items": [
+            "ERP & CRM Integration",
+            "Cloud & Hybrid Architectures",
+            "Security & Privacy Controls",
+            "Change Management",
+            "Training & Adoption"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "company-stats",
+      "type": "stats-grid",
+      "title": "Our **Track Record**",
+      "description": "Proven results across industries and use cases",
+      "stats": [
+        {
+          "value": "50+",
+          "label": "AI Projects Delivered",
+          "description": "Successful implementations across various industries"
+        },
+        {
+          "value": "95%",
+          "label": "Client Satisfaction",
+          "description": "Consistently high satisfaction ratings from our clients"
+        },
+        {
+          "value": "100%",
+          "label": "Compliance Rate",
+          "description": "All projects meet or exceed regulatory requirements"
+        },
+        {
+          "value": "24/7",
+          "label": "Support Available",
+          "description": "Ongoing support for all implemented solutions"
+        }
+      ]
+    },
+    {
+      "id": "certifications",
+      "type": "certifications-grid",
+      "title": "**Certifications & Partnerships**",
+      "description": "Industry-recognized certifications and strategic partnerships",
+      "certifications": [
+        {
+          "name": "ISO 42001 Certified",
+          "description": "Certified AI Management System implementation",
+          "logo": "/images/certifications/iso-42001.png"
+        },
+        {
+          "name": "ISO 27001 Aligned",
+          "description": "Information security management alignment",
+          "logo": "/images/certifications/iso-27001.png"
+        },
+        {
+          "name": "SOC 2 Type II",
+          "description": "Service organization controls compliance",
+          "logo": "/images/certifications/soc2.png"
+        },
+        {
+          "name": "NIST Framework",
+          "description": "AI Risk Management Framework implementation",
+          "logo": "/images/certifications/nist.png"
+        }
+      ]
+    },
+    {
+      "id": "cta-partnership",
+      "type": "cta",
+      "variant": "consultation",
+      "title": "Partner with **NovaCoreVectra**",
+      "description": "Ready to transform your organization with responsible AI? Let's discuss your goals and challenges.",
+      "cta": {
+        "text": "Start the Conversation",
+        "href": "/contact",
+        "variant": "primary"
+      }
+    }
+  ]
+}

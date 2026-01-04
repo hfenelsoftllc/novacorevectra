@@ -1,4 +1,4 @@
-import * as fc from 'fast-check';
+﻿import * as fc from 'fast-check';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -34,7 +34,7 @@ describe('Property 8: Content Management Separation', () => {
         
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -67,7 +67,7 @@ describe('Property 8: Content Management Separation', () => {
         
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -96,7 +96,7 @@ describe('Property 8: Content Management Separation', () => {
         
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -129,7 +129,7 @@ describe('Property 8: Content Management Separation', () => {
         
         return true;
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 });

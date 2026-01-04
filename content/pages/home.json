@@ -1,0 +1,94 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-04T00:00:00Z",
+  "page": "home",
+  "meta": {
+    "title": "NovaCoreVectra - AI Solutions & Governance",
+    "description": "Leading AI consulting and governance solutions for enterprise",
+    "keywords": ["AI solutions", "AI governance", "enterprise AI", "ISO 42001"]
+  },
+  "hero": {
+    "title": "Transform Your Business with **Responsible AI**",
+    "subtitle": "Enterprise-grade AI solutions built for transparency, compliance, and measurable impact",
+    "description": "We help organizations navigate the AI landscape with confidence through strategic consulting, implementation, and governance frameworks aligned with ISO 42001 standards.",
+    "cta": {
+      "primary": {
+        "text": "Schedule Consultation",
+        "href": "/contact",
+        "variant": "primary"
+      },
+      "secondary": {
+        "text": "View Our Services",
+        "href": "/services",
+        "variant": "secondary"
+      }
+    },
+    "image": {
+      "src": "/images/hero-ai-transformation.jpg",
+      "alt": "AI transformation visualization",
+      "width": 800,
+      "height": 600
+    }
+  },
+  "sections": [
+    {
+      "id": "value-proposition",
+      "type": "text-image",
+      "title": "Why Choose NovaCoreVectra?",
+      "content": "In an era where AI capabilities evolve rapidly, organizations need partners who understand both the **technical possibilities** and **regulatory requirements**. We bridge the gap between AI innovation and enterprise governance.",
+      "features": [
+        {
+          "title": "ISO 42001 Certified",
+          "description": "Full compliance with international AI management standards"
+        },
+        {
+          "title": "Industry Expertise",
+          "description": "Specialized solutions for Aviation, Healthcare, Financial Services, and Public Sector"
+        },
+        {
+          "title": "End-to-End Support",
+          "description": "From strategy and design to deployment and ongoing operations"
+        }
+      ],
+      "image": {
+        "src": "/images/ai-governance-framework.jpg",
+        "alt": "AI governance framework visualization",
+        "width": 600,
+        "height": 400
+      }
+    },
+    {
+      "id": "process-overview",
+      "type": "process-lifecycle",
+      "title": "Our Proven **4-Stage Process**",
+      "description": "We follow a systematic approach to ensure successful AI implementation and governance",
+      "showAnimation": true
+    },
+    {
+      "id": "industry-focus",
+      "type": "industry-variants",
+      "title": "Industry-Specific **AI Solutions**",
+      "description": "Tailored approaches for your sector's unique challenges and regulatory requirements",
+      "showSelector": true
+    },
+    {
+      "id": "trust-compliance",
+      "type": "compliance-section",
+      "title": "Built on **Trust & Compliance**",
+      "description": "Our solutions are designed with regulatory compliance and risk management at their core",
+      "showFramework": "iso-42001"
+    },
+    {
+      "id": "cta-consultation",
+      "type": "cta",
+      "variant": "consultation",
+      "title": "Ready to Transform Your Business?",
+      "description": "Schedule a consultation to discuss your AI strategy and governance needs",
+      "cta": {
+        "text": "Get Started Today",
+        "href": "/contact",
+        "variant": "primary"
+      }
+    }
+  ]
+}

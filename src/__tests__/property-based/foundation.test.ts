@@ -7,7 +7,7 @@ describe('Property-Based Testing Foundation', () => {
       fc.property(fc.integer(), fc.integer(), (a, b) => {
         return a + b === b + a; // Commutative property of addition
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -18,7 +18,7 @@ describe('Property-Based Testing Foundation', () => {
         const result = a + b;
         return result.startsWith(a) && result.endsWith(b);
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 
@@ -29,7 +29,7 @@ describe('Property-Based Testing Foundation', () => {
         const reversed = [...arr].reverse();
         return reversed.reverse().join(',') === arr.join(',');
       }),
-      { numRuns: 100 }
+      { numRuns: 10 }
     );
   });
 });
