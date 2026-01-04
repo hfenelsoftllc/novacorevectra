@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { Card, CardContent, Button } from '@/components';
 import { AlertTriangle, RefreshCw } from 'lucide-react';

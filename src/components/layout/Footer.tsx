@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { MAIN_NAVIGATION } from '../../constants/navigation';
+import { Logo } from '../ui/logo';
 import { cn } from '../../utils';
 
 export interface FooterProps {
@@ -38,13 +39,8 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
         <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company info and logo */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center space-x-2 mb-4">
-              <div className="h-8 w-8 bg-primary rounded-md flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">NCV</span>
-              </div>
-              <span className="font-bold text-lg text-foreground">
-                NovaCoreVectra
-              </span>
+            <Link href="/" className="inline-block mb-4">
+              <Logo size="md" />
             </Link>
             <p className="text-muted-foreground text-sm max-w-md mb-4">
               Leading AI consulting and governance solutions for enterprise. 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '../src/styles/globals.css';
 import { Header, Footer } from '../src/components/layout';
+import { AnalyticsProvider, GoogleAnalyticsScript } from '../src/components/common';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -30,12 +31,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <GoogleAnalyticsScript />
+      </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
-        <Header />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        <AnalyticsProvider>
+          <Header />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </AnalyticsProvider>
       </body>
     </html>
   );

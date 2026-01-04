@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { Search, Palette, Rocket, Settings } from 'lucide-react';

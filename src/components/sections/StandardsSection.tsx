@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { Card, CardContent, AnimatedSection } from '@/components';
 import { STANDARDS } from '@/constants';

@@ -14,7 +14,7 @@ export * from './cards';
 export * from './common';
 
 // Demo Components
-export * from './demo/ComponentDemo';
+export * from './demo';
 
 // Industry Components
 export * from './industry';

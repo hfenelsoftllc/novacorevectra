@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { Button } from '../ui/button';
+import { Logo } from '../ui/logo';
 import { Navigation } from './Navigation';
 import { cn } from '../../utils';
 
@@ -39,15 +40,11 @@ export const Header: React.FC<HeaderProps> = ({ className }) => {
           <div className="flex items-center">
             <Link 
               href="/" 
-              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+              className="hover:opacity-80 transition-opacity"
               onClick={closeMobileMenu}
             >
-              <div className="h-8 w-8 bg-primary rounded-md flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">NCV</span>
-              </div>
-              <span className="font-bold text-lg text-foreground hidden sm:inline-block">
-                NovaCoreVectra
-              </span>
+              <Logo size="md" className="sm:hidden" variant="compact" />
+              <Logo size="md" className="hidden sm:flex" />
             </Link>
           </div>
 

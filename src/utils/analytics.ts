@@ -7,7 +7,7 @@ import { AnalyticsEvent } from '@/types/analytics';
 /**
  * Google Analytics 4 configuration
  */
-export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX';
+export const GA_MEASUREMENT_ID = process.env['NEXT_PUBLIC_GA_MEASUREMENT_ID'] || 'G-XXXXXXXXXX';
 
 /**
  * Initialize Google Analytics 4
@@ -199,7 +199,7 @@ export const getABTestVariant = (test: ABTest): ABTestVariant | null => {
     }
   }
 
-  return test.variants[0]; // Fallback to first variant
+  return test.variants[0] || null; // Fallback to first variant
 };
 
 /**

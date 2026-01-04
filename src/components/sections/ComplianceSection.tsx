@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import { useState } from 'react';
 import { Download, ChevronDown, ChevronUp, Shield, CheckCircle } from 'lucide-react';
