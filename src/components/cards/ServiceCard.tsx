@@ -30,22 +30,22 @@ const ServiceCardComponent = React.forwardRef<HTMLDivElement, ServiceCardProps>(
           y: -2, // Reduced hover movement for smoother animation
           transition: { duration: 0.15 }, // Faster hover transition
         }}
-        role="article"
+        role='article'
         tabIndex={0}
         aria-labelledby={`service-title-${service.id}`}
         aria-describedby={`service-description-${service.id}`}
         {...props}
       >
         {/* Icon */}
-        <div 
+        <div
           className='mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/20'
-          aria-hidden="true"
+          aria-hidden='true'
         >
           {service.icon}
         </div>
 
         {/* Title */}
-        <h3 
+        <h3
           id={`service-title-${service.id}`}
           className='mb-3 text-xl font-semibold text-foreground'
         >
@@ -53,7 +53,7 @@ const ServiceCardComponent = React.forwardRef<HTMLDivElement, ServiceCardProps>(
         </h3>
 
         {/* Description */}
-        <p 
+        <p
           id={`service-description-${service.id}`}
           className='mb-4 text-sm text-muted-foreground leading-relaxed'
         >
@@ -61,7 +61,7 @@ const ServiceCardComponent = React.forwardRef<HTMLDivElement, ServiceCardProps>(
         </p>
 
         {/* Bullet Points */}
-        <ul 
+        <ul
           className='space-y-2'
           aria-label={`Key features of ${service.title}`}
         >
@@ -70,9 +70,9 @@ const ServiceCardComponent = React.forwardRef<HTMLDivElement, ServiceCardProps>(
               key={bulletIndex}
               className='flex items-start text-sm text-muted-foreground'
             >
-              <span 
-                className='mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary' 
-                aria-hidden="true"
+              <span
+                className='mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary'
+                aria-hidden='true'
               />
               <span>{bullet}</span>
             </li>
@@ -80,9 +80,9 @@ const ServiceCardComponent = React.forwardRef<HTMLDivElement, ServiceCardProps>(
         </ul>
 
         {/* Hover effect overlay */}
-        <div 
-          className='absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100' 
-          aria-hidden="true"
+        <div
+          className='absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'
+          aria-hidden='true'
         />
       </motion.div>
     );

@@ -7,12 +7,12 @@
  * Debounce function to limit the rate at which a function can fire
  * Useful for optimizing scroll, resize, and input handlers
  */
-export const debounce = <T extends (...args: any[]) => any>(
+export const debounce = <T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): ((...args: Parameters<T>) => void) => {
   let timeout: NodeJS.Timeout;
-  
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
@@ -23,12 +23,12 @@ export const debounce = <T extends (...args: any[]) => any>(
  * Throttle function to ensure a function is called at most once per specified interval
  * Useful for optimizing frequently fired events like scroll or mousemove
  */
-export const throttle = <T extends (...args: any[]) => any>(
+export const throttle = <T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): ((...args: Parameters<T>) => void) => {
   let inThrottle: boolean;
-  
+
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args);
@@ -70,7 +70,7 @@ export const getOptimizedDuration = (
   distance: number = 1
 ): number => {
   if (prefersReducedMotion()) return 0.1;
-  
+
   // Scale duration based on distance, but cap it for performance
   const scaledDuration = baseDuration * Math.min(distance, 2);
   return Math.max(0.1, Math.min(scaledDuration, 1.0));

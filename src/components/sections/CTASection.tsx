@@ -11,17 +11,7 @@ import { cn } from '@/utils/cn';
  * Memoized for performance optimization
  */
 const CTASectionComponent = React.forwardRef<HTMLElement, CTASectionProps>(
-  (
-    {
-      title,
-      subtitle,
-      action,
-      className,
-      children,
-      ...props
-    },
-    ref
-  ) => {
+  ({ title, subtitle, action, className, children, ...props }, ref) => {
     return (
       <section
         ref={ref}
@@ -29,20 +19,20 @@ const CTASectionComponent = React.forwardRef<HTMLElement, CTASectionProps>(
           'max-w-7xl mx-auto px-6 py-20 sm:py-24 text-center',
           className
         )}
-        aria-labelledby="cta-heading"
-        role="region"
-        aria-label="Call to action"
+        aria-labelledby='cta-heading'
+        role='region'
+        aria-label='Call to action'
         {...props}
       >
         {/* Animated Title */}
         <motion.h3
-          id="cta-heading"
+          id='cta-heading'
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ 
+          transition={{
             duration: 0.4,
-            ease: [0.25, 0.46, 0.45, 0.94] // Optimized easing curve
+            ease: [0.25, 0.46, 0.45, 0.94], // Optimized easing curve
           }}
           className='text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground mb-4'
         >
@@ -54,13 +44,13 @@ const CTASectionComponent = React.forwardRef<HTMLElement, CTASectionProps>(
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ 
-            duration: 0.4, 
+          transition={{
+            duration: 0.4,
             delay: 0.05, // Reduced delay
-            ease: [0.25, 0.46, 0.45, 0.94]
+            ease: [0.25, 0.46, 0.45, 0.94],
           }}
           className='text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-8'
-          aria-describedby="cta-heading"
+          aria-describedby='cta-heading'
         >
           {subtitle}
         </motion.p>
@@ -71,10 +61,10 @@ const CTASectionComponent = React.forwardRef<HTMLElement, CTASectionProps>(
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ 
-              duration: 0.4, 
+            transition={{
+              duration: 0.4,
               delay: 0.1,
-              ease: [0.25, 0.46, 0.45, 0.94]
+              ease: [0.25, 0.46, 0.45, 0.94],
             }}
             className='mb-8'
           >
@@ -87,10 +77,10 @@ const CTASectionComponent = React.forwardRef<HTMLElement, CTASectionProps>(
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ 
-            duration: 0.4, 
+          transition={{
+            duration: 0.4,
             delay: 0.15,
-            ease: [0.25, 0.46, 0.45, 0.94]
+            ease: [0.25, 0.46, 0.45, 0.94],
           }}
         >
           <Button
@@ -100,9 +90,9 @@ const CTASectionComponent = React.forwardRef<HTMLElement, CTASectionProps>(
             aria-label={`${action.text} - Contact us to get started`}
           >
             {action.text}
-            <ArrowRight 
-              className='h-4 w-4 transition-transform group-hover:translate-x-1' 
-              aria-hidden="true"
+            <ArrowRight
+              className='h-4 w-4 transition-transform group-hover:translate-x-1'
+              aria-hidden='true'
             />
           </Button>
         </motion.div>

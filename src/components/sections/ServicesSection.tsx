@@ -15,43 +15,32 @@ const ServicesSectionComponent = React.forwardRef<HTMLElement, SectionProps>(
     return (
       <AnimatedSection
         ref={ref}
-        className={cn(
-          'max-w-7xl mx-auto px-6 py-20',
-          className
-        )}
+        className={cn('max-w-7xl mx-auto px-6 py-20', className)}
         animationProps={{
           initial: { opacity: 0, y: 30 },
           animate: { opacity: 1, y: 0 },
-          transition: { 
-            duration: 0.6, 
-            ease: [0.25, 0.46, 0.45, 0.94] // Optimized easing curve
+          transition: {
+            duration: 0.6,
+            ease: [0.25, 0.46, 0.45, 0.94], // Optimized easing curve
           },
         }}
-        aria-labelledby="services-heading"
-        role="region"
-        aria-label="Our services"
+        aria-labelledby='services-heading'
+        role='region'
+        aria-label='Our services'
         {...props}
       >
         {/* Optional section header */}
-        {children && (
-          <header className='text-center mb-16'>
-            {children}
-          </header>
-        )}
+        {children && <header className='text-center mb-16'>{children}</header>}
 
         {/* Services Grid */}
-        <div 
+        <div
           className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8'
-          role="list"
-          aria-label="List of services offered"
+          role='list'
+          aria-label='List of services offered'
         >
           {SERVICES.map((service, index) => (
-            <div key={service.id} role="listitem">
-              <ServiceCard
-                service={service}
-                index={index}
-                className='h-full'
-              />
+            <div key={service.id} role='listitem'>
+              <ServiceCard service={service} index={index} className='h-full' />
             </div>
           ))}
         </div>

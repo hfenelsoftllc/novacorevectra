@@ -8,29 +8,37 @@ import { Workflow } from 'lucide-react';
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, className, ...props }: React.ComponentProps<'div'>) => {
+    div: ({
+      children,
+      className,
+      ...props
+    }: React.ComponentProps<'div'> & Record<string, unknown>) => {
       // Filter out framer-motion specific props
-      const { 
+      const {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        initial, 
+        initial,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        whileInView, 
+        whileInView,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        whileHover, 
+        whileHover,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        viewport, 
+        viewport,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        transition, 
-        ...domProps 
+        transition,
+        ...domProps
       } = props;
-      return <div className={className} {...domProps}>{children}</div>;
+      return (
+        <div className={className} {...domProps}>
+          {children}
+        </div>
+      );
     },
   },
 }));
 
 const mockService: Service = {
   id: 'test-service',
-  icon: <Workflow className="h-8 w-8" data-testid="service-icon" />,
+  icon: <Workflow className='h-8 w-8' data-testid='service-icon' />,
   title: 'Test Service',
   description: 'This is a test service description',
   bullets: ['Feature 1', 'Feature 2', 'Feature 3'],
@@ -41,7 +49,9 @@ describe('ServiceCard', () => {
     render(<ServiceCard service={mockService} />);
 
     expect(screen.getByText('Test Service')).toBeInTheDocument();
-    expect(screen.getByText('This is a test service description')).toBeInTheDocument();
+    expect(
+      screen.getByText('This is a test service description')
+    ).toBeInTheDocument();
     expect(screen.getByText('Feature 1')).toBeInTheDocument();
     expect(screen.getByText('Feature 2')).toBeInTheDocument();
     expect(screen.getByText('Feature 3')).toBeInTheDocument();
@@ -50,7 +60,7 @@ describe('ServiceCard', () => {
 
   it('applies custom className when provided', () => {
     const { container } = render(
-      <ServiceCard service={mockService} className="custom-class" />
+      <ServiceCard service={mockService} className='custom-class' />
     );
 
     expect(container.firstChild).toHaveClass('custom-class');

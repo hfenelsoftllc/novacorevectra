@@ -18,63 +18,63 @@ const StandardsSectionComponent = React.forwardRef<HTMLElement, SectionProps>(
     return (
       <AnimatedSection
         ref={ref}
-        className={cn(
-          'bg-muted/30 border-t border-border',
-          className
-        )}
+        className={cn('bg-muted/30 border-t border-border', className)}
         animationProps={{
           initial: { opacity: 0, y: 20 },
           animate: { opacity: 1, y: 0 },
-          transition: { 
-            duration: 0.5, 
-            ease: [0.25, 0.46, 0.45, 0.94] // Optimized easing curve
+          transition: {
+            duration: 0.5,
+            ease: [0.25, 0.46, 0.45, 0.94], // Optimized easing curve
           },
         }}
-        aria-labelledby="standards-heading"
-        role="region"
-        aria-label="Compliance standards"
+        aria-labelledby='standards-heading'
+        role='region'
+        aria-label='Compliance standards'
         {...props}
       >
         <div className='max-w-7xl mx-auto px-6 py-20 text-center'>
           {/* Section Header */}
           <header className='mb-12'>
-            <h2 id="standards-heading" className='text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground mb-4'>
+            <h2
+              id='standards-heading'
+              className='text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground mb-4'
+            >
               Standards-Aligned. Audit-Ready.
             </h2>
             <p className='text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed'>
               Our delivery framework is aligned with globally recognized AI and
-              security standards to ensure trust, accountability, and resilience.
+              security standards to ensure trust, accountability, and
+              resilience.
             </p>
           </header>
 
           {/* Optional additional content */}
-          {children && (
-            <div className='mb-10'>
-              {children}
-            </div>
-          )}
+          {children && <div className='mb-10'>{children}</div>}
 
           {/* Standards Grid */}
-          <div 
+          <div
             className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
-            role="list"
-            aria-label="List of compliance standards"
+            role='list'
+            aria-label='List of compliance standards'
           >
             {STANDARDS.map((standard, index) => {
               const animationDelay = calculateAnimationDelay(index);
-              
+
               return (
                 <Card
                   key={standard.id}
                   className={cn(
                     'bg-card border-border transition-all duration-300 hover:shadow-lg hover:shadow-primary/5',
-                    !prefersReducedMotion && 'animate-in fade-in slide-in-from-bottom-4'
+                    !prefersReducedMotion &&
+                      'animate-in fade-in slide-in-from-bottom-4'
                   )}
                   style={{
-                    animationDelay: prefersReducedMotion ? '0ms' : `${animationDelay * 1000}ms`,
+                    animationDelay: prefersReducedMotion
+                      ? '0ms'
+                      : `${animationDelay * 1000}ms`,
                     animationFillMode: 'both',
                   }}
-                  role="listitem"
+                  role='listitem'
                   tabIndex={0}
                   aria-label={`Standard: ${standard.name}${standard.description ? ` - ${standard.description}` : ''}`}
                 >

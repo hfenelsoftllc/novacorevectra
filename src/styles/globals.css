@@ -115,15 +115,15 @@
 
   /* Ensure interactive elements have proper focus states */
   button:focus-visible,
-  [role="button"]:focus-visible,
+  [role='button']:focus-visible,
   a:focus-visible,
   [tabindex]:focus-visible {
     @apply ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
 
   /* Improve card focus states */
-  [role="article"]:focus-visible,
-  [role="listitem"]:focus-visible {
+  [role='article']:focus-visible,
+  [role='listitem']:focus-visible {
     @apply ring-2 ring-primary ring-offset-2 ring-offset-background rounded-lg;
   }
 
@@ -144,7 +144,7 @@
     .text-muted-foreground {
       @apply text-foreground;
     }
-    
+
     .border {
       border-width: 2px;
     }

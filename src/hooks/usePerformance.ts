@@ -6,9 +6,12 @@ import { useCallback, useMemo } from 'react';
  */
 export const usePerformance = () => {
   // Memoized animation delay calculator
-  const calculateAnimationDelay = useCallback((index: number, baseDelay: number = 0.05) => {
-    return Math.min(index * baseDelay, 0.3); // Cap maximum delay at 300ms
-  }, []);
+  const calculateAnimationDelay = useCallback(
+    (index: number, baseDelay: number = 0.05) => {
+      return Math.min(index * baseDelay, 0.3); // Cap maximum delay at 300ms
+    },
+    []
+  );
 
   // Memoized easing curve for consistent animations
   const optimizedEasing = useMemo(() => [0.25, 0.46, 0.45, 0.94] as const, []);
@@ -22,14 +25,14 @@ export const usePerformance = () => {
   }, []);
 
   // Performance-optimized animation config
-  const getAnimationConfig = useCallback((
-    duration: number = 0.4,
-    delay: number = 0
-  ) => ({
-    duration: prefersReducedMotion ? 0.1 : duration,
-    delay: prefersReducedMotion ? 0 : delay,
-    ease: optimizedEasing,
-  }), [prefersReducedMotion, optimizedEasing]);
+  const getAnimationConfig = useCallback(
+    (duration: number = 0.4, delay: number = 0) => ({
+      duration: prefersReducedMotion ? 0.1 : duration,
+      delay: prefersReducedMotion ? 0 : delay,
+      ease: optimizedEasing,
+    }),
+    [prefersReducedMotion, optimizedEasing]
+  );
 
   return {
     calculateAnimationDelay,
