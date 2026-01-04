@@ -14,9 +14,14 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "type-check": "tsc --noEmit"
+    "test:property": "jest --testNamePattern='Property'",
+    "test:unit": "jest --testNamePattern='(?!Property)'",
+    "type-check": "tsc --noEmit",
+    "analyze": "ANALYZE=true npm run build",
+    "clean": "rm -rf .next out dist coverage"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.2",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
@@ -25,8 +30,11 @@
     "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.48.2",
     "tailwind-merge": "^1.14.0",
-    "tailwindcss": "^3.3.0"
+    "tailwindcss": "^3.3.0",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.1.0",
@@ -56,8 +64,12 @@
     "typescript",
     "nextjs",
     "services",
-    "refactor"
+    "refactor",
+    "ai",
+    "governance",
+    "marketing",
+    "property-based-testing"
   ],
-  "author": "",
+  "author": "NovaCoreVectra",
   "license": "MIT"
 }

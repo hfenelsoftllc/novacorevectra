@@ -1,10 +1,11 @@
 import React from 'react';
 import { ServiceCard, AnimatedSection } from '@/components';
+import { ProcessLifecycleSection } from '@/components/sections';
 import { SERVICES } from '@/constants';
 
 /**
  * Demo component to showcase the newly created base UI components
- * This demonstrates that ServiceCard and AnimatedSection work correctly
+ * This demonstrates that ServiceCard, AnimatedSection, and ProcessLifecycleSection work correctly
  */
 export const ComponentDemo: React.FC = () => {
   return (
@@ -13,6 +14,9 @@ export const ComponentDemo: React.FC = () => {
         <h1 className='text-3xl font-bold text-center mb-8'>
           Base UI Components Demo
         </h1>
+
+        {/* Process Lifecycle Section Demo */}
+        <ProcessLifecycleSection className="mb-16" />
 
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {SERVICES.map((service, index) => (
