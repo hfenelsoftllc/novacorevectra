@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: false, // Using pages directory for now
-  },
+  // No experimental options needed for pages directory
   typescript: {
     // Enable strict type checking
     ignoreBuildErrors: false,

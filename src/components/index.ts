@@ -6,7 +6,10 @@ export * from './ui/card';
 // export * from './layout';
 
 // Section Components
-// export * from './sections';
+export * from './sections/HeroSection';
+export * from './sections/ServicesSection';
+export * from './sections/StandardsSection';
+export * from './sections/CTASection';
 
 // Card Components
 export * from './cards/ServiceCard';

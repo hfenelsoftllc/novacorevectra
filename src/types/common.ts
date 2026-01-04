@@ -17,6 +17,9 @@ export interface AnimationProps {
 export interface SectionProps {
   className?: string;
   children: ReactNode;
+  role?: string;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
 }
 
 /**
@@ -38,7 +41,7 @@ export interface ActionButtonProps {
 /**
  * Props for hero section
  */
-export interface HeroSectionProps {
+export interface HeroSectionProps extends SectionProps {
   title: string;
   subtitle: string;
   primaryAction: ActionButtonProps;
@@ -52,4 +55,13 @@ export interface ServiceCardProps {
   service: Service;
   index?: number;
   className?: string;
+}
+
+/**
+ * Props for CTA section
+ */
+export interface CTASectionProps extends SectionProps {
+  title: string;
+  subtitle: string;
+  action: ActionButtonProps;
 }

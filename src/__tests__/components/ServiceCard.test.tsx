@@ -8,9 +8,21 @@ import { Workflow } from 'lucide-react';
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, className, ...props }: any) => {
+    div: ({ children, className, ...props }: React.ComponentProps<'div'>) => {
       // Filter out framer-motion specific props
-      const { initial, whileInView, whileHover, viewport, transition, ...domProps } = props;
+      const { 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        initial, 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        whileInView, 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        whileHover, 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        viewport, 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        transition, 
+        ...domProps 
+      } = props;
       return <div className={className} {...domProps}>{children}</div>;
     },
   },

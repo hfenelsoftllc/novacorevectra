@@ -1,7 +1,7 @@
 {
-  "name": "services-page-refactor",
+  "name": "novacorevectra",
   "version": "1.0.0",
-  "description": "Refactored services overview page with improved architecture",
+  "description": "To empower organizations to lead the AI era by fusing world-class strategy with ethical innovation. We build the intelligent systems that allow your business to",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",

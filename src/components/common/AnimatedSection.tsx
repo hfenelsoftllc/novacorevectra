@@ -17,6 +17,9 @@ export const AnimatedSection = React.forwardRef<
       className,
       animationProps = {},
       viewport = { once: true, margin: '-100px' },
+      role,
+      'aria-label': ariaLabel,
+      'aria-labelledby': ariaLabelledBy,
       ...props
     },
     ref
@@ -39,6 +42,10 @@ export const AnimatedSection = React.forwardRef<
         whileInView={defaultAnimationProps.animate}
         viewport={viewport}
         transition={defaultAnimationProps.transition}
+        role={role}
+        aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledBy}
+        tabIndex={-1}
         {...props}
       >
         {children}

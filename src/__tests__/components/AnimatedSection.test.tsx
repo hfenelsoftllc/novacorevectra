@@ -6,9 +6,19 @@ import { AnimatedSection } from '@/components/common/AnimatedSection';
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
   motion: {
-    section: ({ children, className, ...props }: any) => {
+    section: ({ children, className, ...props }: React.ComponentProps<'section'>) => {
       // Filter out framer-motion specific props
-      const { initial, whileInView, viewport, transition, ...domProps } = props;
+      const { 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        initial, 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        whileInView, 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        viewport, 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        transition, 
+        ...domProps 
+      } = props;
       return <section className={className} {...domProps}>{children}</section>;
     },
   },

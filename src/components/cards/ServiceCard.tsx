@@ -30,38 +30,60 @@ export const ServiceCard = React.forwardRef<HTMLDivElement, ServiceCardProps>(
           y: -4,
           transition: { duration: 0.2 },
         }}
+        role="article"
+        tabIndex={0}
+        aria-labelledby={`service-title-${service.id}`}
+        aria-describedby={`service-description-${service.id}`}
         {...props}
       >
         {/* Icon */}
-        <div className='mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/20'>
+        <div 
+          className='mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary/20'
+          aria-hidden="true"
+        >
           {service.icon}
         </div>
 
         {/* Title */}
-        <h3 className='mb-3 text-xl font-semibold text-foreground'>
+        <h3 
+          id={`service-title-${service.id}`}
+          className='mb-3 text-xl font-semibold text-foreground'
+        >
           {service.title}
         </h3>
 
         {/* Description */}
-        <p className='mb-4 text-sm text-muted-foreground leading-relaxed'>
+        <p 
+          id={`service-description-${service.id}`}
+          className='mb-4 text-sm text-muted-foreground leading-relaxed'
+        >
           {service.description}
         </p>
 
         {/* Bullet Points */}
-        <ul className='space-y-2'>
+        <ul 
+          className='space-y-2'
+          aria-label={`Key features of ${service.title}`}
+        >
           {service.bullets.map((bullet, bulletIndex) => (
             <li
               key={bulletIndex}
               className='flex items-start text-sm text-muted-foreground'
             >
-              <span className='mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary' />
+              <span 
+                className='mr-2 mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary' 
+                aria-hidden="true"
+              />
               <span>{bullet}</span>
             </li>
           ))}
         </ul>
 
         {/* Hover effect overlay */}
-        <div className='absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
+        <div 
+          className='absolute inset-0 rounded-xl bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100' 
+          aria-hidden="true"
+        />
       </motion.div>
     );
   }
