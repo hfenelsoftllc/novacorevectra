@@ -9,7 +9,10 @@ export * from './ui/card';
 // export * from './sections';
 
 // Card Components
-// export * from './cards';
+export * from './cards/ServiceCard';
 
 // Common Components
-// export * from './common';
+export * from './common/AnimatedSection';
+
+// Demo Components
+export * from './demo/ComponentDemo';
