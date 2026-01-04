@@ -1,7 +1,8 @@
 import React from 'react';
 import { ServiceCard, AnimatedSection } from '@/components';
-import { ProcessLifecycleSection } from '@/components/sections';
+import { ProcessLifecycleSection, IndustryVariantsSection } from '@/components/sections';
 import { SERVICES } from '@/constants';
+import { INDUSTRIES } from '@/constants/industries';
 
 /**
  * Demo component to showcase the newly created base UI components
@@ -14,6 +15,12 @@ export const ComponentDemo: React.FC = () => {
         <h1 className='text-3xl font-bold text-center mb-8'>
           Base UI Components Demo
         </h1>
+
+        {/* Industry Variants Section Demo */}
+        <IndustryVariantsSection 
+          industries={INDUSTRIES}
+          className="mb-16"
+        />
 
         {/* Process Lifecycle Section Demo */}
         <ProcessLifecycleSection className="mb-16" />

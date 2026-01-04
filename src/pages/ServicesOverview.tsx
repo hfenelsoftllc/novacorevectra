@@ -111,12 +111,10 @@ const ServicesOverview: React.FC = () => {
             }
           >
             <CTASection
-              title='Build AI You Can Trust'
-              subtitle='Partner with NovaCoreVectra to transform business processes with governed, enterprise-ready AI.'
-              action={{
-                text: 'Contact Us',
-                onClick: handleContactUs,
-              }}
+              variant='demo'
+              title='See Our AI Solutions in Action'
+              description='Request a personalized demo to see how our AI solutions can address your specific challenges.'
+              showLeadCapture={true}
             />
           </React.Suspense>
         </main>

@@ -7,8 +7,8 @@ export * from './types';
 // Export all constants
 export * from './constants';
 
-// Export all hooks
-export * from './hooks';
+// Export all hooks (excluding conflicting types)
+export { usePerformance, useAnalytics } from './hooks';
 
 // Export all utilities
 export * from './utils';

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { ErrorBoundary } from '@/components';
+import { ErrorBoundary, CTASection } from '@/components';
 
 /**
  * ContactPage component - Contact information and lead capture forms
@@ -337,6 +337,21 @@ const ContactPage: React.FC = () => {
               </div>
             </motion.section>
           </div>
+
+          {/* Newsletter CTA Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="mt-16"
+          >
+            <CTASection
+              variant='newsletter'
+              title='Stay Updated on AI Trends'
+              description='Subscribe to our newsletter for the latest insights on AI governance, trends, and best practices.'
+              showLeadCapture={true}
+            />
+          </motion.section>
         </div>
       </motion.div>
     </ErrorBoundary>

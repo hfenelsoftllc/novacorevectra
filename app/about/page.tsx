@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { ErrorBoundary } from '@/components';
+import { ErrorBoundary, CTASection } from '@/components';
 
 /**
  * AboutPage component - Company information and team details
@@ -191,21 +191,12 @@ const AboutPage: React.FC = () => {
             transition={{ delay: 0.6, duration: 0.5 }}
             className="text-center"
           >
-            <div className="bg-slate-800/50 rounded-2xl p-8 border border-slate-700">
-              <h2 className="text-3xl font-semibold text-foreground mb-4">
-                Ready to Transform Your Business?
-              </h2>
-              <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Let&apos;s discuss how NovaCoreVectra can help you implement responsible AI solutions 
-                that drive real business value.
-              </p>
-              <button
-                onClick={handleContactTeam}
-                className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
-              >
-                Contact Our Team
-              </button>
-            </div>
+            <CTASection
+              variant='consultation'
+              title='Ready to Transform Your Business?'
+              description="Let's discuss how NovaCoreVectra can help you implement responsible AI solutions that drive real business value."
+              showLeadCapture={true}
+            />
           </motion.section>
         </div>
       </motion.div>

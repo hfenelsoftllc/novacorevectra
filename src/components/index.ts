@@ -15,3 +15,9 @@ export * from './common';
 
 // Demo Components
 export * from './demo/ComponentDemo';
+
+// Industry Components
+export * from './industry';
+
+// Form Components
+export * from './forms';

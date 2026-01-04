@@ -97,12 +97,10 @@ const HomePage: React.FC = () => {
             }
           >
             <CTASection
+              variant='consultation'
               title='Build AI You Can Trust'
-              subtitle='Partner with NovaCoreVectra to transform business processes with governed, enterprise-ready AI.'
-              action={{
-                text: 'Contact Us',
-                onClick: handleContactUs,
-              }}
+              description='Partner with NovaCoreVectra to transform business processes with governed, enterprise-ready AI.'
+              showLeadCapture={true}
             />
           </React.Suspense>
         </main>

@@ -62,6 +62,7 @@ export interface ServiceCardProps {
  */
 export interface CTASectionProps extends SectionProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
+  description?: string;
   action: ActionButtonProps;
 }
