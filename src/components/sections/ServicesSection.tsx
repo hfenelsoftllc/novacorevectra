@@ -8,8 +8,9 @@ import { cn } from '@/utils/cn';
 /**
  * ServicesSection component displays the services grid using ServiceCard components
  * Includes responsive layout and proper semantic structure
+ * Memoized for performance optimization
  */
-export const ServicesSection = React.forwardRef<HTMLElement, SectionProps>(
+const ServicesSectionComponent = React.forwardRef<HTMLElement, SectionProps>(
   ({ className, children, ...props }, ref) => {
     return (
       <AnimatedSection
@@ -19,9 +20,12 @@ export const ServicesSection = React.forwardRef<HTMLElement, SectionProps>(
           className
         )}
         animationProps={{
-          initial: { opacity: 0, y: 40 },
+          initial: { opacity: 0, y: 30 },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.8, ease: [0.21, 1.11, 0.81, 0.99] },
+          transition: { 
+            duration: 0.6, 
+            ease: [0.25, 0.46, 0.45, 0.94] // Optimized easing curve
+          },
         }}
         aria-labelledby="services-heading"
         role="region"
@@ -56,4 +60,7 @@ export const ServicesSection = React.forwardRef<HTMLElement, SectionProps>(
   }
 );
 
-ServicesSection.displayName = 'ServicesSection';
+ServicesSectionComponent.displayName = 'ServicesSection';
+
+// Memoize the component to prevent unnecessary re-renders
+export const ServicesSection = React.memo(ServicesSectionComponent);

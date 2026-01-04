@@ -8,8 +8,9 @@ import { cn } from '@/utils/cn';
 /**
  * CTASection component displays a call-to-action section with title, subtitle, and action button
  * Includes smooth animations and responsive design
+ * Memoized for performance optimization
  */
-export const CTASection = React.forwardRef<HTMLElement, CTASectionProps>(
+const CTASectionComponent = React.forwardRef<HTMLElement, CTASectionProps>(
   (
     {
       title,
@@ -39,7 +40,10 @@ export const CTASection = React.forwardRef<HTMLElement, CTASectionProps>(
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.5 }}
+          transition={{ 
+            duration: 0.4,
+            ease: [0.25, 0.46, 0.45, 0.94] // Optimized easing curve
+          }}
           className='text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground mb-4'
         >
           {title}
@@ -50,7 +54,11 @@ export const CTASection = React.forwardRef<HTMLElement, CTASectionProps>(
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.5, delay: 0.1 }}
+          transition={{ 
+            duration: 0.4, 
+            delay: 0.05, // Reduced delay
+            ease: [0.25, 0.46, 0.45, 0.94]
+          }}
           className='text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed mb-8'
           aria-describedby="cta-heading"
         >
@@ -63,7 +71,11 @@ export const CTASection = React.forwardRef<HTMLElement, CTASectionProps>(
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ 
+              duration: 0.4, 
+              delay: 0.1,
+              ease: [0.25, 0.46, 0.45, 0.94]
+            }}
             className='mb-8'
           >
             {children}
@@ -75,7 +87,11 @@ export const CTASection = React.forwardRef<HTMLElement, CTASectionProps>(
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.5, delay: 0.3 }}
+          transition={{ 
+            duration: 0.4, 
+            delay: 0.15,
+            ease: [0.25, 0.46, 0.45, 0.94]
+          }}
         >
           <Button
             size='lg'
@@ -95,4 +111,7 @@ export const CTASection = React.forwardRef<HTMLElement, CTASectionProps>(
   }
 );
 
-CTASection.displayName = 'CTASection';
+CTASectionComponent.displayName = 'CTASection';
+
+// Memoize the component to prevent unnecessary re-renders
+export const CTASection = React.memo(CTASectionComponent);

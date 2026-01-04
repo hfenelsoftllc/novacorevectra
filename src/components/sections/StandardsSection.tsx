@@ -3,14 +3,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { AnimatedSection } from '@/components/common/AnimatedSection';
 import { STANDARDS } from '@/constants/standards';
 import { SectionProps } from '@/types/common';
+import { usePerformance } from '@/hooks/usePerformance';
 import { cn } from '@/utils/cn';
 
 /**
  * StandardsSection component displays compliance standards in a card layout
  * Includes proper semantic structure and responsive design
+ * Memoized for performance optimization
  */
-export const StandardsSection = React.forwardRef<HTMLElement, SectionProps>(
+const StandardsSectionComponent = React.forwardRef<HTMLElement, SectionProps>(
   ({ className, children, ...props }, ref) => {
+    const { calculateAnimationDelay, prefersReducedMotion } = usePerformance();
+
     return (
       <AnimatedSection
         ref={ref}
@@ -19,9 +23,12 @@ export const StandardsSection = React.forwardRef<HTMLElement, SectionProps>(
           className
         )}
         animationProps={{
-          initial: { opacity: 0, y: 30 },
+          initial: { opacity: 0, y: 20 },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.7, ease: [0.21, 1.11, 0.81, 0.99] },
+          transition: { 
+            duration: 0.5, 
+            ease: [0.25, 0.46, 0.45, 0.94] // Optimized easing curve
+          },
         }}
         aria-labelledby="standards-heading"
         role="region"
@@ -53,33 +60,37 @@ export const StandardsSection = React.forwardRef<HTMLElement, SectionProps>(
             role="list"
             aria-label="List of compliance standards"
           >
-            {STANDARDS.map((standard, index) => (
-              <Card
-                key={standard.id}
-                className={cn(
-                  'bg-card border-border transition-all duration-300 hover:shadow-lg hover:shadow-primary/5',
-                  'animate-in fade-in slide-in-from-bottom-4'
-                )}
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                  animationFillMode: 'both',
-                }}
-                role="listitem"
-                tabIndex={0}
-                aria-label={`Standard: ${standard.name}${standard.description ? ` - ${standard.description}` : ''}`}
-              >
-                <CardContent className='p-6'>
-                  <h3 className='font-medium text-foreground text-sm sm:text-base leading-relaxed'>
-                    {standard.name}
-                  </h3>
-                  {standard.description && (
-                    <p className='mt-2 text-xs sm:text-sm text-muted-foreground'>
-                      {standard.description}
-                    </p>
+            {STANDARDS.map((standard, index) => {
+              const animationDelay = calculateAnimationDelay(index);
+              
+              return (
+                <Card
+                  key={standard.id}
+                  className={cn(
+                    'bg-card border-border transition-all duration-300 hover:shadow-lg hover:shadow-primary/5',
+                    !prefersReducedMotion && 'animate-in fade-in slide-in-from-bottom-4'
                   )}
-                </CardContent>
-              </Card>
-            ))}
+                  style={{
+                    animationDelay: prefersReducedMotion ? '0ms' : `${animationDelay * 1000}ms`,
+                    animationFillMode: 'both',
+                  }}
+                  role="listitem"
+                  tabIndex={0}
+                  aria-label={`Standard: ${standard.name}${standard.description ? ` - ${standard.description}` : ''}`}
+                >
+                  <CardContent className='p-6'>
+                    <h3 className='font-medium text-foreground text-sm sm:text-base leading-relaxed'>
+                      {standard.name}
+                    </h3>
+                    {standard.description && (
+                      <p className='mt-2 text-xs sm:text-sm text-muted-foreground'>
+                        {standard.description}
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </AnimatedSection>
@@ -87,4 +98,7 @@ export const StandardsSection = React.forwardRef<HTMLElement, SectionProps>(
   }
 );
 
-StandardsSection.displayName = 'StandardsSection';
+StandardsSectionComponent.displayName = 'StandardsSection';
+
+// Memoize the component to prevent unnecessary re-renders
+export const StandardsSection = React.memo(StandardsSectionComponent);

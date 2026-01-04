@@ -1,15 +1,19 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
 import { ServiceCardProps } from '@/types/common';
+import { usePerformance } from '@/hooks/usePerformance';
 import { cn } from '@/utils/cn';
 
 /**
  * ServiceCard component displays a service offering with icon, title, description, and bullet points
  * Includes animation support and proper TypeScript interfaces
+ * Memoized for performance optimization
  */
-export const ServiceCard = React.forwardRef<HTMLDivElement, ServiceCardProps>(
+const ServiceCardComponent = React.forwardRef<HTMLDivElement, ServiceCardProps>(
   ({ service, index = 0, className, ...props }, ref) => {
-    const animationDelay = index * 0.1;
+    const { calculateAnimationDelay, getAnimationConfig } = usePerformance();
+    const animationDelay = calculateAnimationDelay(index);
+    const animationConfig = getAnimationConfig(0.4, animationDelay);
 
     return (
       <motion.div
@@ -21,14 +25,10 @@ export const ServiceCard = React.forwardRef<HTMLDivElement, ServiceCardProps>(
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
-        transition={{
-          duration: 0.5,
-          delay: animationDelay,
-          ease: [0.21, 1.11, 0.81, 0.99],
-        }}
+        transition={animationConfig}
         whileHover={{
-          y: -4,
-          transition: { duration: 0.2 },
+          y: -2, // Reduced hover movement for smoother animation
+          transition: { duration: 0.15 }, // Faster hover transition
         }}
         role="article"
         tabIndex={0}
@@ -89,4 +89,7 @@ export const ServiceCard = React.forwardRef<HTMLDivElement, ServiceCardProps>(
   }
 );
 
-ServiceCard.displayName = 'ServiceCard';
+ServiceCardComponent.displayName = 'ServiceCard';
+
+// Memoize the component to prevent unnecessary re-renders
+export const ServiceCard = React.memo(ServiceCardComponent);

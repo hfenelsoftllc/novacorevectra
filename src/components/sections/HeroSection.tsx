@@ -7,8 +7,9 @@ import { cn } from '@/utils/cn';
 /**
  * HeroSection component displays the main hero section with title, subtitle, and action buttons
  * Includes responsive design and smooth animations
+ * Memoized for performance optimization
  */
-export const HeroSection = React.forwardRef<HTMLElement, HeroSectionProps>(
+const HeroSectionComponent = React.forwardRef<HTMLElement, HeroSectionProps>(
   (
     {
       title,
@@ -36,7 +37,10 @@ export const HeroSection = React.forwardRef<HTMLElement, HeroSectionProps>(
           id="hero-title"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ 
+            duration: 0.6,
+            ease: [0.25, 0.46, 0.45, 0.94] // Optimized easing curve
+          }}
           className='text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-foreground'
         >
           {title}
@@ -46,7 +50,11 @@ export const HeroSection = React.forwardRef<HTMLElement, HeroSectionProps>(
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ 
+            duration: 0.6, 
+            delay: 0.1, // Reduced delay for faster perceived performance
+            ease: [0.25, 0.46, 0.45, 0.94]
+          }}
           className='mt-6 text-base sm:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed'
           aria-describedby="hero-title"
         >
@@ -57,7 +65,11 @@ export const HeroSection = React.forwardRef<HTMLElement, HeroSectionProps>(
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ 
+            duration: 0.6, 
+            delay: 0.2, // Reduced delay
+            ease: [0.25, 0.46, 0.45, 0.94]
+          }}
           className='mt-8 sm:mt-10 flex flex-col sm:flex-row justify-center gap-4'
           role="group"
           aria-label="Hero section actions"
@@ -85,4 +97,7 @@ export const HeroSection = React.forwardRef<HTMLElement, HeroSectionProps>(
   }
 );
 
-HeroSection.displayName = 'HeroSection';
+HeroSectionComponent.displayName = 'HeroSection';
+
+// Memoize the component to prevent unnecessary re-renders
+export const HeroSection = React.memo(HeroSectionComponent);
