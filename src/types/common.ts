@@ -16,7 +16,7 @@ export interface AnimationProps {
  */
 export interface SectionProps {
   className?: string;
-  children: ReactNode;
+  children?: ReactNode;
   role?: string;
   'aria-label'?: string;
   'aria-labelledby'?: string;

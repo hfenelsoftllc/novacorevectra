@@ -16,6 +16,7 @@ export * from './cards/ServiceCard';
 
 // Common Components
 export * from './common/AnimatedSection';
+export * from './common/ErrorBoundary';
 
 // Demo Components
 export * from './demo/ComponentDemo';
