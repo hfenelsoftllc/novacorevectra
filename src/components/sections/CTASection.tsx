@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components';
 import { ArrowRight } from 'lucide-react';
-import { CTASectionProps } from '@/types/common';
-import { cn } from '@/utils/cn';
+import { CTASectionProps } from '@/types';
+import { cn } from '@/utils';
 
 /**
  * CTASection component displays a call-to-action section with title, subtitle, and action button

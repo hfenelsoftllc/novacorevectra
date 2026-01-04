@@ -1,22 +1,17 @@
 // UI Components
-export * from './ui/button';
-export * from './ui/card';
+export * from './ui';
 
 // Layout Components
 // export * from './layout';
 
 // Section Components
-export * from './sections/HeroSection';
-export * from './sections/ServicesSection';
-export * from './sections/StandardsSection';
-export * from './sections/CTASection';
+export * from './sections';
 
 // Card Components
-export * from './cards/ServiceCard';
+export * from './cards';
 
 // Common Components
-export * from './common/AnimatedSection';
-export * from './common/ErrorBoundary';
+export * from './common';
 
 // Demo Components
 export * from './demo/ComponentDemo';

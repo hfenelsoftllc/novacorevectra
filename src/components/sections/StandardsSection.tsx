@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { AnimatedSection } from '@/components/common/AnimatedSection';
-import { STANDARDS } from '@/constants/standards';
-import { SectionProps } from '@/types/common';
-import { usePerformance } from '@/hooks/usePerformance';
-import { cn } from '@/utils/cn';
+import { Card, CardContent, AnimatedSection } from '@/components';
+import { STANDARDS } from '@/constants';
+import { SectionProps } from '@/types';
+import { usePerformance } from '@/hooks';
+import { cn } from '@/utils';
 
 /**
  * StandardsSection component displays compliance standards in a card layout

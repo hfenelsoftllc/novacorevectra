@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { AnimatedSectionProps } from '@/types/common';
-import { cn } from '@/utils/cn';
+import { AnimatedSectionProps } from '@/types';
+import { cn } from '@/utils';
 
 /**
  * AnimatedSection wrapper component provides consistent animations for page sections

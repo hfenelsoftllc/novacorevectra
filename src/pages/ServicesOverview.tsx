@@ -1,19 +1,17 @@
 'use client';
 
 import * as React from 'react';
-import { HeroSection } from '@/components/sections/HeroSection';
-import { ServicesSection } from '@/components/sections/ServicesSection';
-import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import { HeroSection, ServicesSection, ErrorBoundary } from '@/components';
 
 // Lazy load non-critical components for better performance
 const StandardsSection = React.lazy(() =>
-  import('@/components/sections/StandardsSection').then(module => ({
+  import('@/components').then(module => ({
     default: module.StandardsSection,
   }))
 );
 
 const CTASection = React.lazy(() =>
-  import('@/components/sections/CTASection').then(module => ({
+  import('@/components').then(module => ({
     default: module.CTASection,
   }))
 );

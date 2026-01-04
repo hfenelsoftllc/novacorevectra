@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { AnimatedSection } from '@/components/common/AnimatedSection';
+import { AnimatedSection } from '@/components';
 
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({

@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { ServiceCard } from '@/components/cards/ServiceCard';
-import { AnimatedSection } from '@/components/common/AnimatedSection';
-import { SERVICES } from '@/constants/services';
-import { SectionProps } from '@/types/common';
-import { cn } from '@/utils/cn';
+import { ServiceCard, AnimatedSection } from '@/components';
+import { SERVICES } from '@/constants';
+import { SectionProps } from '@/types';
+import { cn } from '@/utils';
 
 /**
  * ServicesSection component displays the services grid using ServiceCard components

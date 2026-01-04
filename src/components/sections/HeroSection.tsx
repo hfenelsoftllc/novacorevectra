@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { HeroSectionProps } from '@/types/common';
-import { cn } from '@/utils/cn';
+import { Button } from '@/components';
+import { HeroSectionProps } from '@/types';
+import { cn } from '@/utils';
 
 /**
  * HeroSection component displays the main hero section with title, subtitle, and action buttons

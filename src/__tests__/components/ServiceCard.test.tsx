@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ServiceCard } from '@/components/cards/ServiceCard';
-import { Service } from '@/types/services';
+import { ServiceCard } from '@/components';
+import { Service } from '@/types';
 import { Workflow } from 'lucide-react';
 
 // Mock framer-motion to avoid animation issues in tests

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { motion } from 'framer-motion';
-import { ServiceCardProps } from '@/types/common';
-import { usePerformance } from '@/hooks/usePerformance';
-import { cn } from '@/utils/cn';
+import { ServiceCardProps } from '@/types';
+import { usePerformance } from '@/hooks';
+import { cn } from '@/utils';
 
 /**
  * ServiceCard component displays a service offering with icon, title, description, and bullet points

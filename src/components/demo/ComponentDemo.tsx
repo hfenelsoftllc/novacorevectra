@@ -1,6 +1,6 @@
 import React from 'react';
 import { ServiceCard, AnimatedSection } from '@/components';
-import { SERVICES } from '@/constants/services';
+import { SERVICES } from '@/constants';
 
 /**
  * Demo component to showcase the newly created base UI components
