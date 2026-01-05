@@ -19,7 +19,7 @@ export const ISO_42001_FRAMEWORK: ComplianceFramework = {
         'Determine interested parties and their requirements',
         'Define scope of AI management system'
       ],
-      mappedServices: ['business-process-strategy', 'ai-readiness-assessment'],
+      mappedServices: ['business-process-strategy'],
       documentationUrl: '/docs/iso-42001-clause-4.pdf'
     },
     {
@@ -32,7 +32,7 @@ export const ISO_42001_FRAMEWORK: ComplianceFramework = {
         'Establish AI policy and governance structure',
         'Assign roles and responsibilities for AI systems'
       ],
-      mappedServices: ['ai-governance', 'risk-management'],
+      mappedServices: ['enterprise-integration-governance'],
       documentationUrl: '/docs/iso-42001-clause-5.pdf'
     },
     {
@@ -45,7 +45,7 @@ export const ISO_42001_FRAMEWORK: ComplianceFramework = {
         'Plan actions to address risks and opportunities',
         'Set AI objectives and plan to achieve them'
       ],
-      mappedServices: ['risk-assessment', 'ai-strategy-planning'],
+      mappedServices: ['business-process-strategy'],
       documentationUrl: '/docs/iso-42001-clause-6.pdf'
     },
     {
@@ -58,7 +58,7 @@ export const ISO_42001_FRAMEWORK: ComplianceFramework = {
         'Ensure competence of personnel working with AI',
         'Establish communication processes for AI systems'
       ],
-      mappedServices: ['training-development', 'change-management'],
+      mappedServices: ['enterprise-integration-governance'],
       documentationUrl: '/docs/iso-42001-clause-7.pdf'
     },
     {
@@ -71,7 +71,7 @@ export const ISO_42001_FRAMEWORK: ComplianceFramework = {
         'Implement AI system lifecycle processes',
         'Manage AI system changes and updates'
       ],
-      mappedServices: ['ai-implementation', 'system-integration'],
+      mappedServices: ['ai-solution-implementation'],
       documentationUrl: '/docs/iso-42001-clause-8.pdf'
     },
     {
@@ -84,7 +84,7 @@ export const ISO_42001_FRAMEWORK: ComplianceFramework = {
         'Conduct internal audits of AI management system',
         'Review AI management system effectiveness'
       ],
-      mappedServices: ['performance-monitoring', 'compliance-auditing'],
+      mappedServices: ['enterprise-integration-governance'],
       documentationUrl: '/docs/iso-42001-clause-9.pdf'
     },
     {
@@ -97,7 +97,7 @@ export const ISO_42001_FRAMEWORK: ComplianceFramework = {
         'Implement corrective actions for AI issues',
         'Continuously improve AI management system'
       ],
-      mappedServices: ['continuous-improvement', 'system-optimization'],
+      mappedServices: ['ai-solution-implementation'],
       documentationUrl: '/docs/iso-42001-clause-10.pdf'
     }
   ]
