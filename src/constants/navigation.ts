@@ -30,3 +30,12 @@ export const MAIN_NAVIGATION: NavigationItem[] = [
     href: '/contact'
   }
 ];
+
+/**
+ * Navigation configuration object for content management
+ */
+export const NAVIGATION_CONFIG = {
+  mainNavigation: MAIN_NAVIGATION.filter(item => item.id !== 'home'), // Exclude home from main nav
+  allPages: MAIN_NAVIGATION,
+  footerNavigation: MAIN_NAVIGATION.filter(item => item.id !== 'home'),
+};

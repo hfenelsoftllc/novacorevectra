@@ -205,3 +205,8 @@ export const INDUSTRIES: Industry[] = [
     complianceRequirements: ['FISMA', 'Section 508', 'Privacy Act', 'FOIA']
   }
 ];
+
+/**
+ * Industry data configuration for content management
+ */
+export const INDUSTRY_DATA = INDUSTRIES;

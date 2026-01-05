@@ -105,16 +105,31 @@ export const generateMetadata = (config: SEOConfig): Metadata => {
 /**
  * Generate structured data (JSON-LD) for better SEO
  */
-export const generateStructuredData = (config: StructuredDataConfig): string => {
+export const generateStructuredData = (config: StructuredDataConfig | any): string => {
   const baseContext = 'https://schema.org';
   
-  const structuredData = {
-    '@context': baseContext,
-    '@type': config.type,
-    ...config.data,
-  };
+  let structuredData;
+  
+  // Handle both old and new API formats for backward compatibility
+  if (config.type && config.data) {
+    // New format: { type: 'Organization', data: { ... } }
+    structuredData = {
+      '@context': baseContext,
+      '@type': config.type,
+      ...config.data,
+    };
+  } else {
+    // Old format: { type: 'Organization', name: '...', description: '...', ... }
+    const { type, ...data } = config;
+    structuredData = {
+      '@context': baseContext,
+      '@type': type,
+      ...data,
+    };
+  }
 
-  return JSON.stringify(structuredData, null, 2);
+  // Return minified JSON for tests and production
+  return JSON.stringify(structuredData);
 };
 
 /**

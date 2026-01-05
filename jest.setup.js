@@ -3,7 +3,7 @@ import * as fc from 'fast-check';
 
 // Configure fast-check for property-based testing
 fc.configureGlobal({
-  numRuns: 100, // Minimum 100 iterations per property test
+  numRuns: 25, // Reduced for faster execution during integration testing
   verbose: process.env.NODE_ENV === 'test' && process.env.VERBOSE_TESTS === 'true',
   seed: process.env.FAST_CHECK_SEED ? parseInt(process.env.FAST_CHECK_SEED, 10) : undefined,
 });

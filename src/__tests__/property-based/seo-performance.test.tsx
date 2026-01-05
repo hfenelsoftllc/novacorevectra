@@ -1,6 +1,13 @@
 ﻿import * as fc from 'fast-check';
 import { render, screen } from '@testing-library/react';
 import { Metadata } from 'next';
+import { 
+  WEB_VITALS_THRESHOLDS, 
+  getWebVitalRating, 
+  WebVitalMetric,
+  getPerformanceMetrics,
+  PerformanceMetrics
+} from '../../utils/webVitals';
 
 // Mock Next.js components and hooks
 jest.mock('next/navigation', () => ({
@@ -54,6 +61,25 @@ const imagePropsGenerator = fc.record({
   height: fc.integer({ min: 100, max: 2000 }),
 });
 
+// Core Web Vitals test data generators
+const webVitalMetricGenerator = fc.record({
+  name: fc.constantFrom('CLS', 'FCP', 'FID', 'LCP', 'TTFB', 'INP'),
+  value: fc.float({ min: 0, max: 10000, noNaN: true }),
+  delta: fc.float({ min: 0, max: 1000, noNaN: true }),
+  id: fc.string({ minLength: 10, maxLength: 20 }),
+  navigationType: fc.constantFrom('navigate', 'reload', 'back-forward', 'back-forward-cache'),
+});
+
+const performanceMetricsGenerator = fc.record({
+  loadTime: fc.float({ min: 0, max: 10000, noNaN: true }),
+  domContentLoaded: fc.float({ min: 0, max: 5000, noNaN: true }),
+  firstPaint: fc.float({ min: 0, max: 5000, noNaN: true }),
+  firstContentfulPaint: fc.float({ min: 0, max: 5000, noNaN: true }),
+  largestContentfulPaint: fc.option(fc.float({ min: 0, max: 10000, noNaN: true })),
+  firstInputDelay: fc.option(fc.float({ min: 0, max: 1000, noNaN: true })),
+  cumulativeLayoutShift: fc.option(fc.float({ min: 0, max: 1, noNaN: true })),
+});
+
 // Helper functions for SEO validation
 const validateMetadata = (metadata: Metadata): boolean => {
   return !!(
@@ -94,6 +120,38 @@ const validateImageOptimization = (element: HTMLElement): boolean => {
       srcAttr && srcAttr.length > 0 // Has valid src
     );
   });
+};
+
+// Core Web Vitals validation helpers
+const validateWebVitalThresholds = (metric: WebVitalMetric): boolean => {
+  const thresholds = WEB_VITALS_THRESHOLDS[metric.name];
+  const expectedRating = getWebVitalRating(metric.name, metric.value);
+  
+  // Validate rating calculation
+  if (metric.value <= thresholds.good) {
+    return expectedRating === 'good';
+  } else if (metric.value <= thresholds.poor) {
+    return expectedRating === 'needs-improvement';
+  } else {
+    return expectedRating === 'poor';
+  }
+};
+
+const validatePerformanceMetrics = (metrics: PerformanceMetrics): boolean => {
+  return !!(
+    typeof metrics.loadTime === 'number' &&
+    typeof metrics.domContentLoaded === 'number' &&
+    typeof metrics.firstPaint === 'number' &&
+    typeof metrics.firstContentfulPaint === 'number' &&
+    !isNaN(metrics.loadTime) &&
+    !isNaN(metrics.domContentLoaded) &&
+    !isNaN(metrics.firstPaint) &&
+    !isNaN(metrics.firstContentfulPaint) &&
+    metrics.loadTime >= 0 &&
+    metrics.domContentLoaded >= 0 &&
+    metrics.firstPaint >= 0 &&
+    metrics.firstContentfulPaint >= 0
+  );
 };
 
 // Property-based tests for SEO and Performance Optimization
@@ -274,6 +332,106 @@ describe('Property 10: SEO and Performance Optimization', () => {
         
         // Validate main content has proper ID for skip links
         expect(container.querySelector('#main-content')).toBeInTheDocument();
+      }),
+      { numRuns: 10 }
+    );
+  });
+
+  test('validates Core Web Vitals thresholds meet "Good" standards', () => {
+    fc.assert(
+      fc.property(webVitalMetricGenerator, (metricData) => {
+        // Create a complete WebVitalMetric object
+        const metric: WebVitalMetric = {
+          ...metricData,
+          rating: getWebVitalRating(metricData.name, metricData.value),
+        };
+        
+        // Validate threshold calculation is correct
+        expect(validateWebVitalThresholds(metric)).toBe(true);
+        
+        // Validate specific thresholds for "Good" performance
+        const thresholds = WEB_VITALS_THRESHOLDS[metric.name];
+        
+        // Test that values within "good" range are rated correctly
+        const goodValue = thresholds.good * 0.8; // 80% of good threshold
+        const goodRating = getWebVitalRating(metric.name, goodValue);
+        expect(goodRating).toBe('good');
+        
+        // Test that values in "needs improvement" range are rated correctly
+        const needsImprovementValue = (thresholds.good + thresholds.poor) / 2;
+        const needsImprovementRating = getWebVitalRating(metric.name, needsImprovementValue);
+        expect(needsImprovementRating).toBe('needs-improvement');
+        
+        // Test that values above "poor" threshold are rated correctly
+        const poorValue = thresholds.poor * 1.5;
+        const poorRating = getWebVitalRating(metric.name, poorValue);
+        expect(poorRating).toBe('poor');
+      }),
+      { numRuns: 50 }
+    );
+  });
+
+  test('validates performance metrics structure and values', () => {
+    fc.assert(
+      fc.property(performanceMetricsGenerator, (metrics) => {
+        // Validate metrics structure
+        expect(validatePerformanceMetrics(metrics)).toBe(true);
+        
+        // Validate all required metrics are non-negative
+        expect(metrics.loadTime).toBeGreaterThanOrEqual(0);
+        expect(metrics.domContentLoaded).toBeGreaterThanOrEqual(0);
+        expect(metrics.firstPaint).toBeGreaterThanOrEqual(0);
+        expect(metrics.firstContentfulPaint).toBeGreaterThanOrEqual(0);
+        
+        // Validate optional metrics when present
+        if (metrics.largestContentfulPaint !== undefined && metrics.largestContentfulPaint !== null) {
+          expect(metrics.largestContentfulPaint).toBeGreaterThanOrEqual(0);
+          // LCP should generally be >= FCP, but in practice they can be very close or equal
+          // We'll just validate they're both reasonable values
+        }
+        
+        if (metrics.firstInputDelay !== undefined && metrics.firstInputDelay !== null) {
+          expect(metrics.firstInputDelay).toBeGreaterThanOrEqual(0);
+          expect(metrics.firstInputDelay).toBeLessThan(5000); // Reasonable upper bound
+        }
+        
+        if (metrics.cumulativeLayoutShift !== undefined && metrics.cumulativeLayoutShift !== null) {
+          expect(metrics.cumulativeLayoutShift).toBeGreaterThanOrEqual(0);
+          expect(metrics.cumulativeLayoutShift).toBeLessThanOrEqual(1); // CLS should not exceed 1
+        }
+      }),
+      { numRuns: 30 }
+    );
+  });
+
+  test('ensures performance monitoring configuration is optimal', () => {
+    fc.assert(
+      fc.property(fc.constant(true), () => {
+        // Validate Web Vitals thresholds are properly configured
+        expect(WEB_VITALS_THRESHOLDS.LCP.good).toBe(2500); // 2.5 seconds
+        expect(WEB_VITALS_THRESHOLDS.LCP.poor).toBe(4000); // 4 seconds
+        
+        expect(WEB_VITALS_THRESHOLDS.FID.good).toBe(100); // 100ms
+        expect(WEB_VITALS_THRESHOLDS.FID.poor).toBe(300); // 300ms
+        
+        expect(WEB_VITALS_THRESHOLDS.CLS.good).toBe(0.1); // 0.1
+        expect(WEB_VITALS_THRESHOLDS.CLS.poor).toBe(0.25); // 0.25
+        
+        expect(WEB_VITALS_THRESHOLDS.FCP.good).toBe(1800); // 1.8 seconds
+        expect(WEB_VITALS_THRESHOLDS.FCP.poor).toBe(3000); // 3 seconds
+        
+        expect(WEB_VITALS_THRESHOLDS.TTFB.good).toBe(800); // 800ms
+        expect(WEB_VITALS_THRESHOLDS.TTFB.poor).toBe(1800); // 1.8 seconds
+        
+        expect(WEB_VITALS_THRESHOLDS.INP.good).toBe(200); // 200ms
+        expect(WEB_VITALS_THRESHOLDS.INP.poor).toBe(500); // 500ms
+        
+        // Validate that all thresholds follow the pattern: good < poor
+        Object.entries(WEB_VITALS_THRESHOLDS).forEach(([name, thresholds]) => {
+          expect(thresholds.good).toBeLessThan(thresholds.poor);
+          expect(thresholds.good).toBeGreaterThan(0);
+          expect(thresholds.poor).toBeGreaterThan(0);
+        });
       }),
       { numRuns: 10 }
     );

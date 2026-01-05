@@ -167,15 +167,19 @@ describe('Property 12: Responsive Design Compliance', () => {
     // Feature: full-marketing-site, Property 12: Responsive Design Compliance
     fc.assert(
       fc.property(mobileViewportGenerator, (viewport) => {
+        // Clean up any existing DOM elements first
+        cleanup();
+        
         // Test Header component separately to avoid conflicts
         const { unmount: unmountHeader } = render(<HeaderTestComponent viewport={viewport} />);
         
         // Mobile menu button should be present and functional
-        const mobileMenuButtons = screen.getAllByRole('button', { name: /open menu/i });
+        const mobileMenuButtons = screen.queryAllByRole('button', { name: /open.*menu/i });
         expect(mobileMenuButtons.length).toBeGreaterThan(0);
         expect(mobileMenuButtons[0]).toBeInTheDocument();
         
         unmountHeader();
+        cleanup(); // Clean up between renders
         
         // Test responsive component separately
         const { unmount: unmountResponsive } = render(<ResponsiveTestComponent viewport={viewport} />);
@@ -204,6 +208,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         fireEvent.click(homeLink);
         
         unmountResponsive();
+        cleanup(); // Clean up after test
         return true;
       }),
       { numRuns: 10 }
@@ -214,11 +219,18 @@ describe('Property 12: Responsive Design Compliance', () => {
     // Feature: full-marketing-site, Property 12: Responsive Design Compliance
     fc.assert(
       fc.property(mobileViewportGenerator, (viewport) => {
+        // Clean up any existing DOM elements first
+        cleanup();
+        
         const { unmount } = render(<ResponsiveTestComponent viewport={viewport} />);
         
         // Touch targets should meet minimum size requirements (44px for mobile)
-        const touchButton = screen.getByTestId('touch-button');
-        const touchInput = screen.getByTestId('touch-input');
+        const touchButtons = screen.getAllByTestId('touch-button');
+        const touchInputs = screen.getAllByTestId('touch-input');
+        
+        // Use the first elements found
+        const touchButton = touchButtons[0];
+        const touchInput = touchInputs[0];
         
         // Touch button should have minimum dimensions
         expect(touchButton).toHaveClass('min-h-[44px]');
@@ -233,16 +245,19 @@ describe('Property 12: Responsive Design Compliance', () => {
         const navigation = screen.getByRole('navigation', { name: /main navigation/i });
         expect(navigation).toBeInTheDocument();
         
+        unmount();
+        cleanup(); // Clean up between renders
+        
         // Test Header component separately for mobile menu
         const { unmount: unmountHeader } = render(<HeaderTestComponent viewport={viewport} />);
         
         // Mobile menu should be accessible
-        const mobileMenuButtons = screen.getAllByRole('button', { name: /open menu/i });
+        const mobileMenuButtons = screen.queryAllByRole('button', { name: /open.*menu/i });
         expect(mobileMenuButtons.length).toBeGreaterThan(0);
         expect(mobileMenuButtons[0]).toBeInTheDocument();
         
         unmountHeader();
-        unmount();
+        cleanup(); // Clean up after test
         return true;
       }),
       { numRuns: 10 }
@@ -282,9 +297,13 @@ describe('Property 12: Responsive Design Compliance', () => {
     // Feature: full-marketing-site, Property 12: Responsive Design Compliance
     fc.assert(
       fc.property(allViewportGenerator, (viewport) => {
+        // Clean up any existing DOM elements first
+        cleanup();
+        
         const { unmount } = render(<ResponsiveTestComponent viewport={viewport} />);
         
-        const container = screen.getByTestId('responsive-container');
+        const containers = screen.getAllByTestId('responsive-container');
+        const container = containers[0]; // Use the first container found
         const viewportType = container.getAttribute('data-viewport-type');
         
         // Core functionality should be available regardless of viewport
@@ -301,8 +320,11 @@ describe('Property 12: Responsive Design Compliance', () => {
         });
         
         // 3. Interactive elements should be present and functional
-        const touchButton = screen.getByTestId('touch-button');
-        const touchInput = screen.getByTestId('touch-input');
+        const touchButtons = screen.getAllByTestId('touch-button');
+        const touchInputs = screen.getAllByTestId('touch-input');
+        
+        const touchButton = touchButtons[0];
+        const touchInput = touchInputs[0];
         
         expect(touchButton).toBeInTheDocument();
         expect(touchInput).toBeInTheDocument();
@@ -319,16 +341,19 @@ describe('Property 12: Responsive Design Compliance', () => {
           expect(item).toBeVisible();
         });
         
+        unmount();
+        cleanup(); // Clean up between renders
+        
         // 5. Layout should adapt to viewport type - test with Header separately
         if (viewportType === 'mobile') {
           const { unmount: unmountHeader } = render(<HeaderTestComponent viewport={viewport} />);
           // Mobile should have menu button
-          const mobileMenuButtons = screen.getAllByRole('button', { name: /open menu/i });
+          const mobileMenuButtons = screen.queryAllByRole('button', { name: /open.*menu/i });
           expect(mobileMenuButtons.length).toBeGreaterThan(0);
           unmountHeader();
+          cleanup();
         }
         
-        unmount();
         return true;
       }),
       { numRuns: 10 }

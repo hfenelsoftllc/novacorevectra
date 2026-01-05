@@ -102,3 +102,8 @@ export const ISO_42001_FRAMEWORK: ComplianceFramework = {
     }
   ]
 };
+
+/**
+ * Compliance clauses for content management
+ */
+export const COMPLIANCE_CLAUSES = ISO_42001_FRAMEWORK.clauses;
