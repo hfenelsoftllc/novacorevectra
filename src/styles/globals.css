@@ -4,14 +4,14 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 15 23% 42%; /* Dark blue background */
+    --foreground: 0 0% 100%; /* White text */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 15 23% 42%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 15 23% 42%;
+    --popover-foreground: 0 0% 100%;
 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
@@ -20,7 +20,7 @@
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted-foreground: 0 0% 100%; /* White muted text */
 
     --accent: 210 40% 96%;
     --accent-foreground: 222.2 47.4% 11.2%;
@@ -36,14 +36,14 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 15 23% 42%; /* Dark blue background */
+    --foreground: 0 0% 100%; /* White text */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 15 23% 42%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 15 23% 42%;
+    --popover-foreground: 0 0% 100%;
 
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
@@ -52,7 +52,7 @@
     --secondary-foreground: 210 40% 98%;
 
     --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted-foreground: 0 0% 100%; /* White muted text */
 
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
@@ -73,10 +73,32 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Ensure all headers are white on dark backgrounds with high specificity */
+  h1, h2, h3, h4, h5, h6 {
+    color: white !important;
+  }
+  
+  /* Also ensure text-foreground resolves to white */
+  .text-foreground {
+    color: white !important;
+  }
 }
 
 /* Accessibility improvements */
 @layer utilities {
+  /* Force all headers to be white - highest priority */
+  h1, h2, h3, h4, h5, h6,
+  .text-4xl, .text-5xl, .text-6xl, .text-3xl, .text-2xl, .text-xl, .text-lg,
+  h1.text-white, h2.text-white, h3.text-white, h4.text-white, h5.text-white, h6.text-white {
+    color: #ffffff !important;
+  }
+  
+  /* Ensure text-white class always works */
+  .text-white {
+    color: #ffffff !important;
+  }
+  
   /* Screen reader only content */
   .sr-only {
     position: absolute;

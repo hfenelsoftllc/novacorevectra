@@ -45,11 +45,11 @@ function ContentSectionRenderer({ section }: ContentSectionRendererProps) {
       <div className="max-w-7xl mx-auto">
         {title && (
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+            <h2 className="text-3xl font-bold text-white sm:text-4xl">
               {renderRichText(title, { allowMarkdown: true, className: 'inline' })}
             </h2>
             {description && (
-              <p className="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="mt-4 text-xl text-white max-w-3xl mx-auto">
                 {renderRichText(description, { allowMarkdown: true, className: 'inline' })}
               </p>
             )}
@@ -221,7 +221,7 @@ function TextImageSection({ section }: { section: any }) {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       <div>
         {section.content && (
-          <div className="prose prose-lg text-gray-600 mb-8">
+          <div className="prose prose-lg text-white mb-8">
             {renderRichText(section.content, { allowMarkdown: true })}
           </div>
         )}
@@ -235,8 +235,8 @@ function TextImageSection({ section }: { section: any }) {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <h4 className="text-lg font-semibold text-gray-900">{feature.title}</h4>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <h4 className="text-lg font-semibold text-white">{feature.title}</h4>
+                  <p className="text-white">{feature.description}</p>
                 </div>
               </div>
             ))}
@@ -262,15 +262,15 @@ function TextContentSection({ section }: { section: any }) {
   return (
     <div className="max-w-4xl mx-auto">
       {section.content && (
-        <div className="prose prose-lg text-gray-600 mb-8">
+        <div className="prose prose-lg text-white mb-8">
           {renderRichText(section.content, { allowMarkdown: true })}
         </div>
       )}
       {section.highlights && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
           {section.highlights.map((highlight: string, index: number) => (
-            <div key={index} className="bg-gray-50 p-6 rounded-lg">
-              <div className="prose text-gray-700">
+            <div key={index} className="bg-slate-800 p-6 rounded-lg">
+              <div className="prose text-white">
                 {renderRichText(highlight, { allowMarkdown: true })}
               </div>
             </div>
@@ -286,8 +286,8 @@ function TextColumnsSection({ section }: { section: any }) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
       {section.columns?.map((column: any, index: number) => (
         <div key={index}>
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">{column.title}</h3>
-          <div className="prose text-gray-600">
+          <h3 className="text-2xl font-bold text-white mb-4">{column.title}</h3>
+          <div className="prose text-white">
             {renderRichText(column.content, { allowMarkdown: true })}
           </div>
         </div>
@@ -300,13 +300,13 @@ function ServiceCardsSection({ section }: { section: any }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {section.services?.map((service: any) => (
-        <div key={service.id} className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">{service.title}</h3>
-          <p className="text-gray-600 mb-6">{service.description}</p>
+        <div key={service.id} className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
+          <h3 className="text-xl font-bold text-white mb-4">{service.title}</h3>
+          <p className="text-white mb-6">{service.description}</p>
           {service.features && (
             <ul className="space-y-2">
               {service.features.map((feature: string, index: number) => (
-                <li key={index} className="flex items-center text-sm text-gray-600">
+                <li key={index} className="flex items-center text-sm text-white">
                   <svg className="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
@@ -330,8 +330,8 @@ function ValuesGridSection({ section }: { section: any }) {
             {/* Icon would be rendered here based on value.icon */}
             <div className="w-8 h-8 bg-white rounded-full"></div>
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">{value.title}</h3>
-          <p className="text-gray-600">{value.description}</p>
+          <h3 className="text-xl font-bold text-white mb-2">{value.title}</h3>
+          <p className="text-white">{value.description}</p>
         </div>
       ))}
     </div>
@@ -344,8 +344,8 @@ function StatsGridSection({ section }: { section: any }) {
       {section.stats?.map((stat: any, index: number) => (
         <div key={index} className="text-center">
           <div className="text-4xl font-bold text-blue-600 mb-2">{stat.value}</div>
-          <div className="text-lg font-semibold text-gray-900 mb-1">{stat.label}</div>
-          <div className="text-sm text-gray-600">{stat.description}</div>
+          <div className="text-lg font-semibold text-white mb-1">{stat.label}</div>
+          <div className="text-sm text-white">{stat.description}</div>
         </div>
       ))}
     </div>
@@ -356,11 +356,11 @@ function ExpertiseGridSection({ section }: { section: any }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       {section.areas?.map((area: any, index: number) => (
-        <div key={index} className="bg-gray-50 p-6 rounded-lg">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">{area.category}</h3>
+        <div key={index} className="bg-slate-800 p-6 rounded-lg">
+          <h3 className="text-xl font-bold text-white mb-4">{area.category}</h3>
           <ul className="space-y-2">
             {area.items.map((item: string, itemIndex: number) => (
-              <li key={itemIndex} className="flex items-center text-gray-600">
+              <li key={itemIndex} className="flex items-center text-white">
                 <svg className="w-4 h-4 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
@@ -378,14 +378,14 @@ function CertificationsGridSection({ section }: { section: any }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       {section.certifications?.map((cert: any, index: number) => (
-        <div key={index} className="text-center bg-white p-6 rounded-lg shadow-lg border border-gray-200">
+        <div key={index} className="text-center bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
           <img
             src={cert.logo}
             alt={cert.name}
             className="w-16 h-16 mx-auto mb-4"
           />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{cert.name}</h3>
-          <p className="text-sm text-gray-600">{cert.description}</p>
+          <h3 className="text-lg font-semibold text-white mb-2">{cert.name}</h3>
+          <p className="text-sm text-white">{cert.description}</p>
         </div>
       ))}
     </div>
@@ -396,13 +396,13 @@ function ContactGridSection({ section }: { section: any }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       {section.options?.map((option: any, index: number) => (
-        <div key={index} className="text-center bg-white p-8 rounded-lg shadow-lg border border-gray-200">
+        <div key={index} className="text-center bg-slate-800 p-8 rounded-lg shadow-lg border border-slate-700">
           <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
             {/* Icon would be rendered here based on option.icon */}
             <div className="w-8 h-8 bg-white rounded-full"></div>
           </div>
-          <h3 className="text-xl font-bold text-gray-900 mb-4">{option.title}</h3>
-          <p className="text-gray-600 mb-6">{option.description}</p>
+          <h3 className="text-xl font-bold text-white mb-4">{option.title}</h3>
+          <p className="text-white mb-6">{option.description}</p>
           <a
             href={option.cta.href}
             className={`inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md ${
@@ -422,8 +422,8 @@ function ContactGridSection({ section }: { section: any }) {
 function ContactInfoSection({ section }: { section: any }) {
   // This would render contact information from site config
   return (
-    <div className="bg-gray-50 p-8 rounded-lg">
-      <p className="text-gray-600">Contact information would be rendered here from site config.</p>
+    <div className="bg-slate-800 p-8 rounded-lg">
+      <p className="text-white">Contact information would be rendered here from site config.</p>
     </div>
   );
 }
@@ -432,8 +432,8 @@ function LeadCaptureFormSection({ section }: { section: any }) {
   // This would render the lead capture form component
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
-        <p className="text-gray-600">Lead capture form would be rendered here.</p>
+      <div className="bg-slate-800 p-8 rounded-lg shadow-lg border border-slate-700">
+        <p className="text-white">Lead capture form would be rendered here.</p>
       </div>
     </div>
   );
@@ -444,9 +444,9 @@ function FAQSection({ section }: { section: any }) {
     <div className="max-w-4xl mx-auto">
       <div className="space-y-6">
         {section.faqs?.map((faq: any, index: number) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">{faq.question}</h3>
-            <div className="prose text-gray-600">
+          <div key={index} className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
+            <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
+            <div className="prose text-white">
               {renderRichText(faq.answer, { allowMarkdown: true })}
             </div>
           </div>
@@ -464,9 +464,9 @@ function ProcessStepsSection({ section }: { section: any }) {
           <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold">{index + 1}</span>
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">{step.title}</h3>
-          <p className="text-gray-600 mb-2">{step.description}</p>
-          <p className="text-sm text-blue-600 font-medium">{step.duration}</p>
+          <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
+          <p className="text-white mb-2">{step.description}</p>
+          <p className="text-sm text-blue-400 font-medium">{step.duration}</p>
         </div>
       ))}
     </div>

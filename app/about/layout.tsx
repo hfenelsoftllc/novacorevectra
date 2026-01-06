@@ -1,11 +1,9 @@
 import { Metadata } from 'next';
-import { generateMetadata as generateSEOMetadata, pageConfigs } from '../../src/utils/seo';
 
-export const metadata: Metadata = generateSEOMetadata({
-  ...pageConfigs.about,
-  url: `${process.env['NEXT_PUBLIC_SITE_URL'] || 'https://novacorevectra.com'}/about`,
-  image: `${process.env['NEXT_PUBLIC_SITE_URL'] || 'https://novacorevectra.com'}/og-about.png`,
-});
+export const metadata: Metadata = {
+  title: 'About Us - NovaCoreVectra',
+  description: 'Learn about NovaCoreVectra - empowering organizations to lead the AI era through world-class strategy and ethical innovation.',
+};
 
 export default function AboutLayout({
   children,

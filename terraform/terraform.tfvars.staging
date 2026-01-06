@@ -1,0 +1,8 @@
+# Staging environment configuration
+environment      = "staging"
+aws_region      = "us-east-1"
+domain_name     = "novacorevectra.net"
+project_name    = "novacorevectra"
+enable_versioning = true
+enable_logging   = false  # Disable logging for staging to reduce costs
+log_retention_days = 7    # Shorter retention for staging

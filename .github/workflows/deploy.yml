@@ -1,0 +1,618 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+env:
+  NODE_VERSION: '18'
+  AWS_REGION: 'us-east-1'
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    outputs:
+      build-artifact: ${{ steps.upload-artifact.outputs.artifact-id }}
+      environment: ${{ steps.determine-env.outputs.environment }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine deployment environment
+        id: determine-env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            echo "environment=staging" >> $GITHUB_OUTPUT
+          else
+            echo "environment=none" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: 'package-lock.json'
+
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: |
+          echo "Installing dependencies with npm ci for reproducible builds..."
+          npm ci --prefer-offline --no-audit --progress=false
+          echo "Dependencies installed successfully"
+
+      - name: Run type checking
+        run: |
+          echo "Running TypeScript type checking..."
+          npm run type-check
+          echo "Type checking completed successfully"
+
+      - name: Run tests
+        run: |
+          echo "Running unit tests and property-based tests..."
+          npm run test:coverage
+          echo "Tests completed successfully"
+          echo "Test coverage summary:"
+          cat coverage/coverage-summary.json | grep -E '"total"' -A 10 || echo "Coverage summary not available"
+
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-coverage-${{ github.sha }}
+          path: coverage/
+          retention-days: 30
+
+      - name: Run property-based tests
+        run: |
+          echo "Running property-based tests specifically..."
+          npm run test:property
+          echo "Property-based tests completed successfully"
+
+      - name: Build application
+        run: |
+          echo "Building Next.js application for static export..."
+          npm run build
+          echo "Build completed successfully"
+          echo "Verifying static export output..."
+          ls -la out/
+          echo "Static export verification complete"
+
+      - name: Verify build artifacts
+        run: |
+          echo "Verifying build artifacts are ready for deployment..."
+          if [ ! -d "out" ]; then
+            echo "Error: out/ directory not found"
+            exit 1
+          fi
+          if [ ! -f "out/index.html" ]; then
+            echo "Error: index.html not found in out/ directory"
+            exit 1
+          fi
+          echo "Build artifacts verified successfully"
+          echo "Build size summary:"
+          du -sh out/
+          echo "File count in build:"
+          find out/ -type f | wc -l
+
+      - name: Upload build artifacts
+        id: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-${{ github.sha }}
+          path: |
+            out/
+            .next/
+          retention-days: 30
+
+      - name: Send build success notification
+        if: success()
+        run: |
+          chmod +x .github/scripts/send-notification.sh
+          ./.github/scripts/send-notification.sh "build_completed" "success"
+
+      - name: Send build failure notification
+        if: failure()
+        run: |
+          chmod +x .github/scripts/send-notification.sh
+          ./.github/scripts/send-notification.sh "build_failed" "failed"
+
+  security:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    needs: build
+    if: needs.build.outputs.environment != 'none'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint Security Scanning
+        run: |
+          echo "Running ESLint security scanning..."
+          npm run lint:security -- --format json --output-file eslint-security-report.json || true
+          echo "ESLint security scanning completed"
+          
+          # Display summary
+          if [ -f eslint-security-report.json ]; then
+            echo "ESLint Security Issues Found:"
+            cat eslint-security-report.json | jq -r '.[] | select(.messages | length > 0) | "\(.filePath): \(.messages | length) issues"' || echo "No security issues found by ESLint"
+          fi
+
+      - name: Setup Semgrep
+        run: |
+          echo "Installing Semgrep..."
+          python3 -m pip install semgrep
+          echo "Semgrep installed successfully"
+
+      - name: Run Semgrep Static Analysis
+        run: |
+          echo "Running Semgrep static analysis..."
+          semgrep --config=.semgrep.yml --json --output=semgrep-report.json . || true
+          echo "Semgrep static analysis completed"
+          
+          # Display summary
+          if [ -f semgrep-report.json ]; then
+            echo "Semgrep Security Issues Found:"
+            cat semgrep-report.json | jq -r '.results[] | "\(.path):\(.start.line) - \(.check_id): \(.extra.message)"' || echo "No security issues found by Semgrep"
+          fi
+
+      - name: Upload security scan reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports-${{ github.sha }}
+          path: |
+            eslint-security-report.json
+            semgrep-report.json
+            npm-audit-report.json
+            snyk-report.json
+            trufflehog-report.json
+            secret-patterns.txt
+            security-summary.json
+          retention-days: 30
+
+      - name: Run npm audit for dependency vulnerabilities
+        run: |
+          echo "Running npm audit for dependency vulnerabilities..."
+          npm audit --audit-level=moderate --json > npm-audit-report.json || true
+          echo "npm audit completed"
+          
+          # Display summary
+          if [ -f npm-audit-report.json ]; then
+            echo "npm audit results:"
+            cat npm-audit-report.json | jq -r '.metadata | "Total vulnerabilities: \(.vulnerabilities.total), Critical: \(.vulnerabilities.critical), High: \(.vulnerabilities.high), Moderate: \(.vulnerabilities.moderate), Low: \(.vulnerabilities.low)"' || echo "No vulnerabilities found by npm audit"
+          fi
+
+      - name: Setup Snyk
+        run: |
+          echo "Installing Snyk CLI..."
+          npm install -g snyk
+          echo "Snyk CLI installed successfully"
+
+      - name: Run Snyk dependency scanning
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          echo "Running Snyk dependency vulnerability scanning..."
+          if [ -n "$SNYK_TOKEN" ]; then
+            snyk auth $SNYK_TOKEN
+            snyk test --json > snyk-report.json || true
+            echo "Snyk dependency scanning completed"
+            
+            # Display summary
+            if [ -f snyk-report.json ]; then
+              echo "Snyk vulnerability results:"
+              cat snyk-report.json | jq -r '.vulnerabilities | length as $total | "Total vulnerabilities found: \($total)"' || echo "No vulnerabilities found by Snyk"
+            fi
+          else
+            echo "SNYK_TOKEN not provided, skipping Snyk scanning"
+            echo '{"vulnerabilities": [], "summary": "Skipped - no token"}' > snyk-report.json
+          fi
+
+      - name: Setup TruffleHog
+        run: |
+          echo "Installing TruffleHog for secret scanning..."
+          curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin
+          echo "TruffleHog installed successfully"
+
+      - name: Run TruffleHog secret scanning
+        run: |
+          echo "Running TruffleHog secret scanning on git history..."
+          trufflehog git file://. --json --no-update > trufflehog-report.json || true
+          echo "TruffleHog secret scanning completed"
+          
+          # Display summary
+          if [ -f trufflehog-report.json ]; then
+            echo "TruffleHog secret scanning results:"
+            cat trufflehog-report.json | jq -r 'select(.Verified == true) | "\(.SourceMetadata.Data.Git.file):\(.SourceMetadata.Data.Git.line) - \(.DetectorName): Secret found"' || echo "No verified secrets found by TruffleHog"
+            
+            # Count total findings
+            TOTAL_SECRETS=$(cat trufflehog-report.json | jq -s 'length')
+            VERIFIED_SECRETS=$(cat trufflehog-report.json | jq -s 'map(select(.Verified == true)) | length')
+            echo "Total findings: $TOTAL_SECRETS, Verified secrets: $VERIFIED_SECRETS"
+          fi
+
+      - name: Run GitHub Secret Scanning (if available)
+        run: |
+          echo "GitHub Secret Scanning is automatically enabled for public repositories"
+          echo "For private repositories, it requires GitHub Advanced Security"
+          echo "Manual secret patterns check..."
+          
+          # Basic pattern matching for common secrets
+          echo "Checking for common secret patterns..."
+          grep -r -n -E "(password|secret|key|token|api_key|access_key)\s*[:=]\s*['\"][^'\"]{8,}['\"]" . \
+            --exclude-dir=node_modules \
+            --exclude-dir=.git \
+            --exclude-dir=coverage \
+            --exclude="*.json" \
+            --exclude="*.md" \
+            --exclude="*.yml" \
+            --exclude="*.yaml" > secret-patterns.txt || echo "No obvious secret patterns found"
+          
+          if [ -s secret-patterns.txt ]; then
+            echo "Potential secret patterns found:"
+            cat secret-patterns.txt
+          else
+            echo "No secret patterns detected in manual scan"
+          fi
+
+      - name: Evaluate Security Gate
+        run: |
+          echo "Evaluating security gate to determine if deployment should proceed..."
+          chmod +x .github/scripts/security-gate.sh
+          ./.github/scripts/security-gate.sh
+          echo "Security gate evaluation completed"
+
+      - name: Upload security scan reports (final)
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports-final-${{ github.sha }}
+          path: |
+            eslint-security-report.json
+            semgrep-report.json
+            npm-audit-report.json
+            snyk-report.json
+            trufflehog-report.json
+            secret-patterns.txt
+            security-summary.json
+          retention-days: 30
+
+      - name: Send security scan success notification
+        if: success()
+        run: |
+          chmod +x .github/scripts/send-notification.sh
+          ./.github/scripts/send-notification.sh "security_scan_completed" "success"
+
+      - name: Send security scan failure notification
+        if: failure()
+        run: |
+          chmod +x .github/scripts/send-notification.sh
+          ./.github/scripts/send-notification.sh "security_scan_failed" "failed"
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build, security]
+    if: needs.build.outputs.environment == 'staging' && github.event_name == 'push'
+    environment: staging
+    outputs:
+      deployment-version: ${{ steps.deploy.outputs.deployment-version }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ github.sha }}
+          path: ./artifacts
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Load staging environment configuration
+        run: |
+          echo "Loading staging environment configuration..."
+          set -a
+          source .github/config/staging.env
+          set +a
+          
+          # Export variables for subsequent steps
+          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+          echo "S3_BUCKET_PREFIX=$S3_BUCKET_PREFIX" >> $GITHUB_ENV
+          echo "HTML_CACHE_CONTROL=$HTML_CACHE_CONTROL" >> $GITHUB_ENV
+          echo "STATIC_CACHE_CONTROL=$STATIC_CACHE_CONTROL" >> $GITHUB_ENV
+          echo "API_CACHE_CONTROL=$API_CACHE_CONTROL" >> $GITHUB_ENV
+          echo "DEPLOYMENT_TIMEOUT=$DEPLOYMENT_TIMEOUT" >> $GITHUB_ENV
+          
+          echo "Staging configuration loaded successfully"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.0"
+
+      - name: Initialize Terraform for staging
+        working-directory: terraform
+        run: |
+          echo "Initializing Terraform for staging environment..."
+          terraform init \
+            -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET }}" \
+            -backend-config="key=staging/terraform.tfstate" \
+            -backend-config="region=${{ env.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ secrets.TERRAFORM_STATE_LOCK_TABLE }}" \
+            -backend-config="encrypt=true"
+
+      - name: Plan Terraform changes for staging
+        working-directory: terraform
+        run: |
+          echo "Planning Terraform changes for staging..."
+          terraform plan \
+            -var-file="terraform.tfvars.staging" \
+            -out=staging.tfplan
+          echo "Terraform plan completed for staging"
+
+      - name: Apply Terraform changes for staging
+        working-directory: terraform
+        run: |
+          echo "Applying Terraform changes for staging..."
+          terraform apply -auto-approve staging.tfplan
+          echo "Terraform apply completed for staging"
+
+      - name: Get S3 bucket name for staging
+        id: get-bucket
+        working-directory: terraform
+        run: |
+          BUCKET_NAME=$(terraform output -raw s3_bucket_name)
+          echo "bucket-name=$BUCKET_NAME" >> $GITHUB_OUTPUT
+          echo "Staging S3 bucket: $BUCKET_NAME"
+
+      - name: Get Terraform outputs for monitoring and notifications
+        run: |
+          chmod +x .github/scripts/get-terraform-outputs.sh
+          ./.github/scripts/get-terraform-outputs.sh terraform
+
+      - name: Make deployment scripts executable
+        run: |
+          chmod +x .github/scripts/deploy.sh
+          chmod +x .github/scripts/deployment-versioning.sh
+
+      - name: Deploy to staging using deployment script
+        id: deploy
+        run: |
+          echo "Deploying to staging using environment-specific configuration..."
+          ./.github/scripts/deploy.sh staging ./artifacts/out ${{ steps.get-bucket.outputs.bucket-name }}
+          
+          # Capture deployment version from environment variable
+          echo "deployment-version=$DEPLOYMENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Send deployment success notification
+        if: success()
+        run: |
+          chmod +x .github/scripts/send-notification.sh
+          ./.github/scripts/send-notification.sh "deployment_completed" "success"
+
+      - name: Send deployment failure notification
+        if: failure()
+        run: |
+          chmod +x .github/scripts/send-notification.sh
+          ./.github/scripts/send-notification.sh "deployment_failed" "failed"
+
+      - name: Output staging deployment information
+        run: |
+          echo "🎉 Staging deployment completed successfully!"
+          echo "Environment: staging"
+          echo "Deployment Version: ${{ steps.deploy.outputs.deployment-version }}"
+          echo "S3 Bucket: ${{ steps.get-bucket.outputs.bucket-name }}"
+          echo "Website URL: http://${{ steps.get-bucket.outputs.bucket-name }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
+          echo "Domain: staging.${{ vars.DOMAIN_NAME || 'novacorevectra.net' }}"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build, security]
+    if: needs.build.outputs.environment == 'production' && github.event_name == 'push'
+    environment: production
+    outputs:
+      deployment-version: ${{ steps.deploy.outputs.deployment-version }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ github.sha }}
+          path: ./artifacts
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Load production environment configuration
+        run: |
+          echo "Loading production environment configuration..."
+          set -a
+          source .github/config/production.env
+          set +a
+          
+          # Export variables for subsequent steps
+          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+          echo "S3_BUCKET_PREFIX=$S3_BUCKET_PREFIX" >> $GITHUB_ENV
+          echo "HTML_CACHE_CONTROL=$HTML_CACHE_CONTROL" >> $GITHUB_ENV
+          echo "STATIC_CACHE_CONTROL=$STATIC_CACHE_CONTROL" >> $GITHUB_ENV
+          echo "API_CACHE_CONTROL=$API_CACHE_CONTROL" >> $GITHUB_ENV
+          echo "DEPLOYMENT_TIMEOUT=$DEPLOYMENT_TIMEOUT" >> $GITHUB_ENV
+          echo "INVALIDATION_TIMEOUT=$INVALIDATION_TIMEOUT" >> $GITHUB_ENV
+          
+          echo "Production configuration loaded successfully"
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~1.0"
+
+      - name: Initialize Terraform for production
+        working-directory: terraform
+        run: |
+          echo "Initializing Terraform for production environment..."
+          terraform init \
+            -backend-config="bucket=${{ secrets.TERRAFORM_STATE_BUCKET }}" \
+            -backend-config="key=production/terraform.tfstate" \
+            -backend-config="region=${{ env.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ secrets.TERRAFORM_STATE_LOCK_TABLE }}" \
+            -backend-config="encrypt=true"
+
+      - name: Plan Terraform changes for production
+        working-directory: terraform
+        run: |
+          echo "Planning Terraform changes for production..."
+          terraform plan \
+            -var-file="terraform.tfvars.production" \
+            -out=production.tfplan
+          echo "Terraform plan completed for production"
+
+      - name: Apply Terraform changes for production
+        working-directory: terraform
+        run: |
+          echo "Applying Terraform changes for production..."
+          terraform apply -auto-approve production.tfplan
+          echo "Terraform apply completed for production"
+
+      - name: Get AWS resource information for production
+        id: get-resources
+        working-directory: terraform
+        run: |
+          BUCKET_NAME=$(terraform output -raw s3_bucket_name)
+          CLOUDFRONT_ID=$(terraform output -raw cloudfront_distribution_id)
+          CLOUDFRONT_DOMAIN=$(terraform output -raw cloudfront_domain_name)
+          echo "bucket-name=$BUCKET_NAME" >> $GITHUB_OUTPUT
+          echo "cloudfront-id=$CLOUDFRONT_ID" >> $GITHUB_OUTPUT
+          echo "cloudfront-domain=$CLOUDFRONT_DOMAIN" >> $GITHUB_OUTPUT
+          echo "Production S3 bucket: $BUCKET_NAME"
+          echo "Production CloudFront distribution: $CLOUDFRONT_ID"
+          echo "Production CloudFront domain: $CLOUDFRONT_DOMAIN"
+
+      - name: Get Terraform outputs for monitoring and notifications
+        run: |
+          chmod +x .github/scripts/get-terraform-outputs.sh
+          ./.github/scripts/get-terraform-outputs.sh terraform
+
+      - name: Make deployment scripts executable
+        run: |
+          chmod +x .github/scripts/deploy.sh
+          chmod +x .github/scripts/deployment-versioning.sh
+
+      - name: Deploy to production using deployment script
+        id: deploy
+        run: |
+          echo "Deploying to production using environment-specific configuration..."
+          ./.github/scripts/deploy.sh production ./artifacts/out \
+            ${{ steps.get-resources.outputs.bucket-name }} \
+            ${{ steps.get-resources.outputs.cloudfront-id }} \
+            ${{ steps.get-resources.outputs.cloudfront-domain }}
+          
+          # Capture deployment version from environment variable
+          echo "deployment-version=$DEPLOYMENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Send deployment success notification
+        if: success()
+        run: |
+          chmod +x .github/scripts/send-notification.sh
+          ./.github/scripts/send-notification.sh "deployment_completed" "success"
+
+      - name: Send deployment failure notification
+        if: failure()
+        run: |
+          chmod +x .github/scripts/send-notification.sh
+          ./.github/scripts/send-notification.sh "deployment_failed" "failed"
+
+      - name: Output production deployment information
+        run: |
+          echo "🎉 Production deployment completed successfully!"
+          echo "Environment: production"
+          echo "Deployment Version: ${{ steps.deploy.outputs.deployment-version }}"
+          echo "S3 Bucket: ${{ steps.get-resources.outputs.bucket-name }}"
+          echo "CloudFront Distribution: ${{ steps.get-resources.outputs.cloudfront-id }}"
+          echo "CloudFront Domain: ${{ steps.get-resources.outputs.cloudfront-domain }}"
+          echo "Website URL: http://${{ steps.get-resources.outputs.bucket-name }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
+          echo "CDN URL: https://${{ steps.get-resources.outputs.cloudfront-domain }}"
+          echo "Custom Domain: https://${{ vars.DOMAIN_NAME || 'novacorevectra.net' }}"
+
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    needs: [build, deploy-staging, deploy-production]
+    if: always() && (needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success')
+    
+    steps:
+      - name: Run health checks
+        run: |
+          echo "Health checks will be implemented in task 7"
+          if [[ "${{ needs.deploy-staging.result }}" == "success" ]]; then
+            echo "This will verify staging deployment success"
+          fi
+          if [[ "${{ needs.deploy-production.result }}" == "success" ]]; then
+            echo "This will verify production deployment success"
+          fi
+
+  notify:
+    name: Notify Results
+    runs-on: ubuntu-latest
+    needs: [build, security, deploy-staging, deploy-production, health-check]
+    if: always() && needs.build.outputs.environment != 'none'
+    
+    steps:
+      - name: Notify deployment status
+        run: |
+          echo "Notification system will be implemented in task 9"
+          echo "Status: ${{ job.status }}"
+          echo "Environment: ${{ needs.build.outputs.environment }}"
+          if [[ "${{ needs.deploy-staging.result }}" == "success" ]]; then
+            echo "Staging deployment: SUCCESS"
+          elif [[ "${{ needs.deploy-staging.result }}" == "failure" ]]; then
+            echo "Staging deployment: FAILED"
+          fi
+          if [[ "${{ needs.deploy-production.result }}" == "success" ]]; then
+            echo "Production deployment: SUCCESS"
+          elif [[ "${{ needs.deploy-production.result }}" == "failure" ]]; then
+            echo "Production deployment: FAILED"
+          fi

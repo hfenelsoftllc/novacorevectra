@@ -1,0 +1,40 @@
+# TruffleHog configuration for secret scanning
+detectors:
+  - name: all
+    
+# Exclude patterns to reduce false positives
+exclude_paths:
+  - node_modules/
+  - .git/
+  - coverage/
+  - out/
+  - .next/
+  - "*.test.ts"
+  - "*.test.tsx"
+  - "*.spec.ts"
+  - "*.spec.tsx"
+  - "*.md"
+  - "package-lock.json"
+
+# Custom regex patterns for additional secret detection
+custom_detectors:
+  - name: "Custom API Key"
+    regex: 
+      - 'api[_-]?key\s*[:=]\s*["\']([a-zA-Z0-9]{20,})["\']'
+    keywords:
+      - "api_key"
+      - "apikey"
+      - "api-key"
+      
+  - name: "Custom Secret"
+    regex:
+      - 'secret\s*[:=]\s*["\']([a-zA-Z0-9]{16,})["\']'
+    keywords:
+      - "secret"
+      - "password"
+      - "token"
+
+# Verification settings
+verify: true
+include_detectors: []
+exclude_detectors: []

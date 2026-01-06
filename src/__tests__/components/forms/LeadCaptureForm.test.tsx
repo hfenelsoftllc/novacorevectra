@@ -12,6 +12,16 @@ jest.mock('@/hooks/useAnalytics', () => ({
   }),
 }));
 
+// Mock progressive profiling utilities
+jest.mock('@/utils/progressiveProfiling', () => ({
+  isReturningVisitor: jest.fn(() => false),
+  getVisitorData: jest.fn(() => null),
+  saveVisitorData: jest.fn(),
+  trackVisit: jest.fn(),
+  getVisitCount: jest.fn(() => 1),
+  getProgressiveFields: jest.fn(() => []),
+}));
+
 // Mock localStorage
 const localStorageMock = {
   getItem: jest.fn(),
@@ -137,13 +147,13 @@ describe('LeadCaptureForm', () => {
   });
 
   test('shows returning visitor message when applicable', () => {
-    localStorageMock.getItem.mockImplementation((key) => {
-      if (key === 'leadCaptureVisitCount') return '2';
-      if (key === 'leadCaptureVisitorData') return JSON.stringify({
-        firstName: 'John',
-        email: 'john@example.com',
-      });
-      return null;
+    const { isReturningVisitor, getVisitorData } = require('@/utils/progressiveProfiling');
+    
+    // Mock returning visitor
+    isReturningVisitor.mockReturnValue(true);
+    getVisitorData.mockReturnValue({
+      firstName: 'John',
+      email: 'john@example.com',
     });
 
     render(

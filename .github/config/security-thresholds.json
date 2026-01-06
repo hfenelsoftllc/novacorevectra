@@ -1,0 +1,24 @@
+{
+  "vulnerabilityThresholds": {
+    "critical": 0,
+    "high": 2,
+    "moderate": 10,
+    "low": 50
+  },
+  "allowedVulnerabilities": {
+    "npm": [],
+    "snyk": []
+  },
+  "blockDeployment": {
+    "critical": true,
+    "high": true,
+    "moderate": false,
+    "low": false
+  },
+  "notifications": {
+    "critical": ["email", "slack"],
+    "high": ["email", "slack"],
+    "moderate": ["slack"],
+    "low": ["slack"]
+  }
+}

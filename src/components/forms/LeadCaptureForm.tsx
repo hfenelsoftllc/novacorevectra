@@ -110,7 +110,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({
 }) => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [returningVisitor, setReturningVisitor] = React.useState(false);
-  const [visitCount, setVisitCount] = React.useState(0);
+  const [visitCount, setVisitCount] = React.useState(1);
   const [progressiveFieldsToShow, setProgressiveFieldsToShow] = React.useState<string[]>([]);
   
   const { trackFormStart, trackFormSubmission, trackFormFieldCompletion } = useAnalytics();
@@ -137,21 +137,32 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({
     defaultValues: existingData,
   });
 
-  // Initialize progressive profiling
-  React.useEffect(() => {
-    trackVisit();
+  // Initialize progressive profiling - use useMemo to prevent re-computation
+  const { initialReturningVisitor, initialVisitCount, initialProgressiveFields } = React.useMemo(() => {
     const currentVisitCount = getVisitCount();
     const isReturning = isReturningVisitor();
     const visitorData = getVisitorData();
     
-    setReturningVisitor(isReturning);
-    setVisitCount(currentVisitCount);
+    const fieldsToShow = showProgressiveFields 
+      ? getProgressiveFields(currentVisitCount, visitorData)
+      : [];
     
+    return {
+      initialReturningVisitor: isReturning,
+      initialVisitCount: currentVisitCount,
+      initialProgressiveFields: fieldsToShow,
+    };
+  }, [showProgressiveFields]);
+
+  // Set initial state only once
+  React.useEffect(() => {
+    setReturningVisitor(initialReturningVisitor);
+    setVisitCount(initialVisitCount);
+    setProgressiveFieldsToShow(initialProgressiveFields);
+    
+    // Pre-fill existing data if available
     if (showProgressiveFields) {
-      const fieldsToShow = getProgressiveFields(currentVisitCount, visitorData);
-      setProgressiveFieldsToShow(fieldsToShow);
-      
-      // Pre-fill existing data
+      const visitorData = getVisitorData();
       if (visitorData) {
         Object.entries(visitorData).forEach(([key, value]) => {
           if (value && key !== 'visitCount' && key !== 'lastVisit') {
@@ -161,9 +172,9 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({
       }
     }
     
-    // Track form start
+    // Track form start only once
     trackFormStart(variant);
-  }, [setValue, showProgressiveFields, variant, trackFormStart]);
+  }, []); // Empty dependency array to run only once
 
   const onFormSubmit = async (data: any) => {
     setIsSubmitting(true);

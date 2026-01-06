@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable static export for S3 hosting
+  output: 'export',
+  trailingSlash: true,
+  skipTrailingSlashRedirect: true,
+  
   // Enable App Router (default in Next.js 14)
   experimental: {
     // Enable optimized package imports

@@ -1,0 +1,8 @@
+# Production environment configuration
+environment      = "production"
+aws_region      = "us-east-1"
+domain_name     = "novacorevectra.net"
+project_name    = "novacorevectra"
+enable_versioning = true
+enable_logging   = true  # Enable logging for production
+log_retention_days = 90  # Longer retention for production

@@ -1,0 +1,56 @@
+rules:
+  - id: javascript-security-audit
+    patterns:
+      - pattern: eval($X)
+      - pattern: Function($X)
+      - pattern: setTimeout($X, ...)
+      - pattern: setInterval($X, ...)
+    message: "Potential code injection vulnerability detected"
+    languages: [javascript, typescript]
+    severity: ERROR
+    
+  - id: react-dangerous-html
+    patterns:
+      - pattern: dangerouslySetInnerHTML={{__html: $X}}
+    message: "Potential XSS vulnerability with dangerouslySetInnerHTML"
+    languages: [javascript, typescript]
+    severity: WARNING
+    
+  - id: hardcoded-secrets
+    patterns:
+      - pattern: |
+          $KEY = "..."
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: (?i)(password|secret|key|token|api_key|access_key)
+    message: "Potential hardcoded secret detected"
+    languages: [javascript, typescript]
+    severity: ERROR
+    
+  - id: insecure-random
+    patterns:
+      - pattern: Math.random()
+    message: "Math.random() is not cryptographically secure"
+    languages: [javascript, typescript]
+    severity: WARNING
+    
+  - id: sql-injection-risk
+    patterns:
+      - pattern: |
+          $QUERY = "..." + $VAR + "..."
+      - pattern: |
+          $QUERY = `...${$VAR}...`
+    message: "Potential SQL injection vulnerability"
+    languages: [javascript, typescript]
+    severity: ERROR
+
+  - id: prototype-pollution
+    patterns:
+      - pattern: |
+          $OBJ[$KEY] = $VAL
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: (__proto__|constructor|prototype)
+    message: "Potential prototype pollution vulnerability"
+    languages: [javascript, typescript]
+    severity: ERROR
