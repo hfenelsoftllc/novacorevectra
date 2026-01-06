@@ -2,16 +2,19 @@
 
 import * as React from 'react';
 import { HeroSection, ServicesSection, ErrorBoundary } from '@/components';
+import { ExecutiveBriefModal } from '@/components/modals/ExecutiveBriefModal';
+import { emailService, type ContactFormData } from '@/services/emailService';
+import { safeLazy, useFastRefreshDebug } from '@/utils/fastRefresh';
 
 // Lazy load non-critical components for better performance
-const StandardsSection = React.lazy(() =>
-  import('@/components').then(module => ({
+const StandardsSection = safeLazy(() => 
+  import('@/components/sections/StandardsSection').then(module => ({
     default: module.StandardsSection,
   }))
 );
 
-const CTASection = React.lazy(() =>
-  import('@/components').then(module => ({
+const CTASection = safeLazy(() => 
+  import('@/components/sections/CTASection').then(module => ({
     default: module.CTASection,
   }))
 );
@@ -23,6 +26,11 @@ const CTASection = React.lazy(() =>
  * Includes performance optimizations with lazy loading for non-critical components
  */
 const ServicesOverview: React.FC = () => {
+  const [showExecutiveBriefModal, setShowExecutiveBriefModal] = React.useState(false);
+  
+  // Add Fast Refresh debugging in development
+  useFastRefreshDebug('ServicesOverview');
+
   // Action handlers for hero section
   const handleExploreServices = React.useCallback(() => {
     // Scroll to services section
@@ -35,16 +43,37 @@ const ServicesOverview: React.FC = () => {
   }, []);
 
   const handleExecutiveBrief = React.useCallback(() => {
-    // Handle executive brief download/navigation
-    console.log('Executive brief requested');
-    // TODO: Implement actual download or navigation logic
+    // Open executive brief modal
+    setShowExecutiveBriefModal(true);
   }, []);
 
   // Action handler for CTA section
-  const handleContactUs = React.useCallback(() => {
-    // Handle contact form or navigation
-    console.log('Contact us requested');
-    // TODO: Implement actual contact logic
+  const handleContactUs = React.useCallback(async (data?: any) => {
+    if (!data) return; // Don't process if no data provided
+    
+    try {
+      // Transform the data to match ContactFormData interface
+      const contactData: ContactFormData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        company: data.company || '',
+        subject: data.subject || 'General Inquiry',
+        message: data.message || 'Contact request from services page',
+      };
+
+      const success = await emailService.sendContactForm(contactData);
+      
+      if (success) {
+        console.log('Contact form submitted successfully');
+        // You could show a success message here
+      } else {
+        throw new Error('Failed to send contact form');
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      // You could show an error message here
+    }
   }, []);
 
   return (
@@ -115,12 +144,21 @@ const ServicesOverview: React.FC = () => {
               title='See Our AI Solutions in Action'
               description='Request a personalized demo to see how our AI solutions can address your specific challenges.'
               showLeadCapture={true}
+              onAction={handleContactUs}
             />
           </React.Suspense>
+
+          {/* Executive Brief Modal */}
+          <ExecutiveBriefModal
+            isOpen={showExecutiveBriefModal}
+            onClose={() => setShowExecutiveBriefModal(false)}
+          />
         </main>
       </div>
     </ErrorBoundary>
   );
 };
+
+ServicesOverview.displayName = 'ServicesOverview';
 
 export default ServicesOverview;

@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Suspense } from 'react';
+import Image from 'next/image';
 import '../src/styles/globals.css';
+import logo from '../src/images/NCV-Logo-Web.png'
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,7 +25,16 @@ export default function RootLayout({
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
               {/* Logo */}
-              <div className="flex items-center">
+              <div className="flex items-center space-x-3">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden bg-white p-1">
+                  <Image 
+                    src={logo} 
+                    alt="NovaCoreVectra Logo" 
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
                 <a href="/" className="text-xl font-bold text-white hover:text-blue-400 transition-colors">
                   NovaCoreVectra
                 </a>
@@ -61,7 +72,15 @@ export default function RootLayout({
         <footer className="bg-slate-800/50 border-t border-slate-700 mt-auto">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
-              <div className="mb-4">
+              <div className="mb-4 flex items-center justify-center space-x-3">
+                <div className="relative w-8 h-8 rounded-full overflow-hidden bg-white p-1">
+                  <Image 
+                    src={logo} 
+                    alt="NovaCoreVectra Logo" 
+                    fill
+                    className="object-contain"
+                  />
+                </div>
                 <a href="/" className="text-xl font-bold text-white hover:text-blue-400 transition-colors">
                   NovaCoreVectra
                 </a>

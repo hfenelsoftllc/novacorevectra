@@ -10,6 +10,7 @@ const nextConfig = {
     // Enable optimized package imports
     optimizePackageImports: ['framer-motion', 'lucide-react'],
   },
+  
   typescript: {
     // Enable strict type checking
     ignoreBuildErrors: true,
@@ -18,11 +19,13 @@ const nextConfig = {
     // Enable ESLint during builds
     ignoreDuringBuilds: true,
   },
+  
   // Enable source maps in development only
   productionBrowserSourceMaps: false,
   
   // Optimize images with advanced settings
   images: {
+    unoptimized: true, // Required for static export
     domains: [],
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -32,9 +35,23 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
-  // Configure webpack for better performance
+  // Performance optimizations
+  poweredByHeader: false,
+  compress: true,
+  
+  // Configure webpack for better performance and Fast Refresh
   webpack: (config, { dev, isServer }) => {
-    // Optimize bundle size
+    // Fast Refresh optimizations for development
+    if (dev && !isServer) {
+      config.watchOptions = {
+        ...config.watchOptions,
+        poll: false,
+        aggregateTimeout: 300,
+        ignored: ['**/node_modules/**', '**/.git/**', '**/.next/**'],
+      };
+    }
+    
+    // Optimize bundle size for production
     if (!dev && !isServer) {
       config.optimization.splitChunks.cacheGroups = {
         ...config.optimization.splitChunks.cacheGroups,
@@ -67,11 +84,9 @@ const nextConfig = {
     return config;
   },
   
-  // Performance optimizations
-  poweredByHeader: false,
-  compress: true,
-  
-  // Security headers
+  // Security headers (disabled for static export)
+  // Note: Headers don't work with output: 'export' - handle via CDN/hosting provider
+  /*
   async headers() {
     return [
       {
@@ -115,6 +130,7 @@ const nextConfig = {
       },
     ];
   },
+  */
 };
 
 module.exports = nextConfig;

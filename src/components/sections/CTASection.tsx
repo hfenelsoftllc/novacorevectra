@@ -7,6 +7,7 @@ import { ArrowRight, Calendar, Download, MessageCircle, Phone } from 'lucide-rea
 import { CTASectionProps, CTAVariant } from '@/types';
 import { cn } from '@/utils';
 import { LeadCaptureForm } from '../forms/LeadCaptureForm';
+import { calendarService, type ConsultationRequest } from '@/services/calendarService';
 
 /**
  * CTA variant configurations
@@ -57,7 +58,7 @@ interface EnhancedCTASectionProps extends Omit<CTASectionProps, 'title' | 'subti
   title?: string;
   description?: string;
   buttonText?: string;
-  onAction?: () => void;
+  onAction?: (data?: any) => void | Promise<void>;
   showLeadCapture?: boolean;
 }
 
@@ -82,19 +83,50 @@ const CTASectionComponent = React.forwardRef<HTMLElement, EnhancedCTASectionProp
     const config = CTA_VARIANTS[variant];
     const IconComponent = config.icon;
 
-    const handleAction = () => {
+    const handleAction = async (data?: any) => {
       if (onAction) {
-        onAction();
+        await onAction(data);
       } else if (showLeadCapture) {
         setShowForm(true);
       }
     };
 
     const handleFormSubmit = async (data: any) => {
-      // Handle form submission logic here
-      console.log('Form submitted:', data);
-      setShowForm(false);
-      // TODO: Integrate with CRM or email service
+      try {
+        // Handle form submission logic here
+        console.log('Form submitted:', data);
+        
+        // Create calendar event for consultation requests
+        if (variant === 'consultation' || variant === 'demo') {
+          const consultationData: ConsultationRequest = {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            email: data.email,
+            company: data.company,
+            jobTitle: data.jobTitle,
+            industry: data.industry,
+            projectType: data.projectType,
+            message: data.message,
+          };
+          
+          const calendarSuccess = await calendarService.createConsultationEvent(consultationData);
+          
+          if (calendarSuccess) {
+            console.log('Calendar event created successfully');
+          } else {
+            console.warn('Failed to create calendar event, but form was submitted');
+          }
+        }
+        
+        setShowForm(false);
+        
+        // Call the handleAction with form data
+        handleAction(data);
+      } catch (error) {
+        console.error('Error handling form submission:', error);
+        // Still close the form even if there's an error
+        setShowForm(false);
+      }
     };
 
     return (
@@ -191,7 +223,7 @@ const CTASectionComponent = React.forwardRef<HTMLElement, EnhancedCTASectionProp
           >
             <Button
               size='lg'
-              onClick={handleAction}
+              onClick={() => handleAction()}
               className='bg-white text-gray-900 hover:bg-gray-100 gap-2 group'
               aria-label={`${buttonText || config.buttonText} - ${config.description}`}
             >

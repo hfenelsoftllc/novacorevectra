@@ -21,3 +21,6 @@ export * from './industry';
 
 // Form Components
 export * from './forms';
+
+// Modal Components
+export * from './modals';
