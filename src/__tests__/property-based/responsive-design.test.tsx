@@ -131,9 +131,12 @@ describe('Property 12: Responsive Design Compliance', () => {
     // Feature: full-marketing-site, Property 12: Responsive Design Compliance
     fc.assert(
       fc.property(allViewportGenerator, (viewport) => {
+        cleanup(); // Ensure clean state before render
         const { unmount } = render(<ResponsiveTestComponent viewport={viewport} />);
         
-        const container = screen.getByTestId('responsive-container');
+        const containers = screen.queryAllByTestId('responsive-container');
+        expect(containers.length).toBeGreaterThan(0);
+        const container = containers[0];
         const viewportType = container.getAttribute('data-viewport-type');
         
         // Container should adapt to viewport size
@@ -157,6 +160,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         expect(screen.getByRole('link', { name: /contact/i })).toBeInTheDocument();
         
         unmount();
+        cleanup(); // Ensure clean state after test
         return true;
       }),
       { numRuns: 10 }
@@ -225,8 +229,11 @@ describe('Property 12: Responsive Design Compliance', () => {
         const { unmount } = render(<ResponsiveTestComponent viewport={viewport} />);
         
         // Touch targets should meet minimum size requirements (44px for mobile)
-        const touchButtons = screen.getAllByTestId('touch-button');
-        const touchInputs = screen.getAllByTestId('touch-input');
+        const touchButtons = screen.queryAllByTestId('touch-button');
+        const touchInputs = screen.queryAllByTestId('touch-input');
+        
+        expect(touchButtons.length).toBeGreaterThan(0);
+        expect(touchInputs.length).toBeGreaterThan(0);
         
         // Use the first elements found
         const touchButton = touchButtons[0];
@@ -270,9 +277,13 @@ describe('Property 12: Responsive Design Compliance', () => {
     
     fc.assert(
       fc.property(motionPreferenceGenerator, (respectsMotionPreference) => {
+        cleanup(); // Ensure clean state before render
         const { unmount } = render(<MotionTestComponent respectsMotionPreference={respectsMotionPreference} />);
         
-        const animatedElement = screen.getByTestId('animated-element');
+        const animatedElements = screen.queryAllByTestId('animated-element');
+        expect(animatedElements.length).toBeGreaterThan(0);
+        const animatedElement = animatedElements[0];
+        
         expect(animatedElement).toBeInTheDocument();
         
         if (respectsMotionPreference) {
@@ -287,6 +298,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         }
         
         unmount();
+        cleanup(); // Ensure clean state after test
         return true;
       }),
       { numRuns: 10 }
@@ -302,7 +314,8 @@ describe('Property 12: Responsive Design Compliance', () => {
         
         const { unmount } = render(<ResponsiveTestComponent viewport={viewport} />);
         
-        const containers = screen.getAllByTestId('responsive-container');
+        const containers = screen.queryAllByTestId('responsive-container');
+        expect(containers.length).toBeGreaterThan(0);
         const container = containers[0]; // Use the first container found
         const viewportType = container.getAttribute('data-viewport-type');
         
@@ -320,8 +333,11 @@ describe('Property 12: Responsive Design Compliance', () => {
         });
         
         // 3. Interactive elements should be present and functional
-        const touchButtons = screen.getAllByTestId('touch-button');
-        const touchInputs = screen.getAllByTestId('touch-input');
+        const touchButtons = screen.queryAllByTestId('touch-button');
+        const touchInputs = screen.queryAllByTestId('touch-input');
+        
+        expect(touchButtons.length).toBeGreaterThan(0);
+        expect(touchInputs.length).toBeGreaterThan(0);
         
         const touchButton = touchButtons[0];
         const touchInput = touchInputs[0];
@@ -364,9 +380,12 @@ describe('Property 12: Responsive Design Compliance', () => {
     // Feature: full-marketing-site, Property 12: Responsive Design Compliance
     fc.assert(
       fc.property(allViewportGenerator, (viewport) => {
+        cleanup(); // Ensure clean state before render
         const { unmount } = render(<ResponsiveTestComponent viewport={viewport} />);
         
-        const container = screen.getByTestId('responsive-container');
+        const containers = screen.queryAllByTestId('responsive-container');
+        expect(containers.length).toBeGreaterThan(0);
+        const container = containers[0];
         const viewportType = container.getAttribute('data-viewport-type');
         
         // Container should have appropriate dimensions
@@ -403,6 +422,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         }
         
         unmount();
+        cleanup(); // Ensure clean state after test
         return true;
       }),
       { numRuns: 10 }
@@ -413,11 +433,18 @@ describe('Property 12: Responsive Design Compliance', () => {
     // Feature: full-marketing-site, Property 12: Responsive Design Compliance
     fc.assert(
       fc.property(allViewportGenerator, (viewport) => {
+        cleanup(); // Ensure clean state before render
         const { unmount } = render(<ResponsiveTestComponent viewport={viewport} />);
         
         // Text elements should be readable
-        const touchButton = screen.getByTestId('touch-button');
-        const touchInput = screen.getByTestId('touch-input');
+        const touchButtons = screen.queryAllByTestId('touch-button');
+        const touchInputs = screen.queryAllByTestId('touch-input');
+        
+        expect(touchButtons.length).toBeGreaterThan(0);
+        expect(touchInputs.length).toBeGreaterThan(0);
+        
+        const touchButton = touchButtons[0];
+        const touchInput = touchInputs[0];
         
         // Button text should be visible
         expect(touchButton).toHaveTextContent('Touch Target');
@@ -445,6 +472,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         });
         
         unmount();
+        cleanup(); // Ensure clean state after test
         return true;
       }),
       { numRuns: 10 }
