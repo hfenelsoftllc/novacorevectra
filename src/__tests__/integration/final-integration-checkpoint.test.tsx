@@ -12,10 +12,22 @@ import '@testing-library/jest-dom';
 const mockAnalytics = {
   trackPageView: jest.fn(),
   trackEvent: jest.fn(),
+  trackCTAClick: jest.fn(),
+  trackFormSubmission: jest.fn(),
+  trackFormStart: jest.fn(),
+  trackFormFieldCompletion: jest.fn(),
   trackConversion: jest.fn(),
+  trackConversionEvent: jest.fn(),
   trackEngagement: jest.fn(),
   trackFunnelStep: jest.fn(),
+  trackScrollDepth: jest.fn(),
+  trackSessionStart: jest.fn(),
+  trackSessionEnd: jest.fn(),
   trackError: jest.fn(),
+  getTestVariant: jest.fn(),
+  trackTestConversion: jest.fn(),
+  getUserId: jest.fn(() => 'test-user-id'),
+  getSessionId: jest.fn(() => 'test-session-id'),
 };
 
 // Mock framer-motion to avoid animation issues in tests

@@ -99,7 +99,7 @@ const OptimizedImage = React.forwardRef<HTMLImageElement, OptimizedImageProps>(
                   />
                 </svg>
               </div>
-              <p className="text-sm">Image unavailable</p>
+              <p className="text-sm">Failed to load image</p>
             </div>
           </div>
         )}

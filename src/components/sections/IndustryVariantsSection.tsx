@@ -37,7 +37,7 @@ export const IndustryVariantsSection: React.FC<IndustryVariantsSectionProps> = (
   }
 
   return (
-    <section className={cn('py-16 px-4', className)} role="tabpanel">
+    <section className={cn('py-16 px-4', className)}>
       <div className="max-w-7xl mx-auto space-y-12">
         {/* Section Header */}
         <div className="text-center space-y-4">
@@ -64,7 +64,7 @@ export const IndustryVariantsSection: React.FC<IndustryVariantsSectionProps> = (
         </div>
 
         {/* Industry Content */}
-        <div className="mt-12">
+        <div className="mt-12" role="tabpanel" aria-labelledby={`tab-${selectedIndustry}`}>
           <IndustryContent
             industry={currentIndustry}
             key={selectedIndustry} // Force re-render when industry changes

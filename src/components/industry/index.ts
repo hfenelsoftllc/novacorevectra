@@ -1,3 +1,2 @@
-export { IndustrySelector } from './IndustrySelector';
-export { IndustryContent } from './IndustryContent';
-export { IndustryCard } from './IndustryCard';
+export * from './IndustrySelector';
+export * from './IndustryContent';

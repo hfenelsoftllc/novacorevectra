@@ -42,6 +42,26 @@ export class ErrorBoundary extends React.Component<
     return { hasError: true, error };
   }
 
+  override componentDidMount() {
+    // Add global escape key listener
+    if (typeof window !== 'undefined') {
+      document.addEventListener('keydown', this.handleKeyDown);
+    }
+  }
+
+  override componentWillUnmount() {
+    // Remove global escape key listener
+    if (typeof window !== 'undefined') {
+      document.removeEventListener('keydown', this.handleKeyDown);
+    }
+  }
+
+  handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape' && this.state.hasError) {
+      this.resetError();
+    }
+  };
+
   override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error information
     console.error('ErrorBoundary caught an error:', error, errorInfo);
@@ -85,6 +105,9 @@ export class ErrorBoundary extends React.Component<
         announceToScreenReader('Page has been reset. Content is now loading.', 'polite');
       }, 100);
     }
+    
+    // Force a re-render by updating the key of the children
+    this.forceUpdate();
   };
 
   override render() {

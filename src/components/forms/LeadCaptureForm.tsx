@@ -40,7 +40,7 @@ interface LeadCaptureFormProps {
  * Industry options for the form
  */
 const INDUSTRY_OPTIONS = [
-  { value: 'aviation', label: 'Aviation' },
+  { value: 'airlines', label: 'Airlines' },
   { value: 'healthcare', label: 'Healthcare' },
   { value: 'financial', label: 'Financial Services' },
   { value: 'public-sector', label: 'Public Sector' },

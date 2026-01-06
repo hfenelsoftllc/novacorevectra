@@ -4,44 +4,44 @@ import { IndustryContent } from '../../../components/industry/IndustryContent';
 import { INDUSTRIES } from '../../../constants/industries';
 
 describe('IndustryContent', () => {
-  const aviationIndustry = INDUSTRIES.find(industry => industry.id === 'aviation')!;
+  const airlinesIndustry = INDUSTRIES.find(industry => industry.id === 'airlines')!;
 
   it('renders industry overview', () => {
-    render(<IndustryContent industry={aviationIndustry} />);
+    render(<IndustryContent industry={airlinesIndustry} />);
 
-    expect(screen.getByText('Aviation Solutions')).toBeInTheDocument();
-    expect(screen.getByText(aviationIndustry.description)).toBeInTheDocument();
+    expect(screen.getByText('Airlines Solutions')).toBeInTheDocument();
+    expect(screen.getByText(airlinesIndustry.description)).toBeInTheDocument();
   });
 
   it('renders specialized services section', () => {
-    render(<IndustryContent industry={aviationIndustry} />);
+    render(<IndustryContent industry={airlinesIndustry} />);
 
-    expect(screen.getByText('Specialized Services for Aviation')).toBeInTheDocument();
+    expect(screen.getByText('Specialized Services for Airlines')).toBeInTheDocument();
     
     // Check that services are rendered
-    aviationIndustry.specificServices.forEach(service => {
+    airlinesIndustry.specificServices.forEach(service => {
       expect(screen.getByText(service.title)).toBeInTheDocument();
     });
   });
 
   it('renders case studies section', () => {
-    render(<IndustryContent industry={aviationIndustry} />);
+    render(<IndustryContent industry={airlinesIndustry} />);
 
     expect(screen.getByText('Success Stories')).toBeInTheDocument();
     
     // Check that case studies are rendered
-    aviationIndustry.caseStudies.forEach(caseStudy => {
+    airlinesIndustry.caseStudies.forEach(caseStudy => {
       expect(screen.getByText(caseStudy.title)).toBeInTheDocument();
     });
   });
 
   it('renders compliance requirements', () => {
-    render(<IndustryContent industry={aviationIndustry} />);
+    render(<IndustryContent industry={airlinesIndustry} />);
 
     expect(screen.getByText('Compliance & Standards')).toBeInTheDocument();
     
     // Check that compliance requirements are rendered
-    aviationIndustry.complianceRequirements.forEach(requirement => {
+    airlinesIndustry.complianceRequirements.forEach(requirement => {
       expect(screen.getByText(requirement)).toBeInTheDocument();
     });
   });

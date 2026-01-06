@@ -149,13 +149,14 @@ describe('Smoke Test Suite', () => {
       // Submit the form
       await user.click(screen.getByRole('button', { name: /Send Message/i }));
       
-      // Verify form submission alert
-      expect(alertSpy).toHaveBeenCalledWith('Thank you for your message! We will get back to you soon.');
-      
-      // Verify form is cleared after submission
+      // Verify form submission success message appears
       await waitFor(() => {
-        expect(screen.getByLabelText(/First Name/i)).toHaveValue('');
-        expect(screen.getByLabelText(/Email Address/i)).toHaveValue('');
+        expect(screen.getByText(/Thank you! Your message has been sent successfully/i)).toBeInTheDocument();
+      });
+      
+      // Verify form is cleared after submission (form is no longer visible)
+      await waitFor(() => {
+        expect(screen.queryByLabelText(/First Name/i)).not.toBeInTheDocument();
       });
       
       alertSpy.mockRestore();

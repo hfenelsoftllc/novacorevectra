@@ -244,11 +244,7 @@ const ComplianceSectionComponent = React.forwardRef<HTMLElement, ComplianceSecti
             <h3 className="text-xl font-semibold text-foreground text-center mb-8">
               Compliance Framework Mapping
             </h3>
-            <div
-              className="grid gap-6"
-              role="list"
-              aria-label="List of compliance clauses"
-            >
+            <div className="grid gap-6">
               {framework.clauses.map((clause, index) => (
                 <ComplianceClauseCard
                   key={clause.id}

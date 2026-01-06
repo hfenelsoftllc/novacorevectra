@@ -241,13 +241,13 @@ describe('Core Integration Tests', () => {
       const user = userEvent.setup();
       
       const industries = [
-        { id: 'aviation', name: 'Aviation', description: 'Aviation solutions' },
+        { id: 'airlines', name: 'Airlines', description: 'Airlines solutions' },
         { id: 'healthcare', name: 'Healthcare', description: 'Healthcare solutions' },
         { id: 'financial', name: 'Financial', description: 'Financial solutions' },
       ];
       
       const TestIndustrySection = () => {
-        const [selectedIndustry, setSelectedIndustry] = React.useState('aviation');
+        const [selectedIndustry, setSelectedIndustry] = React.useState('airlines');
         const currentIndustry = industries.find(i => i.id === selectedIndustry);
         
         return (
@@ -275,13 +275,13 @@ describe('Core Integration Tests', () => {
       render(<TestIndustrySection />);
       
       // Verify initial state
-      expect(screen.getByRole('heading', { name: 'Aviation' })).toBeInTheDocument();
-      expect(screen.getByText('Aviation solutions')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Airlines' })).toBeInTheDocument();
+      expect(screen.getByText('Airlines solutions')).toBeInTheDocument();
       
       // Switch to healthcare
       await user.click(screen.getByRole('tab', { name: 'Healthcare' }));
       expect(screen.getByText('Healthcare solutions')).toBeInTheDocument();
-      expect(screen.queryByText('Aviation solutions')).not.toBeInTheDocument();
+      expect(screen.queryByText('Airlines solutions')).not.toBeInTheDocument();
       
       // Switch to financial
       await user.click(screen.getByRole('tab', { name: 'Financial' }));

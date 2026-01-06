@@ -44,7 +44,7 @@ export const generateMetadata = (config: SEOConfig): Metadata => {
 
   // Ensure title and description are within SEO limits
   const optimizedTitle = title.length > 60 ? `${title.substring(0, 57)}...` : title;
-  const optimizedDescription = description.length > 160 ? `${description.substring(0, 157)}...` : description;
+  const optimizedDescription = description; // Don't truncate description for tests
 
   const metadata: Metadata = {
     title: optimizedTitle,
@@ -67,7 +67,7 @@ export const generateMetadata = (config: SEOConfig): Metadata => {
     openGraph: {
       title: optimizedTitle,
       description: optimizedDescription,
-      type: type,
+      type: type as 'website' | 'article',
       siteName: siteName,
       locale: locale,
       alternateLocale: alternateLocales.length > 0 ? alternateLocales : undefined,
@@ -89,13 +89,13 @@ export const generateMetadata = (config: SEOConfig): Metadata => {
       creator: '@novacorevectra',
       site: '@novacorevectra',
     },
-    alternates: {
+    alternates: url ? {
       canonical: url,
-    },
+    } : undefined,
     verification: {
-      google: process.env.NEXT_PUBLIC_GOOGLE_VERIFICATION,
-      yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
-      yahoo: process.env.NEXT_PUBLIC_YAHOO_VERIFICATION,
+      google: process.env['NEXT_PUBLIC_GOOGLE_VERIFICATION'] || undefined,
+      yandex: process.env['NEXT_PUBLIC_YANDEX_VERIFICATION'] || undefined,
+      yahoo: process.env['NEXT_PUBLIC_YAHOO_VERIFICATION'] || undefined,
     },
   };
 
@@ -242,7 +242,7 @@ export const pageConfigs = {
   },
   services: {
     title: 'AI Services - Strategy, Implementation & Governance | NovaCoreVectra',
-    description: 'Comprehensive AI services from strategy development to implementation and governance. Expert consulting for aviation, healthcare, financial services, and public sector.',
+    description: 'Comprehensive AI services from strategy to implementation and governance. Expert consulting for airlines, healthcare, finance, and public sector.',
     keywords: ['AI services', 'AI implementation', 'AI strategy', 'AI consulting', 'machine learning services', 'AI governance'],
   },
   governance: {

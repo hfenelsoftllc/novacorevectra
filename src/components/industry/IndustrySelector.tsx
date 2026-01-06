@@ -6,7 +6,7 @@ import { cn } from '../../utils/cn';
 
 interface IndustrySelectorProps {
   industries: Industry[];
-  selectedIndustry?: string;
+  selectedIndustry: string;
   onIndustrySelect: (industryId: string) => void;
   className?: string;
 }
@@ -17,28 +17,38 @@ export const IndustrySelector: React.FC<IndustrySelectorProps> = ({
   onIndustrySelect,
   className
 }) => {
+  const handleKeyDown = (event: React.KeyboardEvent, industryId: string, index: number) => {
+    if (event.key === 'ArrowRight' && index < industries.length - 1) {
+      event.preventDefault();
+      onIndustrySelect(industries[index + 1].id);
+    } else if (event.key === 'ArrowLeft' && index > 0) {
+      event.preventDefault();
+      onIndustrySelect(industries[index - 1].id);
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onIndustrySelect(industryId);
+    }
+  };
+
   return (
-    <div className={cn('flex flex-wrap gap-3 justify-center', className)}>
-      {industries.map((industry) => (
+    <div className={cn('flex flex-wrap gap-4', className)}>
+      {industries.map((industry, index) => (
         <button
           key={industry.id}
+          role="tab"
+          aria-selected={selectedIndustry === industry.id}
+          tabIndex={selectedIndustry === industry.id ? 0 : -1}
           onClick={() => onIndustrySelect(industry.id)}
+          onKeyDown={(e) => handleKeyDown(e, industry.id, index)}
           className={cn(
-            'px-6 py-3 rounded-lg font-medium transition-all duration-200',
-            'border-2 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50',
+            'px-6 py-3 rounded-lg font-medium transition-all duration-200 border-2 hover:scale-105',
+            'focus:outline-none focus:ring-2 focus:ring-primary/50',
             selectedIndustry === industry.id
               ? 'bg-primary text-primary-foreground border-primary shadow-lg'
               : 'bg-background text-foreground border-border hover:border-primary/50 hover:bg-primary/5'
           )}
-          aria-selected={selectedIndustry === industry.id}
-          role="tab"
         >
           <div className="flex items-center gap-2">
-            {industry.icon && (
-              <span className="flex-shrink-0">
-                {industry.icon}
-              </span>
-            )}
             <span>{industry.name}</span>
           </div>
         </button>

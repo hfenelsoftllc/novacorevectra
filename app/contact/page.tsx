@@ -1,30 +1,87 @@
 'use client';
 
 import * as React from 'react';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 /**
  * ContactPage component - Consistent styling
  */
 const ContactPage: React.FC = () => {
+  const analytics = useAnalytics();
   const [formData, setFormData] = React.useState({
     firstName: '',
     lastName: '',
     email: '',
     company: '',
+    industry: '',
+    projectType: '',
     message: ''
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    // Track form start when component mounts
+    analytics.trackFormStart('contact');
+  }, [analytics]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Track field completion
+    analytics.trackFormFieldCompletion('contact', name, value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message! We will get back to you soon.');
-    setFormData({ firstName: '', lastName: '', email: '', company: '', message: '' });
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      console.log('Form submitted:', formData);
+      
+      // Simulate API call
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      // Track successful submission
+      analytics.trackFormSubmission('contact', true, undefined, formData);
+      
+      setIsSubmitted(true);
+      setFormData({ firstName: '', lastName: '', email: '', company: '', industry: '', projectType: '', message: '' });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setSubmitError(errorMessage);
+      
+      // Track failed submission
+      analytics.trackFormSubmission('contact', false, errorMessage, formData);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="text-center text-white">
+          <h2 className="text-2xl font-semibold mb-4">Thank you! Your message has been sent successfully.</h2>
+          <p>We'll get back to you within 24 hours.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-900">
@@ -46,6 +103,12 @@ const ContactPage: React.FC = () => {
             <h2 className="text-2xl font-semibold text-white mb-6" style={{color: '#ffffff'}}>
               Get in Touch
             </h2>
+            
+            {submitError && (
+              <div className="mb-6 p-4 bg-red-900/50 border border-red-700 rounded-lg text-red-200">
+                Sorry, there was an error sending your message. Please try again.
+              </div>
+            )}
             
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name Fields */}
@@ -116,6 +179,47 @@ const ContactPage: React.FC = () => {
                 />
               </div>
 
+              {/* Industry */}
+              <div>
+                <label htmlFor="industry" className="block text-sm font-medium text-white mb-2">
+                  Industry
+                </label>
+                <select
+                  id="industry"
+                  name="industry"
+                  value={formData.industry}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select your industry</option>
+                  <option value="healthcare">Healthcare</option>
+                  <option value="financial">Financial Services</option>
+                  <option value="airlines">Airlines</option>
+                  <option value="public-sector">Public Sector</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              {/* Project Type */}
+              <div>
+                <label htmlFor="projectType" className="block text-sm font-medium text-white mb-2">
+                  Project Type
+                </label>
+                <select
+                  id="projectType"
+                  name="projectType"
+                  value={formData.projectType}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select project type</option>
+                  <option value="strategy">AI Strategy</option>
+                  <option value="implementation">Implementation</option>
+                  <option value="governance">Governance & Compliance</option>
+                  <option value="consultation">General Consultation</option>
+                </select>
+              </div>
+
               {/* Message */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
@@ -135,9 +239,10 @@ const ContactPage: React.FC = () => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                disabled={isSubmitting}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-colors"
               >
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>

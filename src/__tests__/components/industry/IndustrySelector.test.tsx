@@ -19,7 +19,7 @@ describe('IndustrySelector', () => {
     );
 
     // Check that all industries are rendered
-    expect(screen.getByRole('tab', { name: /aviation/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /airlines/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /healthcare/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /financial services/i })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: /public sector/i })).toBeInTheDocument();
@@ -46,9 +46,9 @@ describe('IndustrySelector', () => {
       />
     );
 
-    const aviationButton = screen.getByRole('tab', { name: /aviation/i });
-    fireEvent.click(aviationButton);
+    const airlinesButton = screen.getByRole('tab', { name: /airlines/i });
+    fireEvent.click(airlinesButton);
 
-    expect(mockOnIndustrySelect).toHaveBeenCalledWith('aviation');
+    expect(mockOnIndustrySelect).toHaveBeenCalledWith('airlines');
   });
 });

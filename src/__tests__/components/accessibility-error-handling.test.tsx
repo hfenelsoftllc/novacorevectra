@@ -358,7 +358,7 @@ describe('Accessibility and Error Handling Tests', () => {
       render(
         <IndustryVariantsSection 
           industries={INDUSTRIES}
-          defaultIndustry="aviation"
+          defaultIndustry="airlines"
         />
       );
 
@@ -386,7 +386,7 @@ describe('Accessibility and Error Handling Tests', () => {
       const { container } = render(
         <IndustryVariantsSection 
           industries={INDUSTRIES}
-          defaultIndustry="aviation"
+          defaultIndustry="airlines"
         />
       );
 

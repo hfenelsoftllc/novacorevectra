@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { Industry } from '../../types/industry';
-import { IndustryCard } from './IndustryCard';
-import { ServiceCard } from '../cards/ServiceCard';
 import { cn } from '../../utils/cn';
 
 interface IndustryContentProps {
@@ -16,87 +14,104 @@ export const IndustryContent: React.FC<IndustryContentProps> = ({
   className
 }) => {
   return (
-    <div className={cn('space-y-12', className)}>
-      {/* Industry Overview */}
+    <div className={cn('space-y-8', className)}>
+      {/* Industry Header */}
       <div className="text-center space-y-4">
-        <div className="flex items-center justify-center gap-3">
-          {industry.icon && (
-            <span className="text-primary">
-              {industry.icon}
-            </span>
-          )}
-          <h2 className="text-3xl font-bold text-foreground">
-            {industry.name} Solutions
-          </h2>
-        </div>
-        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+        <h3 className="text-3xl font-bold text-foreground">
+          {industry.name}
+        </h3>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           {industry.description}
         </p>
       </div>
 
-      {/* Industry-Specific Services */}
-      <div className="space-y-8">
-        <div className="text-center">
-          <h3 className="text-2xl font-semibold text-foreground mb-4">
-            Specialized Services for {industry.name}
-          </h3>
-          <p className="text-muted-foreground">
-            Tailored AI solutions designed specifically for {industry.name.toLowerCase()} industry challenges
-          </p>
+      {/* Specific Services */}
+      {industry.specificServices && industry.specificServices.length > 0 && (
+        <div className="space-y-6">
+          <h4 className="text-xl font-semibold text-foreground text-center">
+            Industry-Specific Solutions
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {industry.specificServices.map((service) => (
+              <div
+                key={service.id}
+                className="bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-shadow"
+              >
+                <div className="flex items-start gap-4">
+                  {service.icon && (
+                    <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                      {service.icon}
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <h5 className="text-lg font-semibold text-foreground mb-2">
+                      {service.title}
+                    </h5>
+                    <p className="text-muted-foreground mb-4">
+                      {service.description}
+                    </p>
+                    <ul className="space-y-1">
+                      {service.bullets.map((bullet, index) => (
+                        <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
+                          <span className="w-1 h-1 bg-primary rounded-full mt-2 flex-shrink-0" />
+                          {bullet}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {industry.specificServices.map((service) => (
-            <ServiceCard
-              key={service.id}
-              service={service}
-              className="h-full"
-            />
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Case Studies */}
-      {industry.caseStudies.length > 0 && (
-        <div className="space-y-8">
-          <div className="text-center">
-            <h3 className="text-2xl font-semibold text-foreground mb-4">
-              Success Stories
-            </h3>
-            <p className="text-muted-foreground">
-              Real-world results from our {industry.name.toLowerCase()} implementations
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {industry.caseStudies && industry.caseStudies.length > 0 && (
+        <div className="space-y-6">
+          <h4 className="text-xl font-semibold text-foreground text-center">
+            Success Stories
+          </h4>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {industry.caseStudies.map((caseStudy) => (
-              <IndustryCard
+              <div
                 key={caseStudy.id}
-                caseStudy={caseStudy}
-                className="h-full"
-              />
+                className="bg-muted/30 rounded-lg p-6"
+              >
+                <h5 className="text-lg font-semibold text-foreground mb-2">
+                  {caseStudy.title}
+                </h5>
+                <p className="text-muted-foreground mb-4">
+                  {caseStudy.description}
+                </p>
+                <div className="space-y-2">
+                  <h6 className="text-sm font-medium text-foreground">Key Results:</h6>
+                  <ul className="space-y-1">
+                    {caseStudy.results.map((result, index) => (
+                      <li key={index} className="flex items-start gap-2 text-sm text-muted-foreground">
+                        <span className="w-1 h-1 bg-green-500 rounded-full mt-2 flex-shrink-0" />
+                        {result}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       )}
 
       {/* Compliance Requirements */}
-      {industry.complianceRequirements.length > 0 && (
-        <div className="space-y-6">
-          <div className="text-center">
-            <h3 className="text-2xl font-semibold text-foreground mb-4">
-              Compliance & Standards
-            </h3>
-            <p className="text-muted-foreground">
-              We ensure compliance with industry-specific regulations and standards
-            </p>
-          </div>
-          
+      {industry.complianceRequirements && industry.complianceRequirements.length > 0 && (
+        <div className="space-y-4">
+          <h4 className="text-xl font-semibold text-foreground text-center">
+            Compliance & Standards
+          </h4>
           <div className="flex flex-wrap justify-center gap-3">
             {industry.complianceRequirements.map((requirement, index) => (
               <span
                 key={index}
-                className="px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium border border-primary/20"
+                className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium"
               >
                 {requirement}
               </span>

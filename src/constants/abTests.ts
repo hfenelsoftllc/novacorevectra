@@ -155,7 +155,7 @@ export const INDUSTRY_SELECTOR_TEST: ABTest = {
         displayType: 'tabs',
         showIcons: true,
         showDescriptions: true,
-        defaultIndustry: 'aviation',
+        defaultIndustry: 'airlines',
       },
     },
     {

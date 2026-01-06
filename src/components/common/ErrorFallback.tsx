@@ -24,6 +24,17 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
   title = 'Something went wrong',
   description = 'We encountered an unexpected error. Please try refreshing the page or return to the home page.'
 }) => {
+  React.useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && resetError) {
+        resetError();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [resetError]);
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Escape' && resetError) {
       resetError();
@@ -62,10 +73,12 @@ export const ErrorFallback: React.FC<ErrorFallbackProps> = ({
               <summary className='cursor-pointer text-sm text-slate-400 hover:text-slate-300 focus:text-slate-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-slate-950 rounded'>
                 Error details (development only)
               </summary>
-              <pre className='mt-2 text-xs text-red-300 bg-slate-900 p-3 rounded overflow-auto max-h-32'>
-                {error.message}
-                {error.stack && `\n${error.stack}`}
-              </pre>
+              <div className='mt-2 text-xs text-red-300 bg-slate-900 p-3 rounded overflow-auto max-h-32'>
+                <div>{error.message}</div>
+                {error.stack && (
+                  <pre className='mt-2 whitespace-pre-wrap'>{error.stack}</pre>
+                )}
+              </div>
             </details>
           )}
 

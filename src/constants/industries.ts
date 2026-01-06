@@ -5,54 +5,54 @@ import { Industry } from '../types/industry';
  */
 export const INDUSTRIES: Industry[] = [
   {
-    id: 'aviation',
-    name: 'Aviation',
-    description: 'AI solutions for safety, efficiency, and regulatory compliance in aviation',
+    id: 'airlines',
+    name: 'Airlines',
+    description: 'AI solutions for operational excellence, passenger experience, and regulatory compliance in airline operations',
     icon: null, // Will be replaced with actual icon components
     caseStudies: [
       {
-        id: 'aviation-maintenance',
-        title: 'Predictive Maintenance for Commercial Fleet',
-        description: 'Reduced unscheduled maintenance by 40% using AI-powered predictive analytics',
-        industry: 'aviation',
+        id: 'airlines-operations',
+        title: 'Operational Excellence for Major Airline',
+        description: 'Enhanced operational efficiency by 35% through AI-driven process optimization and compliance automation',
+        industry: 'airlines',
         results: [
-          '40% reduction in unscheduled maintenance',
-          '$2.3M annual cost savings',
-          '99.7% fleet availability'
+          '35% improvement in operational efficiency',
+          '$4.2M annual cost savings',
+          '98.5% on-time performance'
         ]
       }
     ],
     specificServices: [
       {
-        id: 'predictive-maintenance',
+        id: 'operational-optimization',
         icon: null,
-        title: 'Predictive Maintenance Systems',
-        description: 'AI-powered maintenance scheduling and failure prediction',
-        bullets: ['Reduce downtime', 'Optimize maintenance costs', 'Improve safety']
+        title: 'Operational Excellence Systems',
+        description: 'AI-powered operational optimization and performance monitoring',
+        bullets: ['Enhance efficiency', 'Optimize resource allocation', 'Improve service quality']
       },
       {
-        id: 'flight-optimization',
+        id: 'passenger-experience',
         icon: null,
-        title: 'Flight Operations Optimization',
-        description: 'Optimize flight paths, fuel consumption, and scheduling',
-        bullets: ['Fuel efficiency', 'Route optimization', 'Schedule management']
+        title: 'Passenger Experience Enhancement',
+        description: 'Personalized services, booking optimization, and customer journey improvement',
+        bullets: ['Personalized services', 'Journey optimization', 'Customer satisfaction']
       },
       {
-        id: 'safety-assessment',
+        id: 'compliance-management',
         icon: null,
-        title: 'Safety Risk Assessment',
-        description: 'AI-driven safety analysis and risk mitigation',
-        bullets: ['Risk identification', 'Safety compliance', 'Incident prevention']
+        title: 'Regulatory Compliance Management',
+        description: 'Comprehensive compliance monitoring and industry standard adherence',
+        bullets: ['Standards compliance', 'Regulatory reporting', 'Audit readiness']
       },
       {
-        id: 'regulatory-compliance',
+        id: 'revenue-optimization',
         icon: null,
-        title: 'Regulatory Compliance Automation',
-        description: 'Automated compliance monitoring and reporting',
-        bullets: ['Compliance tracking', 'Automated reporting', 'Audit preparation']
+        title: 'Revenue Management Optimization',
+        description: 'Dynamic pricing, capacity management, and revenue maximization',
+        bullets: ['Dynamic pricing', 'Capacity optimization', 'Revenue growth']
       }
     ],
-    complianceRequirements: ['FAA regulations', 'EASA standards', 'ICAO guidelines']
+    complianceRequirements: ['IATA standards', 'DOT regulations', 'ICAO compliance', 'Industry best practices']
   },
   {
     id: 'healthcare',
