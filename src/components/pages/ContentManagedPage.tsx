@@ -4,9 +4,9 @@
  */
 
 import React from 'react';
-import { usePageContent, useSiteConfig } from '../hooks/useContent';
-import { ContentRenderer } from '../components/common/ContentRenderer';
-import { renderRichText } from '../utils/richTextRenderer';
+import { usePageContent, useSiteConfig } from '../../hooks/useContent';
+import { ContentRenderer } from '../common/ContentRenderer';
+import { renderRichText } from '../../utils/richTextRenderer';
 
 interface ContentManagedPageProps {
   pageName: string;

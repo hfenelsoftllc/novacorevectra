@@ -24,3 +24,6 @@ export * from './forms';
 
 // Modal Components
 export * from './modals';
+
+// Page Components
+export * from './pages';
