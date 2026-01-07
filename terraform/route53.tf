@@ -79,7 +79,7 @@ resource "aws_route53_record" "mx" {
   ttl     = 3600  # 1 hour
 
   records = [
-    "smtp.google.com"
+    "1 smtp.google.com"
   ]
 }
 
