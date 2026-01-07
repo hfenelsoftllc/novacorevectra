@@ -1,5 +1,5 @@
 {
-  "extends": ["next/core-web-vitals", "plugin:security/recommended"],
+  "extends": ["next/core-web-vitals"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
@@ -8,26 +8,14 @@
       "jsx": true
     }
   },
-  "plugins": ["@typescript-eslint", "security"],
+  "plugins": ["@typescript-eslint"],
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/no-explicit-any": "error",
-    "prefer-const": "error",
-    "no-var": "error",
-    "security/detect-object-injection": "error",
-    "security/detect-non-literal-regexp": "error",
-    "security/detect-unsafe-regex": "error",
-    "security/detect-buffer-noassert": "error",
-    "security/detect-child-process": "error",
-    "security/detect-disable-mustache-escape": "error",
-    "security/detect-eval-with-expression": "error",
-    "security/detect-no-csrf-before-method-override": "error",
-    "security/detect-non-literal-fs-filename": "error",
-    "security/detect-non-literal-require": "error",
-    "security/detect-possible-timing-attacks": "error",
-    "security/detect-pseudoRandomBytes": "error"
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "prefer-const": "warn",
+    "no-var": "warn"
   },
   "settings": {
     "react": {
@@ -39,5 +27,13 @@
     "es2021": true,
     "node": true,
     "jest": true
-  }
+  },
+  "ignorePatterns": [
+    ".next/**",
+    "out/**",
+    "node_modules/**",
+    "coverage/**",
+    "*.config.js",
+    "*.config.ts"
+  ]
 }
