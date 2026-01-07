@@ -13,40 +13,84 @@ fc.configureGlobal({
 });
 
 // Mock framer-motion to avoid issues in tests
-jest.mock('framer-motion', () => ({
-  motion: {
-    div: ({ children, ...props }) => <div {...props}>{children}</div>,
-    h1: ({ children, ...props }) => <h1 {...props}>{children}</h1>,
-    h2: ({ children, ...props }) => <h2 {...props}>{children}</h2>,
-    h3: ({ children, ...props }) => <h3 {...props}>{children}</h3>,
-    h4: ({ children, ...props }) => <h4 {...props}>{children}</h4>,
-    section: ({ children, ...props }) => (
-      <section {...props}>{children}</section>
-    ),
-    article: ({ children, ...props }) => (
-      <article {...props}>{children}</article>
-    ),
-    header: ({ children, ...props }) => (
-      <header {...props}>{children}</header>
-    ),
-    footer: ({ children, ...props }) => (
-      <footer {...props}>{children}</footer>
-    ),
-    nav: ({ children, ...props }) => <nav {...props}>{children}</nav>,
-    main: ({ children, ...props }) => <main {...props}>{children}</main>,
-    button: ({ children, ...props }) => <button {...props}>{children}</button>,
-    a: ({ children, ...props }) => <a {...props}>{children}</a>,
-    span: ({ children, ...props }) => <span {...props}>{children}</span>,
-    p: ({ children, ...props }) => <p {...props}>{children}</p>,
-  },
-  AnimatePresence: ({ children }) => children,
-  useAnimation: () => ({
-    start: jest.fn(),
-    stop: jest.fn(),
-    set: jest.fn(),
-  }),
-  useInView: () => [jest.fn(), true],
-}));
+jest.mock('framer-motion', () => {
+  const filterMotionProps = (props) => {
+    const {
+      initial,
+      animate,
+      exit,
+      whileInView,
+      whileHover,
+      whileTap,
+      whileFocus,
+      whileDrag,
+      drag,
+      dragConstraints,
+      dragElastic,
+      dragMomentum,
+      dragPropagation,
+      dragSnapToOrigin,
+      dragTransition,
+      layout,
+      layoutId,
+      transition,
+      variants,
+      viewport,
+      onAnimationStart,
+      onAnimationComplete,
+      onUpdate,
+      onDrag,
+      onDragStart,
+      onDragEnd,
+      onDirectionLock,
+      onHoverStart,
+      onHoverEnd,
+      onTap,
+      onTapStart,
+      onTapCancel,
+      onPan,
+      onPanStart,
+      onPanEnd,
+      ...filteredProps
+    } = props;
+    return filteredProps;
+  };
+
+  return {
+    motion: {
+      div: ({ children, ...props }) => <div {...filterMotionProps(props)}>{children}</div>,
+      h1: ({ children, ...props }) => <h1 {...filterMotionProps(props)}>{children}</h1>,
+      h2: ({ children, ...props }) => <h2 {...filterMotionProps(props)}>{children}</h2>,
+      h3: ({ children, ...props }) => <h3 {...filterMotionProps(props)}>{children}</h3>,
+      h4: ({ children, ...props }) => <h4 {...filterMotionProps(props)}>{children}</h4>,
+      section: ({ children, ...props }) => (
+        <section {...filterMotionProps(props)}>{children}</section>
+      ),
+      article: ({ children, ...props }) => (
+        <article {...filterMotionProps(props)}>{children}</article>
+      ),
+      header: ({ children, ...props }) => (
+        <header {...filterMotionProps(props)}>{children}</header>
+      ),
+      footer: ({ children, ...props }) => (
+        <footer {...filterMotionProps(props)}>{children}</footer>
+      ),
+      nav: ({ children, ...props }) => <nav {...filterMotionProps(props)}>{children}</nav>,
+      main: ({ children, ...props }) => <main {...filterMotionProps(props)}>{children}</main>,
+      button: ({ children, ...props }) => <button {...filterMotionProps(props)}>{children}</button>,
+      a: ({ children, ...props }) => <a {...filterMotionProps(props)}>{children}</a>,
+      span: ({ children, ...props }) => <span {...filterMotionProps(props)}>{children}</span>,
+      p: ({ children, ...props }) => <p {...filterMotionProps(props)}>{children}</p>,
+    },
+    AnimatePresence: ({ children }) => children,
+    useAnimation: () => ({
+      start: jest.fn(),
+      stop: jest.fn(),
+      set: jest.fn(),
+    }),
+    useInView: () => [jest.fn(), true],
+  };
+});
 
 // Mock Next.js router for Pages Router
 jest.mock('next/router', () => ({

@@ -49,8 +49,8 @@ describe('LeadCaptureForm', () => {
       />
     );
 
-    expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Email Address/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /subscribe/i })).toBeInTheDocument();
   });
 
@@ -62,12 +62,12 @@ describe('LeadCaptureForm', () => {
       />
     );
 
-    expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/last name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/company/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/subject/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/message/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Last Name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Email Address/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Company/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Subject/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Message/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /send message/i })).toBeInTheDocument();
   });
 
@@ -79,13 +79,13 @@ describe('LeadCaptureForm', () => {
       />
     );
 
-    expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/last name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/company/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/job title/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/industry/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/project type/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Last Name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Email Address/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Company/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Job Title/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Industry/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Project Type/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument();
   });
 
@@ -124,12 +124,12 @@ describe('LeadCaptureForm', () => {
       />
     );
 
-    await user.type(screen.getByLabelText(/first name/i), 'John');
-    await user.type(screen.getByLabelText(/last name/i), 'Doe');
-    await user.type(screen.getByLabelText(/email address/i), 'john.doe@example.com');
-    await user.type(screen.getByLabelText(/company/i), 'Test Company');
-    await user.type(screen.getByLabelText(/subject/i), 'Test Subject');
-    await user.type(screen.getByLabelText(/message/i), 'This is a test message');
+    await user.type(screen.getByLabelText(/First Name/i), 'John');
+    await user.type(screen.getByLabelText(/Last Name/i), 'Doe');
+    await user.type(screen.getByLabelText(/Email Address/i), 'john.doe@example.com');
+    await user.type(screen.getByLabelText(/Company/i), 'Test Company');
+    await user.type(screen.getByLabelText(/Subject/i), 'Test Subject');
+    await user.type(screen.getByLabelText(/Message/i), 'This is a test message');
 
     const submitButton = screen.getByRole('button', { name: /send message/i });
     await user.click(submitButton);

@@ -274,7 +274,7 @@ const CTASectionComponent = React.forwardRef<HTMLElement, EnhancedCTASectionProp
                 </button>
               </div>
               <LeadCaptureForm
-                variant={variant === 'newsletter' ? 'newsletter' : 'lead-capture'}
+                variant={variant === 'newsletter' ? 'newsletter' : variant === 'contact' ? 'contact' : variant}
                 onSubmit={handleFormSubmit}
                 showProgressiveFields={variant !== 'newsletter'}
               />

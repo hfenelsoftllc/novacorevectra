@@ -15,6 +15,24 @@ import { calendarService } from '@/services/calendarService';
 jest.mock('@/services/emailService');
 jest.mock('@/services/calendarService');
 
+// Mock analytics hook
+jest.mock('@/hooks/useAnalytics', () => ({
+  useAnalytics: () => ({
+    trackFormStart: jest.fn(),
+    trackFormSubmission: jest.fn(),
+    trackFormFieldCompletion: jest.fn(),
+  }),
+}));
+
+// Mock progressive profiling utilities
+jest.mock('@/utils/progressiveProfiling', () => ({
+  isReturningVisitor: jest.fn(() => false),
+  getVisitorData: jest.fn(() => null),
+  saveVisitorData: jest.fn(),
+  getVisitCount: jest.fn(() => 1),
+  getProgressiveFields: jest.fn(() => []),
+}));
+
 const mockEmailService = emailService as jest.Mocked<typeof emailService>;
 const mockCalendarService = calendarService as jest.Mocked<typeof calendarService>;
 
@@ -143,9 +161,15 @@ describe('High Priority Core Functionality', () => {
       await user.type(screen.getByLabelText(/Last Name/i), 'Smith');
       await user.type(screen.getByLabelText(/email address/i), 'jane.smith@example.com');
       await user.type(screen.getByLabelText(/company/i), 'Smith Corp');
+      await user.type(screen.getByLabelText(/job title/i), 'CEO');
+      await user.selectOptions(screen.getByLabelText(/industry/i), 'technology');
+      await user.selectOptions(screen.getByLabelText(/project type/i), 'ai-strategy');
 
       // Submit the form - look for the submit button in the modal
-      await user.click(screen.getByRole('button', { name: /schedule consultation/i }));
+      const formSubmitButton = screen.getAllByRole('button', { name: /schedule consultation/i }).find(button => 
+        button.getAttribute('type') === 'submit'
+      );
+      await user.click(formSubmitButton!);
 
       // Should create calendar event
       await waitFor(() => {
@@ -154,9 +178,9 @@ describe('High Priority Core Functionality', () => {
           lastName: 'Smith',
           email: 'jane.smith@example.com',
           company: 'Smith Corp',
-          jobTitle: undefined,
-          industry: undefined,
-          projectType: undefined,
+          jobTitle: 'CEO',
+          industry: 'technology',
+          projectType: 'ai-strategy',
           message: undefined,
         });
       });
@@ -169,6 +193,9 @@ describe('High Priority Core Functionality', () => {
             lastName: 'Smith',
             email: 'jane.smith@example.com',
             company: 'Smith Corp',
+            jobTitle: 'CEO',
+            industry: 'technology',
+            projectType: 'ai-strategy',
           })
         );
       });
@@ -203,7 +230,13 @@ describe('High Priority Core Functionality', () => {
       await user.type(screen.getByLabelText(/Last Name/i), 'Smith');
       await user.type(screen.getByLabelText(/email address/i), 'jane.smith@example.com');
       await user.type(screen.getByLabelText(/company/i), 'Smith Corp');
-      await user.click(screen.getByRole('button', { name: /schedule consultation/i }));
+      await user.type(screen.getByLabelText(/job title/i), 'CEO');
+      await user.selectOptions(screen.getByLabelText(/industry/i), 'technology');
+      await user.selectOptions(screen.getByLabelText(/project type/i), 'ai-strategy');
+      const formSubmitButton = screen.getAllByRole('button', { name: /schedule consultation/i }).find(button => 
+        button.getAttribute('type') === 'submit'
+      );
+      await user.click(formSubmitButton!);
 
       // Should still call onAction even if calendar fails
       await waitFor(() => {
