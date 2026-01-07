@@ -241,9 +241,9 @@ describe('Core Integration Tests', () => {
       const user = userEvent.setup();
       
       const industries = [
-        { id: 'airlines', name: 'Airlines', description: 'Airlines solutions' },
-        { id: 'healthcare', name: 'Healthcare', description: 'Healthcare solutions' },
-        { id: 'financial', name: 'Financial', description: 'Financial solutions' },
+        { id: 'airlines', name: 'Airlines', description: 'Airlines Solutions' },
+        { id: 'healthcare', name: 'Healthcare', description: 'Healthcare Solutions' },
+        { id: 'financial', name: 'Financial', description: 'Financial Solutions' },
       ];
       
       const TestIndustrySection = () => {
@@ -276,17 +276,17 @@ describe('Core Integration Tests', () => {
       
       // Verify initial state
       expect(screen.getByRole('heading', { name: 'Airlines' })).toBeInTheDocument();
-      expect(screen.getByText('Airlines solutions')).toBeInTheDocument();
+      expect(screen.getByText('Airlines Solutions')).toBeInTheDocument();
       
       // Switch to healthcare
       await user.click(screen.getByRole('tab', { name: 'Healthcare' }));
-      expect(screen.getByText('Healthcare solutions')).toBeInTheDocument();
-      expect(screen.queryByText('Airlines solutions')).not.toBeInTheDocument();
+      expect(screen.getByText('Healthcare Solutions')).toBeInTheDocument();
+      expect(screen.queryByText('Airlines Solutions')).not.toBeInTheDocument();
       
       // Switch to financial
       await user.click(screen.getByRole('tab', { name: 'Financial' }));
-      expect(screen.getByText('Financial solutions')).toBeInTheDocument();
-      expect(screen.queryByText('Healthcare solutions')).not.toBeInTheDocument();
+      expect(screen.getByText('Financial Solutions')).toBeInTheDocument();
+      expect(screen.queryByText('Healthcare Solutions')).not.toBeInTheDocument();
     });
   });
 

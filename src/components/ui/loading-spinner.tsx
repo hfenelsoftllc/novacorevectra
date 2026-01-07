@@ -131,10 +131,12 @@ const LoadingSpinner = React.forwardRef<HTMLDivElement, LoadingSpinnerProps>(
             {text}
           </span>
         )}
-        {/* Screen reader text */}
-        <span className="sr-only">
-          {ariaLabel || defaultAriaLabel}
-        </span>
+        {/* Screen reader text - only if no visible text */}
+        {!text && (
+          <span className="sr-only">
+            {ariaLabel || defaultAriaLabel}
+          </span>
+        )}
       </div>
     );
   }

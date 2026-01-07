@@ -276,8 +276,8 @@ describe('Final Integration Checkpoint - Task 27', () => {
         const [selectedIndustry, setSelectedIndustry] = React.useState('healthcare');
         
         const industries = [
-          { id: 'healthcare', name: 'Healthcare', description: 'Healthcare solutions' },
-          { id: 'finance', name: 'Finance', description: 'Financial services' },
+          { id: 'healthcare', name: 'Healthcare', description: 'Healthcare Solutions' },
+          { id: 'finance', name: 'Finance', description: 'Financial Services' },
         ];
         
         const currentIndustry = industries.find(i => i.id === selectedIndustry);
@@ -307,11 +307,11 @@ describe('Final Integration Checkpoint - Task 27', () => {
       render(<TestIndustrySection />);
       
       // Test initial state
-      expect(screen.getByText('Healthcare solutions')).toBeInTheDocument();
+      expect(screen.getByText('Healthcare Solutions')).toBeInTheDocument();
       
       // Test industry switching
       await user.click(screen.getByText('Finance'));
-      expect(screen.getByText('Financial services')).toBeInTheDocument();
+      expect(screen.getByText('Financial Services')).toBeInTheDocument();
     });
 
     test('compliance mapping integrates with service display', async () => {

@@ -18,7 +18,7 @@ export const IndustryContent: React.FC<IndustryContentProps> = ({
       {/* Industry Header */}
       <div className="text-center space-y-4">
         <h3 className="text-3xl font-bold text-foreground">
-          {industry.name}
+          {industry.name} Solutions
         </h3>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           {industry.description}
@@ -29,7 +29,7 @@ export const IndustryContent: React.FC<IndustryContentProps> = ({
       {industry.specificServices && industry.specificServices.length > 0 && (
         <div className="space-y-6">
           <h4 className="text-xl font-semibold text-foreground text-center">
-            Industry-Specific Solutions
+            Specialized Services for {industry.name}
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {industry.specificServices.map((service) => (
