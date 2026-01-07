@@ -1,16 +1,14 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { axe, toHaveNoViolations } from 'jest-axe';
+import { axe } from 'jest-axe';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import { ErrorFallback } from '../../components/common/ErrorFallback';
 import { AccessibilityAnnouncer, GlobalAnnouncer } from '../../components/common/AccessibilityAnnouncer';
 import { LoadingSpinner } from '../../components/ui/loading-spinner';
 import { Button } from '../../components/ui/button';
 
-// Extend Jest matchers
-// Extend Jest matchers
-(expect as any).extend({ toHaveNoViolations });
+// Note: toHaveNoViolations is now configured globally in jest.setup.js
 
 // Mock Next.js components
 jest.mock('next/image', () => ({

@@ -35,7 +35,7 @@ describe('High Priority Core Functionality', () => {
         />
       );
 
-      expect(screen.getByText('Request Executive Brief')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /request executive brief/i })).toBeInTheDocument();
       expect(screen.getByText('Get our comprehensive AI strategy document')).toBeInTheDocument();
     });
 
@@ -51,8 +51,8 @@ describe('High Priority Core Functionality', () => {
       );
 
       // Fill out the form
-      await user.type(screen.getByLabelText(/first name/i), 'John');
-      await user.type(screen.getByLabelText(/last name/i), 'Doe');
+      await user.type(screen.getByLabelText(/First Name/i), 'John');
+      await user.type(screen.getByLabelText(/Last Name/i), 'Doe');
       await user.type(screen.getByLabelText(/email address/i), 'john.doe@example.com');
       await user.type(screen.getByLabelText(/company/i), 'Test Company');
 
@@ -93,8 +93,8 @@ describe('High Priority Core Functionality', () => {
       );
 
       // Fill out required fields
-      await user.type(screen.getByLabelText(/first name/i), 'John');
-      await user.type(screen.getByLabelText(/last name/i), 'Doe');
+      await user.type(screen.getByLabelText(/First Name/i), 'John');
+      await user.type(screen.getByLabelText(/Last Name/i), 'Doe');
       await user.type(screen.getByLabelText(/email address/i), 'john.doe@example.com');
       await user.type(screen.getByLabelText(/company/i), 'Test Company');
 
@@ -128,18 +128,23 @@ describe('High Priority Core Functionality', () => {
       // Click the CTA button to open form
       await user.click(screen.getByRole('button', { name: /schedule consultation/i }));
 
-      // Wait for form to appear
+      // Wait for modal form to appear
       await waitFor(() => {
-        expect(screen.getByText('Schedule Consultation')).toBeInTheDocument();
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+      });
+
+      // Wait for form fields to be available
+      await waitFor(() => {
+        expect(screen.getByLabelText(/First Name/i)).toBeInTheDocument();
       });
 
       // Fill out the form
-      await user.type(screen.getByLabelText(/first name/i), 'Jane');
-      await user.type(screen.getByLabelText(/last name/i), 'Smith');
+      await user.type(screen.getByLabelText(/First Name/i), 'Jane');
+      await user.type(screen.getByLabelText(/Last Name/i), 'Smith');
       await user.type(screen.getByLabelText(/email address/i), 'jane.smith@example.com');
       await user.type(screen.getByLabelText(/company/i), 'Smith Corp');
 
-      // Submit the form
+      // Submit the form - look for the submit button in the modal
       await user.click(screen.getByRole('button', { name: /schedule consultation/i }));
 
       // Should create calendar event
@@ -188,9 +193,14 @@ describe('High Priority Core Functionality', () => {
       // Click the CTA button to open form
       await user.click(screen.getByRole('button', { name: /schedule consultation/i }));
 
+      // Wait for modal form to appear
+      await waitFor(() => {
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+      });
+
       // Fill out and submit form
-      await user.type(screen.getByLabelText(/first name/i), 'Jane');
-      await user.type(screen.getByLabelText(/last name/i), 'Smith');
+      await user.type(screen.getByLabelText(/First Name/i), 'Jane');
+      await user.type(screen.getByLabelText(/Last Name/i), 'Smith');
       await user.type(screen.getByLabelText(/email address/i), 'jane.smith@example.com');
       await user.type(screen.getByLabelText(/company/i), 'Smith Corp');
       await user.click(screen.getByRole('button', { name: /schedule consultation/i }));

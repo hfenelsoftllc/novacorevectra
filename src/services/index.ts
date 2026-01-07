@@ -1,2 +1,7 @@
 export * from './emailService';
-export { CalendarService } from './calendarService';
+export { 
+  CalendarService, 
+  calendarService,
+  type CalendarEventData,
+  type ConsultationRequest 
+} from './calendarService';

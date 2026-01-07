@@ -1,5 +1,9 @@
 import '@testing-library/jest-dom';
+import { toHaveNoViolations } from 'jest-axe';
 import * as fc from 'fast-check';
+
+// Extend Jest matchers with jest-axe
+expect.extend(toHaveNoViolations);
 
 // Configure fast-check for property-based testing
 fc.configureGlobal({

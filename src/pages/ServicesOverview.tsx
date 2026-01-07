@@ -78,7 +78,10 @@ const ServicesOverview: React.FC = () => {
 
   return (
     <ErrorBoundary>
-      <div className='min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 text-slate-100'>
+      <div 
+        className='min-h-screen bg-gradient-to-b from-slate-950 to-slate-900 text-slate-100'
+        data-testid="services-overview"
+      >
         {/* Skip to main content link for screen readers */}
         <a
           href='#main-content'

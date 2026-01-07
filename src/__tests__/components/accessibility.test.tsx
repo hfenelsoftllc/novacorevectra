@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { axe, toHaveNoViolations } from 'jest-axe';
+import { axe } from 'jest-axe';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import { ErrorFallback } from '../../components/common/ErrorFallback';
 import { LoadingSpinner } from '../../components/ui/loading-spinner';
@@ -9,9 +9,7 @@ import { Header } from '../../components/layout/Header';
 import { Footer } from '../../components/layout/Footer';
 import { AnimatedSection } from '../../components/common/AnimatedSection';
 
-// Extend Jest matchers
-// Extend Jest matchers
-(expect as any).extend({ toHaveNoViolations });
+// Note: toHaveNoViolations is now configured globally in jest.setup.js
 
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
@@ -71,13 +69,13 @@ describe('Accessibility Features', () => {
     test('should handle keyboard navigation', async () => {
       const user = userEvent.setup();
       render(
-        <ErrorBoundary>
+        <ErrorBoundary showHomeLink={true}>
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
 
       const tryAgainButton = screen.getByRole('button', { name: /try again/i });
-      const homeLink = screen.getByRole('link', { name: /go to home page/i });
+      const homeLink = screen.getByRole('link', { name: /go home/i });
 
       // Tab navigation should work
       await user.tab();

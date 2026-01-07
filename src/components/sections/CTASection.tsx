@@ -84,10 +84,10 @@ const CTASectionComponent = React.forwardRef<HTMLElement, EnhancedCTASectionProp
     const IconComponent = config.icon;
 
     const handleAction = async (data?: any) => {
-      if (onAction) {
-        await onAction(data);
-      } else if (showLeadCapture) {
+      if (showLeadCapture) {
         setShowForm(true);
+      } else if (onAction) {
+        await onAction(data);
       }
     };
 
@@ -120,8 +120,10 @@ const CTASectionComponent = React.forwardRef<HTMLElement, EnhancedCTASectionProp
         
         setShowForm(false);
         
-        // Call the handleAction with form data
-        handleAction(data);
+        // Call the onAction with form data
+        if (onAction) {
+          await onAction(data);
+        }
       } catch (error) {
         console.error('Error handling form submission:', error);
         // Still close the form even if there's an error
@@ -251,9 +253,12 @@ const CTASectionComponent = React.forwardRef<HTMLElement, EnhancedCTASectionProp
               exit={{ scale: 0.9, opacity: 0 }}
               className='bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto'
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="modal-title"
             >
               <div className='flex justify-between items-center mb-4'>
-                <h4 className='text-lg font-semibold text-gray-900'>
+                <h4 className='text-lg font-semibold text-gray-900' id="modal-title">
                   {variant === 'consultation' && 'Schedule Consultation'}
                   {variant === 'demo' && 'Request Demo'}
                   {variant === 'whitepaper' && 'Download Whitepaper'}

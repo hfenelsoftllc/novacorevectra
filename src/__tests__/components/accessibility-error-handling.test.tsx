@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { axe, toHaveNoViolations } from 'jest-axe';
+import { axe } from 'jest-axe';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
 import { ErrorFallback } from '../../components/common/ErrorFallback';
 import { OptimizedImage } from '../../components/ui/optimized-image';
@@ -15,8 +15,7 @@ import { ISO_42001_FRAMEWORK } from '../../constants/compliance';
 import { INDUSTRIES } from '../../constants/industries';
 import { PROCESS_STEPS } from '../../constants/processes';
 
-// Extend Jest matchers
-(expect as any).extend({ toHaveNoViolations });
+// Note: toHaveNoViolations is now configured globally in jest.setup.js
 
 // Mock Next.js components
 jest.mock('next/image', () => ({
