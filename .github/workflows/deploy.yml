@@ -348,6 +348,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Diagnose AWS credentials (if configuration fails)
+        if: failure()
+        run: |
+          echo "AWS credential configuration failed. Running diagnostics..."
+          chmod +x .github/scripts/diagnose-credentials.sh
+          ./.github/scripts/diagnose-credentials.sh || true
+
       - name: Load staging environment configuration
         run: |
           echo "Loading staging environment configuration..."
@@ -470,6 +477,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      - name: Diagnose AWS credentials (if configuration fails)
+        if: failure()
+        run: |
+          echo "AWS credential configuration failed. Running diagnostics..."
+          chmod +x .github/scripts/diagnose-credentials.sh
+          ./.github/scripts/diagnose-credentials.sh || true
 
       - name: Load production environment configuration
         run: |
