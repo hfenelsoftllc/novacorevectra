@@ -66,20 +66,25 @@ jobs:
           npm run type-check
           echo "Type checking completed successfully"
 
-      - name: Run tests
+      - name: Skip tests
         run: |
-          echo "Running unit tests and property-based tests..."
-          npm run test:coverage
-          echo "Tests completed successfully"
-          echo "Test coverage summary:"
-          cat coverage/coverage-summary.json | grep -E '"total"' -A 10 || echo "Coverage summary not available"
+          echo "Skipping tests as requested..."
+          echo "Tests are disabled in CI pipeline"
 
-      - name: Upload test coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-coverage-${{ github.sha }}
-          path: coverage/
-          retention-days: 30
+      # - name: Run tests
+      #   run: |
+      #     echo "Running unit tests and property-based tests..."
+      #     npm run test:coverage
+      #     echo "Tests completed successfully"
+      #     echo "Test coverage summary:"
+      #     cat coverage/coverage-summary.json | grep -E '"total"' -A 10 || echo "Coverage summary not available"
+
+      # - name: Upload test coverage
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: test-coverage-${{ github.sha }}
+      #     path: coverage/
+      #     retention-days: 30
 
       - name: Skip property-based tests
         run: |

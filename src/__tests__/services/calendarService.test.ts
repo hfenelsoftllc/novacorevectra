@@ -123,11 +123,11 @@ describe('CalendarService', () => {
       // Need to return > 0.3 for slots to be included
       jest.spyOn(Math, 'random').mockImplementation(() => 0.8);
       
-      const slots = await calendarService.getAvailableTimeSlots(weekday);
+      const result = await calendarService.getAvailableTimeSlots(weekday);
       
-      expect(Array.isArray(slots)).toBe(true);
-      expect(slots.length).toBeGreaterThan(0);
-      expect(slots).toEqual(
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThan(0);
+      expect(result).toEqual(
         expect.arrayContaining([
           expect.stringMatching(/^\d{2}:\d{2}$/)
         ])
@@ -150,12 +150,13 @@ describe('CalendarService', () => {
       // Mock Math.random to ensure we get some slots
       jest.spyOn(Math, 'random').mockImplementation(() => 0.8);
       
-      const slots = await calendarService.getAvailableTimeSlots(date, timezone);
+      const result = await calendarService.getAvailableTimeSlots(date, timezone);
       
       expect(mockConsoleLog).toHaveBeenCalledWith(
         expect.stringContaining(`Available slots for ${date} (${timezone}):`),
         expect.any(Array)
       );
+      expect(Array.isArray(result)).toBe(true);
     });
 
     it('should handle errors gracefully', async () => {
@@ -286,8 +287,8 @@ describe('CalendarService', () => {
       const businessDays = calendarService.getBusinessDaysBetween(startDate, endDate);
       
       expect(businessDays).toHaveLength(5);
-      expect(businessDays[0].getDay()).toBe(1); // Monday
-      expect(businessDays[4].getDay()).toBe(5); // Friday
+      expect(businessDays[0]?.getDay()).toBe(1); // Monday
+      expect(businessDays[4]?.getDay()).toBe(5); // Friday
     });
 
     it('should exclude weekends', () => {
@@ -298,8 +299,8 @@ describe('CalendarService', () => {
       const businessDays = calendarService.getBusinessDaysBetween(startDate, endDate);
       
       expect(businessDays).toHaveLength(2);
-      expect(businessDays[0].getDay()).toBe(5); // Friday
-      expect(businessDays[1].getDay()).toBe(1); // Monday
+      expect(businessDays[0]?.getDay()).toBe(5); // Friday
+      expect(businessDays[1]?.getDay()).toBe(1); // Monday
     });
 
     it('should handle same day range', () => {
@@ -309,7 +310,7 @@ describe('CalendarService', () => {
       const businessDays = calendarService.getBusinessDaysBetween(date, date);
       
       expect(businessDays).toHaveLength(1);
-      expect(businessDays[0].getDay()).toBe(1); // Monday
+      expect(businessDays[0]?.getDay()).toBe(1); // Monday
     });
 
     it('should return empty array for weekend-only range', () => {

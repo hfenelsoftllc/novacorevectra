@@ -62,7 +62,7 @@ export type CTAVariant = 'consultation' | 'demo' | 'whitepaper' | 'contact' | 'n
 /**
  * Form variant types
  */
-export type FormVariant = 'contact' | 'demo' | 'consultation' | 'newsletter' | 'lead-capture';
+export type FormVariant = 'contact' | 'demo' | 'consultation' | 'newsletter' | 'lead-capture' | 'whitepaper';
 
 /**
  * Interface for CTA section props with variants
