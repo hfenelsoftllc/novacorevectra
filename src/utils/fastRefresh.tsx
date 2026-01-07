@@ -3,7 +3,7 @@
  * Helps prevent Fast Refresh failures in development
  */
 
-import * as React from 'react';
+import React from 'react';
 
 /**
  * HOC wrapper that ensures components are Fast Refresh compatible
@@ -122,6 +122,7 @@ export function useFastRefreshDebug(componentName: string) {
         console.log(`🔄 ${componentName} unmounting (Fast Refresh or navigation)`);
       };
     }
+    return undefined;
   }, [componentName]);
 
   React.useEffect(() => {
@@ -142,5 +143,6 @@ export function useFastRefreshDebug(componentName: string) {
         window.removeEventListener('unhandledrejection', handleUnhandledRejection);
       };
     }
+    return undefined;
   }, [componentName]);
 }
