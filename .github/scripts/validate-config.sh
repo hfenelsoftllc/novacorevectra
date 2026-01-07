@@ -82,11 +82,11 @@ validate_config_file() {
     fi
     
     # Validate cache control headers format
-    if [[ ! "$HTML_CACHE_CONTROL" =~ ^public,.*max-age=[0-9]+$ ]]; then
+    if [[ ! "$HTML_CACHE_CONTROL" =~ ^public,\ max-age=[0-9]+$ ]]; then
         log "WARNING: HTML_CACHE_CONTROL may not be in correct format: $HTML_CACHE_CONTROL"
     fi
     
-    if [[ ! "$STATIC_CACHE_CONTROL" =~ ^public,.*max-age=[0-9]+$ ]]; then
+    if [[ ! "$STATIC_CACHE_CONTROL" =~ ^public,\ max-age=[0-9]+$ ]]; then
         log "WARNING: STATIC_CACHE_CONTROL may not be in correct format: $STATIC_CACHE_CONTROL"
     fi
     
