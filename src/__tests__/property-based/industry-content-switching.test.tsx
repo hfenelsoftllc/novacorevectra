@@ -5,7 +5,6 @@ import { IndustryVariantsSection } from '../../components/sections/IndustryVaria
 import { IndustrySelector } from '../../components/industry/IndustrySelector';
 import { IndustryContent } from '../../components/industry/IndustryContent';
 import { INDUSTRIES } from '../../constants/industries';
-import { Industry } from '../../types/industry';
 
 describe('Property 3: Industry Content Switching', () => {
   // Generator for valid industry IDs
@@ -112,7 +111,7 @@ describe('Property 3: Industry Content Switching', () => {
         const { unmount } = render(
           <IndustrySelector 
             industries={industries}
-            selectedIndustry={industries[0].id}
+            selectedIndustry={industries[0]?.id || 'default'}
             onIndustrySelect={mockOnSelect}
           />
         );
@@ -125,12 +124,14 @@ describe('Property 3: Industry Content Switching', () => {
           expect(button).toBeEnabled();
           
           // Test clicking the button
-          fireEvent.click(button);
+          if (button) {
+            fireEvent.click(button);
+          }
           expect(mockOnSelect).toHaveBeenCalledWith(industry.id);
         });
         
         // Verify proper ARIA attributes for accessibility
-        const selectedButtons = screen.getAllByRole('tab', { name: new RegExp(industries[0].name, 'i') });
+        const selectedButtons = screen.getAllByRole('tab', { name: new RegExp(industries[0]?.name || 'default', 'i') });
         expect(selectedButtons[0]).toHaveAttribute('aria-selected', 'true');
         
         unmount();
@@ -196,7 +197,9 @@ describe('Property 3: Industry Content Switching', () => {
           
           // Switch to different industry
           const switchButtons = screen.getAllByRole('tab', { name: new RegExp(switchToIndustryData.name, 'i') });
-          fireEvent.click(switchButtons[0]);
+          if (switchButtons[0]) {
+            fireEvent.click(switchButtons[0]);
+          }
           
           // Verify new industry content is displayed
           expect(screen.getAllByText(`${switchToIndustryData.name} Solutions`)[0]).toBeInTheDocument();

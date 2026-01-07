@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/navigation';
 import HomePage from '../../../app/page';
@@ -182,8 +182,6 @@ describe('User Journey Integration Tests', () => {
 
   describe('Multi-page Navigation Journey', () => {
     test('user can navigate through all main pages maintaining context', async () => {
-      const user = userEvent.setup();
-      
       // Test navigation sequence: Home -> Services -> Governance -> Contact
       const pages = [
         { component: HomePage, expectedText: /Trusted AI for Business Process Transformation/i },
@@ -220,8 +218,6 @@ describe('User Journey Integration Tests', () => {
     });
 
     test('user engagement tracking works across page transitions', async () => {
-      const user = userEvent.setup();
-      
       // Start on home page
       const { unmount: unmountHome } = render(<HomePage />);
       

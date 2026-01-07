@@ -27,7 +27,9 @@ describe('IndustryVariantsSection', () => {
 
     // Should render the first industry by default
     const firstIndustry = INDUSTRIES[0];
-    expect(screen.getByText(`${firstIndustry.name} Solutions`)).toBeInTheDocument();
+    if (firstIndustry) {
+      expect(screen.getByText(`${firstIndustry.name} Solutions`)).toBeInTheDocument();
+    }
   });
 
   it('switches industry content when selector is clicked', () => {

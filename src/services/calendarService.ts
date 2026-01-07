@@ -110,7 +110,8 @@ export class CalendarService {
    */
   private async sendCalendarInvitation(eventData: CalendarEventData): Promise<void> {
     // Generate ICS file content for calendar invitation
-    const icsContent = this.generateICSContent(eventData);
+    // Generate ICS content for calendar integration
+    this.generateICSContent(eventData);
     
     console.log('📧 Calendar invitation would be sent:', {
       to: eventData.attendeeEmail,
@@ -125,7 +126,7 @@ export class CalendarService {
   private calculateEventDateTime(
     preferredDate?: string, 
     preferredTime?: string, 
-    timezone?: string
+    _timezone?: string
   ): { start: string; end: string } {
     const now = new Date();
     let eventDate = new Date();
@@ -140,7 +141,7 @@ export class CalendarService {
     // Set time (default to 2 PM if no preference)
     if (preferredTime) {
       const [hours, minutes] = preferredTime.split(':').map(Number);
-      eventDate.setHours(hours, minutes, 0, 0);
+      eventDate.setHours(hours || 0, minutes || 0, 0, 0);
     } else {
       eventDate.setHours(14, 0, 0, 0); // 2 PM
     }
@@ -241,7 +242,7 @@ END:VCALENDAR`;
   /**
    * Get available time slots for scheduling
    */
-  async getAvailableTimeSlots(date: string, timezone: string = 'UTC'): Promise<string[]> {
+  async getAvailableTimeSlots(_date: string, _timezone: string = 'UTC'): Promise<string[]> {
     // In a real implementation, this would check calendar availability
     // For now, return standard business hours
     const businessHours = [
@@ -254,7 +255,7 @@ END:VCALENDAR`;
   /**
    * Validate if a time slot is available
    */
-  async isTimeSlotAvailable(dateTime: string, timezone: string = 'UTC'): Promise<boolean> {
+  async isTimeSlotAvailable(dateTime: string, _timezone: string = 'UTC'): Promise<boolean> {
     // In a real implementation, this would check against existing calendar events
     // For now, assume all business hours are available
     const date = new Date(dateTime);

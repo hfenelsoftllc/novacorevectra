@@ -6,8 +6,8 @@ import { announceToScreenReader } from './AccessibilityAnnouncer';
 
 interface ErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
-  errorInfo?: React.ErrorInfo;
+  error?: Error | undefined;
+  errorInfo?: React.ErrorInfo | undefined;
 }
 
 interface ErrorBoundaryProps {
@@ -18,7 +18,7 @@ interface ErrorBoundaryProps {
 }
 
 interface ErrorFallbackProps {
-  error: Error | undefined;
+  error?: Error;
   resetError: () => void;
   showHomeLink?: boolean;
 }
@@ -97,7 +97,11 @@ export class ErrorBoundary extends React.Component<
   }
 
   resetError = () => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+    this.setState({ 
+      hasError: false, 
+      error: undefined, 
+      errorInfo: undefined 
+    });
     
     // Announce recovery to screen readers
     if (typeof window !== 'undefined') {
@@ -115,9 +119,9 @@ export class ErrorBoundary extends React.Component<
       const FallbackComponent = this.props.fallback || ErrorFallback;
       return (
         <FallbackComponent
-          error={this.state.error}
+          error={this.state.error || new Error('Unknown error')}
           resetError={this.resetError}
-          showHomeLink={this.props.showHomeLink}
+          showHomeLink={this.props.showHomeLink ?? false}
         />
       );
     }

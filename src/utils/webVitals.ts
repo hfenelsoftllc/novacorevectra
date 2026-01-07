@@ -10,7 +10,7 @@ export interface WebVitalMetric {
   rating: 'good' | 'needs-improvement' | 'poor';
   delta: number;
   id: string;
-  navigationType: 'navigate' | 'reload' | 'back-forward' | 'back-forward-cache';
+  navigationType: 'navigate' | 'reload' | 'back-forward' | 'back-forward-cache' | 'prerender' | 'restore';
 }
 
 /**
@@ -41,7 +41,7 @@ export const getWebVitalRating = (
 /**
  * Report web vital to analytics
  */
-export const reportWebVital = (metric: WebVitalMetric) => {
+export const reportWebVital = (metric: any) => {
   // Track to Google Analytics
   trackEvent({
     event: 'web_vital',

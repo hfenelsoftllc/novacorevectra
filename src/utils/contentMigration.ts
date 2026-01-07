@@ -49,15 +49,15 @@ export class ContentMigrationManager {
       for (let i = fromIndex + 1; i <= toIndex; i++) {
         const migration = this.migrations[i];
         const beforeContent = JSON.stringify(migratedContent);
-        migratedContent = migration.up(migratedContent);
+        migratedContent = migration?.up(migratedContent) || migratedContent;
         const afterContent = JSON.stringify(migratedContent);
 
         if (beforeContent !== afterContent) {
           changes.push({
             path: 'migration',
             operation: 'update',
-            oldValue: migration.version,
-            newValue: `Applied migration: ${migration.description}`
+            oldValue: migration?.version || 'unknown',
+            newValue: `Applied migration: ${migration?.description || 'unknown'}`
           });
         }
       }
@@ -66,15 +66,15 @@ export class ContentMigrationManager {
       for (let i = fromIndex; i > toIndex; i--) {
         const migration = this.migrations[i];
         const beforeContent = JSON.stringify(migratedContent);
-        migratedContent = migration.down(migratedContent);
+        migratedContent = migration?.down(migratedContent) || migratedContent;
         const afterContent = JSON.stringify(migratedContent);
 
         if (beforeContent !== afterContent) {
           changes.push({
             path: 'migration',
             operation: 'update',
-            oldValue: migration.version,
-            newValue: `Reverted migration: ${migration.description}`
+            oldValue: migration?.version || 'unknown',
+            newValue: `Reverted migration: ${migration?.description || 'unknown'}`
           });
         }
       }

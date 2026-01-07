@@ -187,10 +187,10 @@ export function validateRichText(content: string): {
   let linkMatch;
   while ((linkMatch = linkRegex.exec(content)) !== null) {
     const [, text, url] = linkMatch;
-    if (!text.trim()) {
+    if (!text?.trim()) {
       errors.push('Empty link text found');
     }
-    if (!url.trim()) {
+    if (!url?.trim()) {
       errors.push('Empty link URL found');
     }
   }

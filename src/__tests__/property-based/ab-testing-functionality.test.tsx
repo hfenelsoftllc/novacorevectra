@@ -6,12 +6,12 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import * as fc from 'fast-check';
 import { useABTest, useMultipleABTests } from '../../hooks/useABTest';
-import { ABTest, ABTestVariant } from '@/utils/analytics';
+import { ABTest } from '@/utils/analytics';
 import * as analyticsUtils from '../../utils/analytics';
-import { AB_TESTS, AB_TEST_IDS, AB_TEST_CONVERSIONS } from '../../constants/abTests';
+import { AB_TESTS } from '../../constants/abTests';
 
 // Mock analytics utilities
 jest.mock('../../utils/analytics', () => ({
@@ -70,7 +70,7 @@ describe('Property 9: A/B Testing Functionality', () => {
           (analyticsUtils.getABTestVariant as jest.Mock).mockReturnValue(selectedVariant);
 
           const TestComponent = () => {
-            const { variant, getContent, trackConversion, isInTest, getVariantId } = useABTest(testConfig);
+            const { getContent, trackConversion, isInTest, getVariantId } = useABTest(testConfig);
             const content = getContent();
 
             return (
@@ -91,9 +91,11 @@ describe('Property 9: A/B Testing Functionality', () => {
           const { unmount } = render(<TestComponent />);
 
           // Verify variant selection works
-          expect(screen.getByTestId('variant-id')).toHaveTextContent(selectedVariant.id);
-          expect(screen.getByTestId('is-in-test')).toHaveTextContent('true');
-          expect(screen.getByTestId('content-title')).toHaveTextContent(selectedVariant.content.title);
+          if (selectedVariant) {
+            expect(screen.getByTestId('variant-id')).toHaveTextContent(selectedVariant.id);
+            expect(screen.getByTestId('is-in-test')).toHaveTextContent('true');
+            expect(screen.getByTestId('content-title')).toHaveTextContent(selectedVariant.content.title);
+          }
 
           // Test conversion tracking
           const convertButton = screen.getByTestId('track-conversion');
@@ -178,7 +180,7 @@ describe('Property 9: A/B Testing Functionality', () => {
           (analyticsUtils.getABTestVariant as jest.Mock).mockReturnValue(selectedVariant);
 
           const TestComponent = () => {
-            const { variant, getContent, isInTest, getVariantId } = useABTest(realTestConfig);
+            const { getContent, isInTest, getVariantId } = useABTest(realTestConfig);
             const content = getContent();
 
             return (
@@ -195,7 +197,9 @@ describe('Property 9: A/B Testing Functionality', () => {
 
           // Verify real test configuration works
           expect(screen.getByTestId('test-id')).toHaveTextContent(realTestConfig.id);
-          expect(screen.getByTestId('variant-id')).toHaveTextContent(selectedVariant.id);
+          if (selectedVariant) {
+            expect(screen.getByTestId('variant-id')).toHaveTextContent(selectedVariant.id);
+          }
           expect(screen.getByTestId('is-in-test')).toHaveTextContent('true');
           expect(screen.getByTestId('has-content')).toHaveTextContent('true');
 

@@ -152,7 +152,7 @@ function isValidDNSValidationRecord(record: DNSValidationRecord, domain: string)
          record.value.endsWith('.acm-validations.aws.');
 }
 
-function isValidDNSRecordInfo(records: DNSRecordInfo[], customDomain: string): boolean {
+function isValidDNSRecordInfo(records: DNSRecordInfo[], _customDomain: string): boolean {
   const hasARecord = records.some(r => r.type === 'A' && r.name === '@');
   const hasAAAARecord = records.some(r => r.type === 'AAAA' && r.name === '@');
   const hasCNAMERecord = records.some(r => r.type === 'CNAME' && r.name === 'www');

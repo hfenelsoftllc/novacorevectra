@@ -179,7 +179,7 @@ describe('Core Integration Tests', () => {
         return (
           <form onSubmit={handleSubmit}>
             <input name="email" placeholder="Email" />
-            {errors.email && <span role="alert">{errors.email}</span>}
+            {errors['email'] && <span role="alert">{errors['email']}</span>}
             <button type="submit">Submit</button>
           </form>
         );

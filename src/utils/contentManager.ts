@@ -48,7 +48,10 @@ class ContentManager {
 
     // Check cache first
     if (useCache && this.isCacheValid(key, version)) {
-      return this.cache[key].content as T;
+      const cachedItem = this.cache[key];
+      if (cachedItem) {
+        return cachedItem.content as T;
+      }
     }
 
     try {
@@ -224,22 +227,27 @@ class ContentManager {
       
       // Navigate to the parent of the target property
       for (let i = 0; i < pathParts.length - 1; i++) {
-        if (!current[pathParts[i]]) {
-          current[pathParts[i]] = {};
+        const pathPart = pathParts[i];
+        if (pathPart && !current[pathPart]) {
+          current[pathPart] = {};
         }
-        current = current[pathParts[i]];
+        if (pathPart) {
+          current = current[pathPart];
+        }
       }
       
       const finalKey = pathParts[pathParts.length - 1];
       
-      switch (change.operation) {
-        case 'add':
-        case 'update':
-          current[finalKey] = change.newValue;
-          break;
-        case 'delete':
-          delete current[finalKey];
-          break;
+      if (finalKey) {
+        switch (change.operation) {
+          case 'add':
+          case 'update':
+            current[finalKey] = change.newValue;
+            break;
+          case 'delete':
+            delete current[finalKey];
+            break;
+        }
       }
     }
     

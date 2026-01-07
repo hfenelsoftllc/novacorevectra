@@ -3,7 +3,7 @@
  * Handles syncing content between different environments and sources
  */
 
-import { contentManager } from './contentManager';
+
 import { ContentChange } from '../types/content';
 
 export interface SyncOptions {
@@ -251,7 +251,7 @@ export class ContentSyncManager {
    * Load content from remote API
    */
   private async loadRemoteContent(contentId: string): Promise<any> {
-    const apiUrl = process.env.NEXT_PUBLIC_CONTENT_API_URL || 'https://api.example.com';
+    const apiUrl = process.env['NEXT_PUBLIC_CONTENT_API_URL'] || 'https://api.example.com';
     const response = await fetch(`${apiUrl}/content/${contentId}`);
     
     if (!response.ok) {
@@ -265,12 +265,12 @@ export class ContentSyncManager {
    * Save content to remote API
    */
   private async saveRemoteContent(contentId: string, content: any): Promise<void> {
-    const apiUrl = process.env.NEXT_PUBLIC_CONTENT_API_URL || 'https://api.example.com';
+    const apiUrl = process.env['NEXT_PUBLIC_CONTENT_API_URL'] || 'https://api.example.com';
     const response = await fetch(`${apiUrl}/content/${contentId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.CONTENT_API_TOKEN}`
+        'Authorization': `Bearer ${process.env['CONTENT_API_TOKEN']}`
       },
       body: JSON.stringify(content)
     });
@@ -284,7 +284,7 @@ export class ContentSyncManager {
    * Load content from CDN
    */
   private async loadCDNContent(contentId: string): Promise<any> {
-    const cdnUrl = process.env.NEXT_PUBLIC_CONTENT_CDN_URL || 'https://cdn.example.com';
+    const cdnUrl = process.env['NEXT_PUBLIC_CONTENT_CDN_URL'] || 'https://cdn.example.com';
     const filePath = this.getContentFilePath(contentId);
     const response = await fetch(`${cdnUrl}${filePath}`);
     
@@ -298,7 +298,7 @@ export class ContentSyncManager {
   /**
    * Save content to CDN (typically via API)
    */
-  private async saveCDNContent(contentId: string, content: any): Promise<void> {
+  private async saveCDNContent(_contentId: string, _content: any): Promise<void> {
     // CDN content is typically updated via API or deployment process
     // This would integrate with your CDN provider's API
     throw new Error('CDN content saving not implemented - typically handled by deployment process');

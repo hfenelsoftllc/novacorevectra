@@ -1,4 +1,4 @@
-﻿import * as fc from 'fast-check';
+import * as fc from 'fast-check';
 import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { Header } from '@/components/layout/Header';
 import { Navigation } from '@/components/layout/Navigation';
@@ -137,7 +137,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         const containers = screen.queryAllByTestId('responsive-container');
         expect(containers.length).toBeGreaterThan(0);
         const container = containers[0];
-        const viewportType = container.getAttribute('data-viewport-type');
+        const viewportType = container?.getAttribute('data-viewport-type');
         
         // Container should adapt to viewport size
         expect(container).toBeInTheDocument();
@@ -189,7 +189,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         const { unmount: unmountResponsive } = render(<ResponsiveTestComponent viewport={viewport} />);
         
         const container = screen.getByTestId('responsive-container');
-        expect(container.getAttribute('data-viewport-type')).toBe('mobile');
+        expect(container?.getAttribute('data-viewport-type')).toBe('mobile');
         
         // All interactive elements should be present
         const touchButton = screen.getByTestId('touch-button');
@@ -291,10 +291,10 @@ describe('Property 12: Responsive Design Compliance', () => {
           expect(animatedElement).toHaveClass('motion-reduce:transition-none');
           
           // Animation should be disabled
-          expect(animatedElement.style.animation).toBe('none');
+          expect(animatedElement?.style.animation).toBe('none');
         } else {
           // When motion is allowed, animations should be present
-          expect(animatedElement.style.animation).toContain('fade-in');
+          expect(animatedElement?.style.animation).toContain('fade-in');
         }
         
         unmount();
@@ -317,7 +317,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         const containers = screen.queryAllByTestId('responsive-container');
         expect(containers.length).toBeGreaterThan(0);
         const container = containers[0]; // Use the first container found
-        const viewportType = container.getAttribute('data-viewport-type');
+        const viewportType = container?.getAttribute('data-viewport-type');
         
         // Core functionality should be available regardless of viewport
         // 1. Navigation should always be accessible
@@ -386,7 +386,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         const containers = screen.queryAllByTestId('responsive-container');
         expect(containers.length).toBeGreaterThan(0);
         const container = containers[0];
-        const viewportType = container.getAttribute('data-viewport-type');
+        const viewportType = container?.getAttribute('data-viewport-type');
         
         // Container should have appropriate dimensions
         expect(container).toHaveStyle({
@@ -409,7 +409,7 @@ describe('Property 12: Responsive Design Compliance', () => {
         
         // Layout should be appropriate for viewport
         // This is tested through the grid classes applied in the component
-        const gridContainer = contentItems[0].parentElement;
+        const gridContainer = contentItems[0]?.parentElement;
         expect(gridContainer).toBeInTheDocument();
         
         // Verify responsive grid behavior through class presence

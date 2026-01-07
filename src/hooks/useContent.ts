@@ -261,8 +261,8 @@ export function useContentSearch() {
 
   const searchContent = useCallback(async (
     query: string,
-    contentType?: 'page' | 'config',
-    filters?: { [key: string]: any }
+    _contentType?: 'page' | 'config',
+    _filters?: { [key: string]: any }
   ) => {
     if (!query.trim()) {
       setSearchResults([]);
@@ -274,7 +274,7 @@ export function useContentSearch() {
       
       // In a real implementation, this would search through content files
       // For now, we'll simulate search results
-      const results = await simulateContentSearch(query, contentType, filters);
+      const results = await simulateContentSearch(query, _contentType, _filters);
       setSearchResults(results);
     } catch (err) {
       console.error('Content search failed:', err);
@@ -301,8 +301,8 @@ export function useContentSearch() {
  */
 async function simulateContentSearch(
   query: string,
-  contentType?: 'page' | 'config',
-  filters?: { [key: string]: any }
+  _contentType?: 'page' | 'config',
+  _filters?: { [key: string]: any }
 ): Promise<any[]> {
   // This would be replaced with actual search implementation
   return new Promise((resolve) => {

@@ -8,8 +8,7 @@
  */
 
 import { execSync } from 'child_process';
-import { readFileSync, existsSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, existsSync, PathLike, PathOrFileDescriptor } from 'fs';
 
 // Mock external dependencies for testing
 jest.mock('child_process');
@@ -18,7 +17,6 @@ jest.mock('fs');
 const mockExecSync = execSync as jest.MockedFunction<typeof execSync>;
 const mockReadFileSync = readFileSync as jest.MockedFunction<typeof readFileSync>;
 const mockExistsSync = existsSync as jest.MockedFunction<typeof existsSync>;
-const mockWriteFileSync = writeFileSync as jest.MockedFunction<typeof writeFileSync>;
 
 interface DeploymentVersion {
   version: string;
@@ -64,11 +62,9 @@ interface RollbackTestScenario {
  * Rollback Functionality Test Runner
  */
 class RollbackTestRunner {
-  private baseDir: string;
   private mockDeployments: Map<string, DeploymentVersion>;
 
-  constructor(baseDir: string = process.cwd()) {
-    this.baseDir = baseDir;
+  constructor() {
     this.mockDeployments = new Map();
     this.setupMockDeployments();
   }
@@ -175,8 +171,7 @@ class RollbackTestRunner {
    */
   async testRollback(
     environment: 'staging' | 'production',
-    targetVersion: string,
-    autoConfirm: boolean = true
+    targetVersion: string
   ): Promise<RollbackResult> {
     const startTime = Date.now();
     const errors: string[] = [];
@@ -216,7 +211,7 @@ class RollbackTestRunner {
       }
 
       // Perform health checks on rolled back version
-      const healthChecks = await this.performHealthChecks(environment, targetVersion);
+      const healthChecks = await this.performHealthChecks(targetVersion);
       
       const success = healthChecks.every(check => check.healthy);
       if (!success) {
@@ -309,7 +304,6 @@ class RollbackTestRunner {
    * Perform health checks after rollback
    */
   private async performHealthChecks(
-    environment: string,
     version: string
   ): Promise<HealthCheckResult[]> {
     const deployment = this.mockDeployments.get(version);
@@ -363,7 +357,7 @@ class RollbackTestRunner {
     }
 
     // Mock workflow content validation
-    const workflowContent = this.mockReadWorkflowFile(workflowPath);
+    const workflowContent = this.mockReadWorkflowFile();
     
     return {
       workflowExists: true,
@@ -555,7 +549,7 @@ class RollbackTestRunner {
     return commonFiles.some(file => filePath.includes(file.split('/').pop() || ''));
   }
 
-  private mockReadWorkflowFile(filePath: string): string {
+  private mockReadWorkflowFile(): string {
     return `
 name: Rollback Deployment
 on:
@@ -623,24 +617,26 @@ describe('Rollback Functionality Integration Tests', () => {
     rollbackRunner = new RollbackTestRunner();
     
     // Mock file system operations
-    mockExistsSync.mockImplementation((path: string) => {
+    mockExistsSync.mockImplementation((path: PathLike) => {
+      const pathStr = path.toString();
       const commonFiles = [
         '.github/workflows/rollback.yml',
         '.github/scripts/rollback.sh',
         '.github/scripts/deployment-versioning.sh',
         '.github/scripts/notify-rollback.sh',
       ];
-      return commonFiles.some(file => path.toString().includes(file));
+      return commonFiles.some(file => pathStr.includes(file));
     });
 
-    mockReadFileSync.mockImplementation((path: string) => {
-      if (path.toString().includes('rollback.yml')) {
+    mockReadFileSync.mockImplementation((path: PathOrFileDescriptor) => {
+      const pathStr = path.toString();
+      if (pathStr.includes('rollback.yml')) {
         return 'workflow content with staging and production';
       }
       return 'mock file content';
     });
 
-    mockExecSync.mockImplementation((command: string) => {
+    mockExecSync.mockImplementation((_command: string) => {
       // Mock successful command execution
       return Buffer.from('Command executed successfully');
     });

@@ -6,12 +6,9 @@
 
 import * as fc from 'fast-check';
 import { renderHook, act } from '@testing-library/react';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { cleanup } from '@testing-library/react';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { CTASection } from '@/components/sections/CTASection';
 import { CTAVariant } from '@/types/forms';
-import * as analyticsUtils from '@/utils/analytics';
 
 // Mock analytics utilities
 jest.mock('@/utils/analytics', () => ({
@@ -49,7 +46,7 @@ jest.mock('framer-motion', () => ({
 
 // Mock components that have complex dependencies
 jest.mock('@/components/forms/LeadCaptureForm', () => ({
-  LeadCaptureForm: ({ variant, onSubmit }: any) => (
+  LeadCaptureForm: ({ onSubmit }: any) => (
     <form data-testid="lead-capture-form">
       <input data-testid="form-input" />
       <button type="submit" onClick={() => onSubmit({ test: 'data' })}>
@@ -95,7 +92,7 @@ describe('Property 7: Analytics Event Tracking', () => {
           sessionId: fc.string({ minLength: 10, maxLength: 50 }),
           userId: fc.string({ minLength: 10, maxLength: 50 }),
         }),
-        ({ page, title, sessionId, userId }) => {
+        ({ page, title }) => {
           const { result } = renderHook(() => useAnalytics());
 
           // Test page view tracking
@@ -212,7 +209,7 @@ describe('Property 7: Analytics Event Tracking', () => {
           if (formData) {
             Object.keys(formData).forEach(fieldName => {
               act(() => {
-                result.current.trackFormFieldCompletion(formType, fieldName, formData[fieldName]);
+                result.current.trackFormFieldCompletion(formType, fieldName, (formData as any)[fieldName]);
               });
             });
           }
@@ -335,8 +332,8 @@ describe('Property 7: Analytics Event Tracking', () => {
           expect(initialSessionId).toBeDefined();
           expect(typeof initialUserId).toBe('string');
           expect(typeof initialSessionId).toBe('string');
-          expect(initialUserId.length).toBeGreaterThan(0);
-          expect(initialSessionId.length).toBeGreaterThan(0);
+          expect(initialUserId?.length || 0).toBeGreaterThan(0);
+          expect(initialSessionId?.length || 0).toBeGreaterThan(0);
 
           return true;
         }
@@ -402,7 +399,7 @@ describe('Property 7: Analytics Event Tracking', () => {
           variant: fc.constantFrom('consultation', 'demo', 'whitepaper'),
           interactionType: fc.constantFrom('click', 'keyboard'),
         }),
-        ({ variant, interactionType }) => {
+        ({ variant }) => {
           const { result } = renderHook(() => useAnalytics());
 
           // Test that analytics tracking is available

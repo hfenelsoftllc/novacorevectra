@@ -114,17 +114,17 @@ describe('Property 8: Content Management Separation', () => {
         // Verify content has the structure needed for components to consume
         if (SERVICES.length > 0) {
           const firstService = SERVICES[0];
-          expect(firstService.id).toBeDefined();
-          expect(firstService.title).toBeDefined();
-          expect(firstService.description).toBeDefined();
-          expect(firstService.icon).toBeDefined();
+          expect(firstService?.id).toBeDefined();
+          expect(firstService?.title).toBeDefined();
+          expect(firstService?.description).toBeDefined();
+          expect(firstService?.icon).toBeDefined();
         }
         
         if (STANDARDS.length > 0) {
           const firstStandard = STANDARDS[0];
-          expect(firstStandard.id).toBeDefined();
-          expect(firstStandard.name).toBeDefined();
-          expect(firstStandard.description).toBeDefined();
+          expect(firstStandard?.id).toBeDefined();
+          expect(firstStandard?.name).toBeDefined();
+          expect(firstStandard?.description).toBeDefined();
         }
         
         return true;

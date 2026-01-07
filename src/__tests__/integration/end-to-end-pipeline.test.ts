@@ -8,7 +8,7 @@
  */
 
 import { execSync } from 'child_process';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, PathLike, PathOrFileDescriptor } from 'fs';
 import * as path from 'path';
 
 // Mock external dependencies for testing
@@ -370,7 +370,8 @@ describe('End-to-End Pipeline Integration Tests', () => {
     pipelineRunner = new PipelineTestRunner();
     
     // Mock file system operations
-    mockExistsSync.mockImplementation((path: string) => {
+    mockExistsSync.mockImplementation((path: PathLike) => {
+      const pathStr = path.toString();
       const commonFiles = [
         'package.json',
         'next.config.js',
@@ -378,11 +379,12 @@ describe('End-to-End Pipeline Integration Tests', () => {
         'terraform/variables.tf',
         '.github/workflows/deploy.yml',
       ];
-      return commonFiles.some(file => path.toString().includes(file));
+      return commonFiles.some(file => pathStr.includes(file));
     });
 
-    mockReadFileSync.mockImplementation((path: string) => {
-      if (path.toString().includes('package.json')) {
+    mockReadFileSync.mockImplementation((path: PathOrFileDescriptor) => {
+      const pathStr = path.toString();
+      if (pathStr.includes('package.json')) {
         return JSON.stringify({ name: 'novacorevectra', version: '1.0.0' });
       }
       return 'mock file content';

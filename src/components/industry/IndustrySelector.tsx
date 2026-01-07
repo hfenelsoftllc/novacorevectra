@@ -20,10 +20,10 @@ export const IndustrySelector: React.FC<IndustrySelectorProps> = ({
   const handleKeyDown = (event: React.KeyboardEvent, industryId: string, index: number) => {
     if (event.key === 'ArrowRight' && index < industries.length - 1) {
       event.preventDefault();
-      onIndustrySelect(industries[index + 1].id);
+      onIndustrySelect(industries[index + 1]?.id || industries[0]?.id || '');
     } else if (event.key === 'ArrowLeft' && index > 0) {
       event.preventDefault();
-      onIndustrySelect(industries[index - 1].id);
+      onIndustrySelect(industries[index - 1]?.id || industries[industries.length - 1]?.id || '');
     } else if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       onIndustrySelect(industryId);

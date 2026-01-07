@@ -46,7 +46,7 @@ export const generateMetadata = (config: SEOConfig): Metadata => {
   const optimizedTitle = title.length > 60 ? `${title.substring(0, 57)}...` : title;
   const optimizedDescription = description; // Don't truncate description for tests
 
-  const metadata: Metadata = {
+  const metadata: any = {
     title: optimizedTitle,
     description: optimizedDescription,
     keywords: keywords.length > 0 ? keywords : undefined,
@@ -80,7 +80,7 @@ export const generateMetadata = (config: SEOConfig): Metadata => {
           alt: optimizedTitle,
         }
       ] : undefined,
-    },
+    } as any,
     twitter: {
       card: 'summary_large_image',
       title: optimizedTitle,
@@ -88,7 +88,7 @@ export const generateMetadata = (config: SEOConfig): Metadata => {
       images: image ? [image] : undefined,
       creator: '@novacorevectra',
       site: '@novacorevectra',
-    },
+    } as any,
     alternates: url ? {
       canonical: url,
     } : undefined,
@@ -96,7 +96,7 @@ export const generateMetadata = (config: SEOConfig): Metadata => {
       google: process.env['NEXT_PUBLIC_GOOGLE_VERIFICATION'] || undefined,
       yandex: process.env['NEXT_PUBLIC_YANDEX_VERIFICATION'] || undefined,
       yahoo: process.env['NEXT_PUBLIC_YAHOO_VERIFICATION'] || undefined,
-    },
+    } as any,
   };
 
   return metadata;

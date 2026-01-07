@@ -5,8 +5,7 @@
  */
 
 import * as fc from 'fast-check';
-import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { LeadCaptureForm } from '@/components/forms/LeadCaptureForm';
 import { FormVariant } from '@/types/forms';
 

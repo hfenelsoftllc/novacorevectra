@@ -23,8 +23,8 @@ interface CloudFrontDistribution {
 
 // Simulate CloudFront distribution creation
 function createCloudFrontDistribution(
-  projectName: string,
-  environment: string,
+  _projectName: string,
+  _environment: string,
   customDomains: string[] = []
 ): CloudFrontDistribution {
   // AWS CloudFront domain names follow the pattern: *.cloudfront.net
@@ -94,7 +94,7 @@ describe('Property-Based Test: CloudFront domain availability', () => {
         const domainParts = distribution.domainName.split('.');
         return distribution.domainName.endsWith('.cloudfront.net') &&
                domainParts.length === 3 && // [id, 'cloudfront', 'net']
-               domainParts[0].length === 14 && // CloudFront distribution ID is 14 characters
+               (domainParts[0]?.length || 0) === 14 && // CloudFront distribution ID is 14 characters
                domainParts[1] === 'cloudfront' &&
                domainParts[2] === 'net';
       }),
@@ -199,7 +199,7 @@ describe('Property-Based Test: CloudFront domain availability', () => {
     fc.assert(
       fc.property(projectNameGen, environmentGen, statusGen, enabledGen, (projectName, environment, status, enabled) => {
         const distribution = createCloudFrontDistribution(projectName, environment);
-        distribution.status = status;
+        distribution.status = status as 'InProgress' | 'Deployed';
         distribution.enabled = enabled;
         
         // Only deployed and enabled distributions should be accessible

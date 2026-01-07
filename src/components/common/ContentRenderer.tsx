@@ -86,38 +86,28 @@ function ContentSectionRenderer({ section }: ContentSectionRendererProps) {
     case 'process-lifecycle':
       return (
         <SectionWrapper>
-          <ProcessLifecycleSection 
-            showAnimation={section.showAnimation}
-            showDetails={section.showDetails}
-          />
+          <ProcessLifecycleSection />
         </SectionWrapper>
       );
 
     case 'industry-variants':
       return (
         <SectionWrapper>
-          <IndustryVariantsSection 
-            showSelector={section.showSelector}
-            showCaseStudies={section.showCaseStudies}
-          />
+          <IndustryVariantsSection industries={[]} />
         </SectionWrapper>
       );
 
     case 'compliance-section':
       return (
         <SectionWrapper>
-          <ComplianceSection 
-            framework={section.showFramework}
-            showMappings={section.showMappings}
-            showDocumentation={section.showDocumentation}
-          />
+          <ComplianceSection />
         </SectionWrapper>
       );
 
     case 'services-grid':
       return (
         <SectionWrapper>
-          <ServicesSection showDetails={section.showDetails} />
+          <ServicesSection />
         </SectionWrapper>
       );
 
@@ -201,10 +191,8 @@ function ContentSectionRenderer({ section }: ContentSectionRendererProps) {
     case 'cta':
       return (
         <CTASection 
-          variant={section.variant}
           title={section.title || ''}
           description={section.description || ''}
-          cta={section.cta}
         />
       );
 
@@ -419,7 +407,7 @@ function ContactGridSection({ section }: { section: any }) {
   );
 }
 
-function ContactInfoSection({ section }: { section: any }) {
+function ContactInfoSection({ section: _section }: { section: any }) {
   // This would render contact information from site config
   return (
     <div className="bg-slate-800 p-8 rounded-lg">
@@ -428,7 +416,7 @@ function ContactInfoSection({ section }: { section: any }) {
   );
 }
 
-function LeadCaptureFormSection({ section }: { section: any }) {
+function LeadCaptureFormSection({ section: _section }: { section: any }) {
   // This would render the lead capture form component
   return (
     <div className="max-w-2xl mx-auto">

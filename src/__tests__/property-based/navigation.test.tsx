@@ -224,7 +224,7 @@ describe('Property 1: Navigation System Completeness', () => {
         // Should show current page as non-link
         const pathSegments = deepPath.split('/').filter(Boolean);
         const currentPage = pathSegments[pathSegments.length - 1];
-        const currentPageElement = screen.getByText(currentPage);
+        const currentPageElement = screen.getByText(currentPage || 'Home');
         expect(currentPageElement).toHaveAttribute('aria-current', 'page');
         
         unmount();

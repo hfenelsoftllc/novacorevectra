@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui';
 import { X, FileText, Send } from 'lucide-react';
 import { cn } from '@/utils';
-import { emailService, type ExecutiveBriefRequest } from '@/services/emailService';
+import { emailService } from '@/services/emailService';
 
 /**
  * Executive brief form schema
@@ -80,7 +80,12 @@ const ExecutiveBriefModal: React.FC<ExecutiveBriefModalProps> = ({
     setIsSubmitting(true);
     
     try {
-      const success = await emailService.sendExecutiveBriefRequest(data);
+      const success = await emailService.sendExecutiveBriefRequest({
+        ...data,
+        jobTitle: data.jobTitle || '',
+        industry: data.industry || '',
+        message: data.message || ''
+      });
       
       if (success) {
         setIsSubmitted(true);

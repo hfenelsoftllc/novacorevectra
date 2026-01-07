@@ -1,2 +1,2 @@
 export * from './emailService';
-export * from './calendarService';
+export { CalendarService } from './calendarService';

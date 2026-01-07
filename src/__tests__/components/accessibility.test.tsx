@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { ErrorBoundary } from '../../components/common/ErrorBoundary';
@@ -10,7 +10,8 @@ import { Footer } from '../../components/layout/Footer';
 import { AnimatedSection } from '../../components/common/AnimatedSection';
 
 // Extend Jest matchers
-expect.extend(toHaveNoViolations);
+// Extend Jest matchers
+(expect as any).extend({ toHaveNoViolations });
 
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({

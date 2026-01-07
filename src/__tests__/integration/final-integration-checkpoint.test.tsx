@@ -72,7 +72,7 @@ describe('Final Integration Checkpoint - Task 27', () => {
   describe('System Integration Tests', () => {
     test('core system components integrate correctly', async () => {
       // Test that basic system components can be imported and rendered
-      const { Button } = await import('@/components/ui/Button');
+      const { Button } = await import('@/components/ui/button');
       const { HeroSection } = await import('@/components/sections/HeroSection');
       
       // Test Button component
@@ -145,10 +145,10 @@ describe('Final Integration Checkpoint - Task 27', () => {
           const newErrors: Record<string, string> = {};
           
           if (!formData.email || !formData.email.includes('@')) {
-            newErrors.email = 'Valid email is required';
+            newErrors['email'] = 'Valid email is required';
           }
           if (!formData.name) {
-            newErrors.name = 'Name is required';
+            newErrors['name'] = 'Name is required';
           }
           
           if (Object.keys(newErrors).length > 0) {
@@ -170,7 +170,7 @@ describe('Final Integration Checkpoint - Task 27', () => {
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
-              {errors.name && <span role="alert">{errors.name}</span>}
+              {errors['name'] && <span role="alert">{errors['name']}</span>}
             </div>
             <div>
               <label htmlFor="email">Email</label>
@@ -180,7 +180,7 @@ describe('Final Integration Checkpoint - Task 27', () => {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
-              {errors.email && <span role="alert">{errors.email}</span>}
+              {errors['email'] && <span role="alert">{errors['email']}</span>}
             </div>
             <button type="submit">Submit</button>
           </form>

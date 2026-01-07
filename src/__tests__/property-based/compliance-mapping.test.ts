@@ -1,8 +1,7 @@
 import * as fc from 'fast-check';
 import { ISO_42001_FRAMEWORK } from '../../constants/compliance';
 import { SERVICES } from '../../constants/services';
-import { ComplianceClause, ComplianceFramework } from '../../types/compliance';
-import { Service } from '../../types/services';
+import { ComplianceClause } from '../../types/compliance';
 
 describe('Property 4: Compliance Mapping Completeness', () => {
   it('should verify all services are mapped to appropriate ISO 42001 clauses with complete clause information', () => {
@@ -11,7 +10,6 @@ describe('Property 4: Compliance Mapping Completeness', () => {
       fc.property(fc.constant(true), () => {
         // Test that all services in the system are mapped to appropriate ISO 42001 clauses
         const framework = ISO_42001_FRAMEWORK;
-        const services = SERVICES;
         
         // Verify framework structure is complete
         expect(framework).toBeDefined();

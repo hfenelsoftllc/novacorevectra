@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { generateMetadata, generateStructuredData, pageConfigs } from '../../utils/seo';
 
@@ -27,11 +27,11 @@ jest.mock('next/navigation', () => ({
 // Mock framer-motion
 jest.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }) => React.createElement('div', props, children),
-    section: ({ children, ...props }) => React.createElement('section', props, children),
-    main: ({ children, ...props }) => React.createElement('main', props, children),
+    div: ({ children, ...props }: any) => React.createElement('div', props, children),
+    section: ({ children, ...props }: any) => React.createElement('section', props, children),
+    main: ({ children, ...props }: any) => React.createElement('main', props, children),
   },
-  AnimatePresence: ({ children }) => children,
+  AnimatePresence: ({ children }: any) => children,
 }));
 
 describe('Smoke Test Suite', () => {
@@ -188,12 +188,12 @@ describe('Smoke Test Suite', () => {
       // Verify OpenGraph data
       expect(metadata.openGraph?.title).toBe(homeConfig.title);
       expect(metadata.openGraph?.description).toBe(homeConfig.description);
-      expect(metadata.openGraph?.type).toBe('website');
+      expect((metadata.openGraph as any)?.type).toBe('website');
       
       // Verify Twitter data
       expect(metadata.twitter?.title).toBe(homeConfig.title);
       expect(metadata.twitter?.description).toBe(homeConfig.description);
-      expect(metadata.twitter?.card).toBe('summary_large_image');
+      expect((metadata.twitter as any)?.card).toBe('summary_large_image');
     });
 
     test('services page SEO configuration is valid', () => {
@@ -255,7 +255,7 @@ describe('Smoke Test Suite', () => {
     });
 
     test('all page configurations have required SEO elements', () => {
-      Object.entries(pageConfigs).forEach(([pageName, config]) => {
+      Object.entries(pageConfigs).forEach(([_pageName, config]) => {
         // Title requirements (allowing for truncation in metadata generation)
         expect(config.title).toBeDefined();
         expect(config.title.length).toBeGreaterThan(10);

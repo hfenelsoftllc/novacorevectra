@@ -6,10 +6,8 @@
 
 import * as fc from 'fast-check';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { CTASection } from '@/components/sections/CTASection';
 import { CTAVariant } from '@/types/forms';
-import { useAnalytics } from '@/hooks/useAnalytics';
 
 // Mock analytics hook
 jest.mock('@/hooks/useAnalytics', () => ({
@@ -34,7 +32,7 @@ jest.mock('framer-motion', () => ({
 
 // Mock LeadCaptureForm component
 jest.mock('@/components/forms/LeadCaptureForm', () => ({
-  LeadCaptureForm: ({ variant, onSubmit }: any) => (
+  LeadCaptureForm: ({ onSubmit }: any) => (
     <form data-testid="lead-capture-form">
       <input data-testid="form-input" />
       <button type="submit" onClick={() => onSubmit({ test: 'data' })}>
@@ -64,7 +62,7 @@ describe('Property 5: CTA Functionality', () => {
           const mockOnAction = jest.fn();
           
           // Render CTA component
-          const { container } = render(
+          render(
             <CTASection
               variant={variant as CTAVariant}
               onAction={mockOnAction}

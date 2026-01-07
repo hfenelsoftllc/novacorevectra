@@ -1,6 +1,6 @@
 ﻿import * as fc from 'fast-check';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
+
 import { ProcessLifecycleSection } from '@/components/sections/ProcessLifecycleSection';
 import { ProcessStep } from '@/types/process';
 import { PROCESS_STEPS } from '@/constants/processes';
@@ -37,7 +37,7 @@ const processStepArbitrary = fc.record({
     fc.constant('2-4 weeks'),
     fc.constant('3-6 weeks'),
     fc.constant('Ongoing')
-  ))
+  ), { nil: undefined })
 });
 
 // Generator for arrays of ProcessStep objects with unique titles (1-4 steps to match typical use)
@@ -47,7 +47,8 @@ const processStepsArrayArbitrary = fc.array(processStepArbitrary, { minLength: 1
     return steps.map((step, index) => ({
       ...step,
       id: `step-${index + 1}`,
-      title: `Process Step ${index + 1}`
+      title: `Process Step ${index + 1}`,
+      duration: step.duration || '1-2 weeks' // Ensure duration is always a string
     }));
   });
 
@@ -104,7 +105,7 @@ describe('Property 2: Process Lifecycle Animation', () => {
           // Use getAllByText to handle potential duplicates and get the first one
           const stepTitleElements = screen.getAllByText(step.title);
           const stepTitle = stepTitleElements[0];
-          const stepCard = stepTitle.closest('.relative') || stepTitle.closest('div');
+          const stepCard = stepTitle?.closest('.relative') || stepTitle?.closest('div');
           
           // Verify that the step card exists and has the proper structure for hover interactions
           expect(stepCard).toBeInTheDocument();
@@ -147,12 +148,12 @@ describe('Property 2: Process Lifecycle Animation', () => {
         }
 
         // Verify each process step has proper structure for animations
-        processes.forEach((step, index) => {
+        processes.forEach((step) => {
           const stepElements = screen.getAllByText(step.title);
           expect(stepElements[0]).toBeInTheDocument();
           
           // Verify step has proper container structure
-          const stepContainer = stepElements[0].closest('.relative');
+          const stepContainer = stepElements[0]?.closest('.relative');
           expect(stepContainer).toBeInTheDocument();
         });
 
@@ -202,8 +203,10 @@ describe('Property 2: Process Lifecycle Animation', () => {
         expect(gridContainer).toHaveClass('grid-cols-1'); // Mobile first
         
         // Verify responsive classes exist (md:grid-cols-2, lg:grid-cols-4)
-        const hasResponsiveClasses = gridContainer.className.includes('md:') || 
-                                   gridContainer.className.includes('lg:');
+        const hasResponsiveClasses = gridContainer ? (
+          gridContainer.className.includes('md:') || 
+          gridContainer.className.includes('lg:')
+        ) : false;
         expect(hasResponsiveClasses).toBe(true);
 
         // Verify mobile connection indicators exist
@@ -342,7 +345,7 @@ describe('Property 13: Responsive Layout Behavior', () => {
           expect(gridContainer).toHaveClass('grid-cols-1'); // Mobile first
           
           // Verify responsive classes exist for larger screens
-          const gridClasses = gridContainer.className;
+          const gridClasses = gridContainer ? gridContainer.className : '';
           const hasResponsiveClasses = gridClasses.includes('md:grid-cols-2') && 
                                      gridClasses.includes('lg:grid-cols-4');
           expect(hasResponsiveClasses).toBe(true);

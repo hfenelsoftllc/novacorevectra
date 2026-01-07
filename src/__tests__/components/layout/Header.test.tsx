@@ -20,11 +20,17 @@ describe('Header', () => {
     const desktopNavContainer = desktopNav.closest('.hidden.md\\:block');
     
     if (desktopNavContainer) {
-      expect(within(desktopNavContainer).getByRole('link', { name: /home/i })).toBeInTheDocument();
-      expect(within(desktopNavContainer).getByRole('link', { name: /services/i })).toBeInTheDocument();
-      expect(within(desktopNavContainer).getByRole('link', { name: /governance/i })).toBeInTheDocument();
-      expect(within(desktopNavContainer).getByRole('link', { name: /about/i })).toBeInTheDocument();
-      expect(within(desktopNavContainer).getByRole('link', { name: /contact/i })).toBeInTheDocument();
+      const homeLink = within(desktopNavContainer as HTMLElement).getByRole('link', { name: /home/i }) as HTMLElement;
+      const servicesLink = within(desktopNavContainer as HTMLElement).getByRole('link', { name: /services/i }) as HTMLElement;
+      const governanceLink = within(desktopNavContainer as HTMLElement).getByRole('link', { name: /governance/i }) as HTMLElement;
+      const aboutLink = within(desktopNavContainer as HTMLElement).getByRole('link', { name: /about/i }) as HTMLElement;
+      const contactLink = within(desktopNavContainer as HTMLElement).getByRole('link', { name: /contact/i }) as HTMLElement;
+      
+      expect(homeLink).toBeInTheDocument();
+      expect(servicesLink).toBeInTheDocument();
+      expect(governanceLink).toBeInTheDocument();
+      expect(aboutLink).toBeInTheDocument();
+      expect(contactLink).toBeInTheDocument();
     }
   });
 

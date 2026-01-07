@@ -19,7 +19,6 @@ import {
   isReturningVisitor, 
   getVisitorData, 
   saveVisitorData, 
-  trackVisit,
   getVisitCount,
   getProgressiveFields 
 } from '@/utils/progressiveProfiling';

@@ -16,7 +16,7 @@ import { INDUSTRIES } from '../../constants/industries';
 import { PROCESS_STEPS } from '../../constants/processes';
 
 // Extend Jest matchers
-expect.extend(toHaveNoViolations);
+(expect as any).extend({ toHaveNoViolations });
 
 // Mock Next.js components
 jest.mock('next/image', () => ({

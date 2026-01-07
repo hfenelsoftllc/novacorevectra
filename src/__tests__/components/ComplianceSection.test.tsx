@@ -101,7 +101,9 @@ describe('ComplianceSection', () => {
     const expandButtons = screen.getAllByRole('button', { name: /expand details/i });
     const firstButton = expandButtons[0];
     expect(firstButton).toBeInTheDocument();
-    fireEvent.click(firstButton);
+    if (firstButton) {
+      fireEvent.click(firstButton);
+    }
 
     // Now the requirements should be visible
     expect(screen.getByText('Test requirement 1')).toBeInTheDocument();
@@ -122,7 +124,9 @@ describe('ComplianceSection', () => {
     const expandButtons = screen.getAllByRole('button', { name: /expand details/i });
     const firstButton = expandButtons[0];
     expect(firstButton).toBeInTheDocument();
-    fireEvent.click(firstButton);
+    if (firstButton) {
+      fireEvent.click(firstButton);
+    }
 
     expect(screen.getByText('Download Documentation')).toBeInTheDocument();
   });
@@ -134,7 +138,9 @@ describe('ComplianceSection', () => {
     const expandButtons = screen.getAllByRole('button', { name: /expand details/i });
     const firstButton = expandButtons[0];
     expect(firstButton).toBeInTheDocument();
-    fireEvent.click(firstButton);
+    if (firstButton) {
+      fireEvent.click(firstButton);
+    }
 
     expect(screen.queryByText('Download Documentation')).not.toBeInTheDocument();
   });
@@ -154,7 +160,9 @@ describe('ComplianceSection', () => {
     const expandButtons = screen.getAllByRole('button', { name: /expand details/i });
     const firstButton = expandButtons[0];
     expect(firstButton).toBeInTheDocument();
-    fireEvent.click(firstButton);
+    if (firstButton) {
+      fireEvent.click(firstButton);
+    }
 
     expect(screen.getByText('Mapped Services')).toBeInTheDocument();
     expect(screen.getByText('Business Process Strategy')).toBeInTheDocument();
