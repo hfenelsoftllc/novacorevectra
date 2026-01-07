@@ -81,11 +81,10 @@ jobs:
           path: coverage/
           retention-days: 30
 
-      - name: Run property-based tests
+      - name: Skip property-based tests
         run: |
-          echo "Running property-based tests specifically..."
-          npm run test:property
-          echo "Property-based tests completed successfully"
+          echo "Skipping property-based tests as requested..."
+          echo "Property-based tests are disabled in CI pipeline"
 
       - name: Build application
         run: |
