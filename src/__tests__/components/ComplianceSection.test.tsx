@@ -99,7 +99,9 @@ describe('ComplianceSection', () => {
 
     // Find and click the expand button for the first clause
     const expandButtons = screen.getAllByRole('button', { name: /expand details/i });
-    fireEvent.click(expandButtons[0]);
+    const firstButton = expandButtons[0];
+    expect(firstButton).toBeInTheDocument();
+    fireEvent.click(firstButton);
 
     // Now the requirements should be visible
     expect(screen.getByText('Test requirement 1')).toBeInTheDocument();
@@ -118,7 +120,9 @@ describe('ComplianceSection', () => {
 
     // Expand the first clause to see download link
     const expandButtons = screen.getAllByRole('button', { name: /expand details/i });
-    fireEvent.click(expandButtons[0]);
+    const firstButton = expandButtons[0];
+    expect(firstButton).toBeInTheDocument();
+    fireEvent.click(firstButton);
 
     expect(screen.getByText('Download Documentation')).toBeInTheDocument();
   });
@@ -128,7 +132,9 @@ describe('ComplianceSection', () => {
 
     // Expand the first clause
     const expandButtons = screen.getAllByRole('button', { name: /expand details/i });
-    fireEvent.click(expandButtons[0]);
+    const firstButton = expandButtons[0];
+    expect(firstButton).toBeInTheDocument();
+    fireEvent.click(firstButton);
 
     expect(screen.queryByText('Download Documentation')).not.toBeInTheDocument();
   });
@@ -136,7 +142,8 @@ describe('ComplianceSection', () => {
   it('renders with proper accessibility attributes', () => {
     render(<ComplianceSection framework={mockFramework} />);
 
-    expect(screen.getByRole('region', { name: /Trust & Compliance/i })).toBeInTheDocument();
+    const region = screen.getByRole('region', { name: /Trust & Compliance/i });
+    expect(region).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 2, name: /trust & compliance/i })).toBeInTheDocument();
   });
 
@@ -145,7 +152,9 @@ describe('ComplianceSection', () => {
 
     // Expand the first clause to see mapped services
     const expandButtons = screen.getAllByRole('button', { name: /expand details/i });
-    fireEvent.click(expandButtons[0]);
+    const firstButton = expandButtons[0];
+    expect(firstButton).toBeInTheDocument();
+    fireEvent.click(firstButton);
 
     expect(screen.getByText('Mapped Services')).toBeInTheDocument();
     expect(screen.getByText('Business Process Strategy')).toBeInTheDocument();

@@ -61,7 +61,7 @@ describe('useAnalytics', () => {
 
     act(() => {
       result.current.trackCTAClick({
-        variant: 'primary',
+        variant: 'consultation',
         position: 'hero',
         page: '/',
         userId: 'test-user',

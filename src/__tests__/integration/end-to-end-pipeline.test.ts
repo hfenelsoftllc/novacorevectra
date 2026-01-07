@@ -9,7 +9,7 @@
 
 import { execSync } from 'child_process';
 import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
+import * as path from 'path';
 
 // Mock external dependencies for testing
 jest.mock('child_process');
@@ -45,11 +45,9 @@ interface PipelineTestResult {
  * End-to-End Pipeline Test Runner
  */
 class PipelineTestRunner {
-  private baseDir: string;
   private environment: 'staging' | 'production';
 
-  constructor(baseDir: string = process.cwd(), environment: 'staging' | 'production' = 'staging') {
-    this.baseDir = baseDir;
+  constructor(environment: 'staging' | 'production' = 'staging') {
     this.environment = environment;
   }
 
@@ -237,7 +235,7 @@ class PipelineTestRunner {
       'next.config.js',
     ];
     
-    return commonFiles.some(file => filePath.includes(file));
+    return commonFiles.some(file => path.normalize(filePath).includes(file));
   }
 
   /**
@@ -497,7 +495,7 @@ describe('End-to-End Pipeline Integration Tests', () => {
 
   describe('Environment-Specific Tests', () => {
     test('should run staging environment pipeline', async () => {
-      const stagingRunner = new PipelineTestRunner(process.cwd(), 'staging');
+      const stagingRunner = new PipelineTestRunner('staging');
       const result = await stagingRunner.runFullPipelineTest();
 
       expect(result.success).toBe(true);
@@ -505,7 +503,7 @@ describe('End-to-End Pipeline Integration Tests', () => {
     });
 
     test('should run production environment pipeline', async () => {
-      const productionRunner = new PipelineTestRunner(process.cwd(), 'production');
+      const productionRunner = new PipelineTestRunner('production');
       const result = await productionRunner.runFullPipelineTest();
 
       expect(result.success).toBe(true);
@@ -513,8 +511,8 @@ describe('End-to-End Pipeline Integration Tests', () => {
     });
 
     test('should validate environment isolation', async () => {
-      const stagingRunner = new PipelineTestRunner(process.cwd(), 'staging');
-      const productionRunner = new PipelineTestRunner(process.cwd(), 'production');
+      const stagingRunner = new PipelineTestRunner('staging');
+      const productionRunner = new PipelineTestRunner('production');
 
       const stagingResult = await stagingRunner.runFullPipelineTest();
       const productionResult = await productionRunner.runFullPipelineTest();

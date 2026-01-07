@@ -291,6 +291,9 @@ describe('Accessibility Features', () => {
         element.focus();
         expect(element).toHaveFocus();
       }
+
+      // Use user for keyboard navigation
+      await user.tab();
     });
   });
 

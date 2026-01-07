@@ -54,17 +54,17 @@ const ThrowError = ({ shouldThrow, message = 'Test error' }: { shouldThrow: bool
 };
 
 // Component that throws async error
-const AsyncErrorComponent = ({ shouldThrow }: { shouldThrow: boolean }) => {
-  React.useEffect(() => {
-    if (shouldThrow) {
-      setTimeout(() => {
-        throw new Error('Async error');
-      }, 100);
-    }
-  }, [shouldThrow]);
+// const AsyncErrorComponent = ({ shouldThrow }: { shouldThrow: boolean }) => {
+//   React.useEffect(() => {
+//     if (shouldThrow) {
+//       setTimeout(() => {
+//         throw new Error('Async error');
+//       }, 100);
+//     }
+//   }, [shouldThrow]);
 
-  return <div>Async component</div>;
-};
+//   return <div>Async component</div>;
+// };
 
 describe('Accessibility and Error Handling Tests', () => {
   describe('ErrorBoundary Advanced Scenarios', () => {
@@ -197,7 +197,8 @@ describe('Accessibility and Error Handling Tests', () => {
 
     test('should show development error details in development mode', () => {
       const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
+      // @ts-ignore - We need to modify NODE_ENV for testing
+      process.env = { ...process.env, NODE_ENV: 'development' };
 
       const error = new Error('Development error');
       error.stack = 'Error stack trace';
@@ -216,7 +217,8 @@ describe('Accessibility and Error Handling Tests', () => {
       fireEvent.click(details);
       expect(screen.getByText('Development error')).toBeInTheDocument();
 
-      process.env.NODE_ENV = originalEnv;
+      // @ts-ignore - Restore original NODE_ENV
+      process.env = { ...process.env, NODE_ENV: originalEnv };
     });
 
     test('should handle keyboard navigation properly', async () => {
@@ -302,13 +304,16 @@ describe('Accessibility and Error Handling Tests', () => {
       render(
         <ComplianceSection 
           framework={ISO_42001_FRAMEWORK}
-          mappedServices={[]}
         />
       );
 
       // Find first expandable clause
       const expandButtons = screen.getAllByRole('button', { name: /expand details/i });
       const firstButton = expandButtons[0];
+      
+      if (!firstButton) {
+        throw new Error('No expand button found');
+      }
 
       // Should be focusable
       firstButton.focus();
@@ -327,7 +332,6 @@ describe('Accessibility and Error Handling Tests', () => {
       render(
         <ComplianceSection 
           framework={ISO_42001_FRAMEWORK}
-          mappedServices={[]}
         />
       );
 
@@ -342,7 +346,6 @@ describe('Accessibility and Error Handling Tests', () => {
       const { container } = render(
         <ComplianceSection 
           framework={ISO_42001_FRAMEWORK}
-          mappedServices={[]}
         />
       );
 
@@ -370,14 +373,16 @@ describe('Accessibility and Error Handling Tests', () => {
       const industryTabs = screen.getAllByRole('tab');
       if (industryTabs.length > 0) {
         const firstTab = industryTabs[0];
-        firstTab.focus();
-        expect(firstTab).toHaveFocus();
+        if (firstTab) {
+          firstTab.focus();
+          expect(firstTab).toHaveFocus();
 
-        // Arrow keys should navigate between industries
-        await user.keyboard('{ArrowRight}');
-        // Next tab should be focused (if exists)
-        if (industryTabs.length > 1) {
-          expect(industryTabs[1]).toHaveFocus();
+          // Arrow keys should navigate between industries
+          await user.keyboard('{ArrowRight}');
+          // Next tab should be focused (if exists)
+          if (industryTabs.length > 1) {
+            expect(industryTabs[1]).toHaveFocus();
+          }
         }
       }
     });

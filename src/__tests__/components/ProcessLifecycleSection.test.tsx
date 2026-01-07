@@ -27,8 +27,8 @@ jest.mock('framer-motion', () => ({
       return (
         <div 
           className={className} 
-          onMouseEnter={onHoverStart}
-          onMouseLeave={onHoverEnd}
+          onMouseEnter={onHoverStart as React.MouseEventHandler<HTMLDivElement>}
+          onMouseLeave={onHoverEnd as React.MouseEventHandler<HTMLDivElement>}
           {...domProps}
         >
           {children}

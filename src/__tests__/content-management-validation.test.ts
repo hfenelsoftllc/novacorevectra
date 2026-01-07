@@ -5,7 +5,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { contentManager, loadSiteConfig, loadPageContent, updateContent } from '../utils/contentManager';
+import { contentManager } from '../utils/contentManager';
 import { renderRichText, validateRichText } from '../utils/richTextRenderer';
 
 describe('Content Management System Validation', () => {
@@ -191,7 +191,7 @@ describe('Content Management System Validation', () => {
       expect(homeContent.hero.image.height).toBeDefined();
       
       // Check sections for media embedding support
-      const sectionsWithImages = homeContent.sections.filter(section => section.image);
+      const sectionsWithImages = homeContent.sections.filter((section: any) => section.image);
       expect(sectionsWithImages.length).toBeGreaterThan(0);
       
       if (sectionsWithImages.length > 0) {

@@ -14,6 +14,7 @@ describe('IndustrySelector', () => {
     render(
       <IndustrySelector
         industries={INDUSTRIES}
+        selectedIndustry="airlines"
         onIndustrySelect={mockOnIndustrySelect}
       />
     );
@@ -42,6 +43,7 @@ describe('IndustrySelector', () => {
     render(
       <IndustrySelector
         industries={INDUSTRIES}
+        selectedIndustry="airlines"
         onIndustrySelect={mockOnIndustrySelect}
       />
     );
