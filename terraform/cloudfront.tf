@@ -1,5 +1,5 @@
 # CloudFront Origin Access Control for S3
-resource "aws_cloudfront_origin_access_control" "website" {
+resource "aws_cloudfront_origin_access_control" "website_ncv_cf" {
   name                              = "${var.project_name}-${var.environment}-oac"
   description                       = "Origin Access Control for ${var.project_name} ${var.environment}"
   origin_access_control_origin_type = "s3"
@@ -96,10 +96,10 @@ resource "aws_cloudfront_response_headers_policy" "security_headers" {
 }
 
 # CloudFront Distribution
-resource "aws_cloudfront_distribution" "website" {
+resource "aws_cloudfront_distribution" "website_ncv_cf_dist" {
   origin {
     domain_name              = aws_s3_bucket.website.bucket_regional_domain_name
-    origin_access_control_id = aws_cloudfront_origin_access_control.website.id
+    origin_access_control_id = aws_cloudfront_origin_access_control.website_ncv_cf.id
     origin_id                = "S3-${aws_s3_bucket.website.bucket}"
   }
 
@@ -109,9 +109,7 @@ resource "aws_cloudfront_distribution" "website" {
   default_root_object = "index.html"
 
   # Aliases (custom domain names)
-  aliases = var.environment == "staging" ? 
-    ["staging.${var.domain_name}"] : 
-    [var.domain_name, "www.${var.domain_name}"]
+  aliases = var.environment == "staging" ? ["staging.${var.domain_name}"] : [var.domain_name, "www.${var.domain_name}"]
 
   # Default cache behavior for HTML files
   default_cache_behavior {
@@ -136,9 +134,9 @@ resource "aws_cloudfront_distribution" "website" {
     compress               = true
   }
 
-  # Cache behavior for images
+  # Cache behavior for images - JPG
   ordered_cache_behavior {
-    path_pattern           = "*.{jpg,jpeg,png,gif,ico,svg,webp}"
+    path_pattern           = "*.jpg"
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = "S3-${aws_s3_bucket.website.bucket}"
@@ -147,9 +145,42 @@ resource "aws_cloudfront_distribution" "website" {
     compress               = true
   }
 
-  # Cache behavior for fonts
+  # Cache behavior for images - PNG
   ordered_cache_behavior {
-    path_pattern           = "*.{woff,woff2,ttf,eot}"
+    path_pattern           = "*.png"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "S3-${aws_s3_bucket.website.bucket}"
+    cache_policy_id        = aws_cloudfront_cache_policy.static_assets.id
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+  }
+
+  # Cache behavior for images - SVG
+  ordered_cache_behavior {
+    path_pattern           = "*.svg"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "S3-${aws_s3_bucket.website.bucket}"
+    cache_policy_id        = aws_cloudfront_cache_policy.static_assets.id
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+  }
+
+  # Cache behavior for fonts - WOFF
+  ordered_cache_behavior {
+    path_pattern           = "*.woff"
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "S3-${aws_s3_bucket.website.bucket}"
+    cache_policy_id        = aws_cloudfront_cache_policy.static_assets.id
+    viewer_protocol_policy = "redirect-to-https"
+    compress               = true
+  }
+
+  # Cache behavior for fonts - WOFF2
+  ordered_cache_behavior {
+    path_pattern           = "*.woff2"
     allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = "S3-${aws_s3_bucket.website.bucket}"
@@ -167,7 +198,7 @@ resource "aws_cloudfront_distribution" "website" {
 
   # SSL Certificate configuration
   viewer_certificate {
-    acm_certificate_arn            = aws_acm_certificate_validation.website.certificate_arn
+    acm_certificate_arn            = aws_acm_certificate_validation.website_ncv_cert.certificate_arn
     ssl_support_method             = "sni-only"
     minimum_protocol_version       = "TLSv1.2_2021"
     cloudfront_default_certificate = false
@@ -217,7 +248,7 @@ resource "aws_s3_bucket_policy" "website_cloudfront" {
         Resource = "${aws_s3_bucket.website.arn}/*"
         Condition = {
           StringEquals = {
-            "AWS:SourceArn" = aws_cloudfront_distribution.website.arn
+            "AWS:SourceArn" = aws_cloudfront_distribution.website_ncv_cf_dist.arn
           }
         }
       }
@@ -226,6 +257,6 @@ resource "aws_s3_bucket_policy" "website_cloudfront" {
 
   depends_on = [
     aws_s3_bucket_public_access_block.website,
-    aws_cloudfront_distribution.website
+    aws_cloudfront_distribution.website_ncv_cf_dist
   ]
 }

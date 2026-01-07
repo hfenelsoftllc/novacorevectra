@@ -17,12 +17,12 @@ resource "aws_route53_record" "website_a" {
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+    name                   = aws_cloudfront_distribution.website_ncv_cf_dist.domain_name
+    zone_id                = aws_cloudfront_distribution.website_ncv_cf_dist.hosted_zone_id
     evaluate_target_health = false
   }
 
-  depends_on = [aws_cloudfront_distribution.website]
+  depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
 }
 
 # AAAA record (IPv6) pointing to CloudFront distribution
@@ -32,12 +32,12 @@ resource "aws_route53_record" "website_aaaa" {
   type    = "AAAA"
 
   alias {
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+    name                   = aws_cloudfront_distribution.website_ncv_cf_dist.domain_name
+    zone_id                = aws_cloudfront_distribution.website_ncv_cf_dist.hosted_zone_id
     evaluate_target_health = false
   }
 
-  depends_on = [aws_cloudfront_distribution.website]
+  depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
 }
 
 # WWW redirect for production environment only
@@ -48,12 +48,12 @@ resource "aws_route53_record" "website_www_a" {
   type    = "A"
 
   alias {
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+    name                   = aws_cloudfront_distribution.website_ncv_cf_dist.domain_name
+    zone_id                = aws_cloudfront_distribution.website_ncv_cf_dist.hosted_zone_id
     evaluate_target_health = false
   }
 
-  depends_on = [aws_cloudfront_distribution.website]
+  depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
 }
 
 resource "aws_route53_record" "website_www_aaaa" {
@@ -63,12 +63,24 @@ resource "aws_route53_record" "website_www_aaaa" {
   type    = "AAAA"
 
   alias {
-    name                   = aws_cloudfront_distribution.website.domain_name
-    zone_id                = aws_cloudfront_distribution.website.hosted_zone_id
+    name                   = aws_cloudfront_distribution.website_ncv_cf_dist.domain_name
+    zone_id                = aws_cloudfront_distribution.website_ncv_cf_dist.hosted_zone_id
     evaluate_target_health = false
   }
 
-  depends_on = [aws_cloudfront_distribution.website]
+  depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
+}
+
+# MX record for Google SMTP
+resource "aws_route53_record" "mx" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = var.domain_name
+  type    = "MX"
+  ttl     = 3600  # 1 hour
+
+  records = [
+    "1 smtp.google.com"
+  ]
 }
 
 # Health check for the website (production only)

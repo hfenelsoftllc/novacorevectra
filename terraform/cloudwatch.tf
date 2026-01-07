@@ -52,7 +52,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudfront_4xx_error_rate" {
   ok_actions          = [aws_sns_topic.cloudwatch_alerts.arn]
 
   dimensions = {
-    DistributionId = aws_cloudfront_distribution.website.id
+    DistributionId = aws_cloudfront_distribution.website_ncv_cf_dist.id
   }
 
   tags = {
@@ -78,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudfront_5xx_error_rate" {
   ok_actions          = [aws_sns_topic.cloudwatch_alerts.arn]
 
   dimensions = {
-    DistributionId = aws_cloudfront_distribution.website.id
+    DistributionId = aws_cloudfront_distribution.website_ncv_cf_dist.id
   }
 
   tags = {
@@ -104,7 +104,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudfront_origin_latency" {
   ok_actions          = [aws_sns_topic.cloudwatch_alerts.arn]
 
   dimensions = {
-    DistributionId = aws_cloudfront_distribution.website.id
+    DistributionId = aws_cloudfront_distribution.website_ncv_cf_dist.id
   }
 
   tags = {
@@ -244,7 +244,7 @@ resource "aws_cloudwatch_dashboard" "website_monitoring" {
 
         properties = {
           metrics = [
-            ["AWS/CloudFront", "Requests", "DistributionId", aws_cloudfront_distribution.website.id],
+            ["AWS/CloudFront", "Requests", "DistributionId", aws_cloudfront_distribution.website_ncv_cf_dist.id],
             [".", "BytesDownloaded", ".", "."],
             [".", "BytesUploaded", ".", "."]
           ]
@@ -264,7 +264,7 @@ resource "aws_cloudwatch_dashboard" "website_monitoring" {
 
         properties = {
           metrics = [
-            ["AWS/CloudFront", "4xxErrorRate", "DistributionId", aws_cloudfront_distribution.website.id],
+            ["AWS/CloudFront", "4xxErrorRate", "DistributionId", aws_cloudfront_distribution.website_ncv_cf_dist.id],
             [".", "5xxErrorRate", ".", "."]
           ]
           view    = "timeSeries"
@@ -283,7 +283,7 @@ resource "aws_cloudwatch_dashboard" "website_monitoring" {
 
         properties = {
           metrics = [
-            ["AWS/CloudFront", "OriginLatency", "DistributionId", aws_cloudfront_distribution.website.id]
+            ["AWS/CloudFront", "OriginLatency", "DistributionId", aws_cloudfront_distribution.website_ncv_cf_dist.id]
           ]
           view    = "timeSeries"
           stacked = false
@@ -332,11 +332,4 @@ resource "aws_cloudwatch_dashboard" "website_monitoring" {
       }
     ]
   })
-
-  tags = {
-    Name        = "${var.project_name}-${var.environment}-monitoring-dashboard"
-    Environment = var.environment
-    Project     = var.project_name
-    Purpose     = "Monitoring Dashboard"
-  }
 }
