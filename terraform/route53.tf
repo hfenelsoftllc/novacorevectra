@@ -76,10 +76,14 @@ resource "aws_route53_record" "mx" {
   zone_id = aws_route53_zone.main.zone_id
   name    = var.domain_name
   type    = "MX"
-  ttl     = 3600  # 1 hour
+  ttl     = 300  #3600 1 hour
 
   records = [
-    "1 smtp.google.com"
+    "1 ASPMX.L.GOOGLE.COM."
+    "5 ALT1.ASPMX.L.GOOGLE.COM."
+    "5 ALT2.ASPMX.L.GOOGLE.COM."
+    "10 ALT3.ASPMX.L.GOOGLE.COM."
+    "10 ALT4.ASPMX.L.GOOGLE.COM."
   ]
 }
 
