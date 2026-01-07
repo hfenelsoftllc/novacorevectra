@@ -18,6 +18,28 @@ resource "aws_acm_certificate" "website_ncv_cert" {
     Environment = var.environment
     Project     = var.project_name
     Purpose     = "SSL Certificate"
+    Domain      = var.environment == "staging" ? "staging.${var.domain_name}" : var.domain_name
+  }
+}
+
+# Dedicated SSL Certificate for staging subdomain (staging.novacorevectra.net)
+resource "aws_acm_certificate" "staging_subdomain_cert" {
+  count    = var.environment == "staging" ? 1 : 0
+  provider = aws.us_east_1
+
+  domain_name       = "staging.${var.domain_name}"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = {
+    Name        = "${var.project_name}-staging-subdomain-certificate"
+    Environment = var.environment
+    Project     = var.project_name
+    Purpose     = "Staging Subdomain SSL Certificate"
+    Domain      = "staging.${var.domain_name}"
   }
 }
 
@@ -33,6 +55,21 @@ resource "aws_acm_certificate_validation" "website_ncv_cert" {
   }
 
   depends_on = [aws_route53_record.certificate_validation]
+}
+
+# Certificate validation for dedicated staging subdomain certificate
+resource "aws_acm_certificate_validation" "staging_subdomain_cert" {
+  count    = var.environment == "staging" ? 1 : 0
+  provider = aws.us_east_1
+
+  certificate_arn         = aws_acm_certificate.staging_subdomain_cert[0].arn
+  validation_record_fqdns = [for record in aws_route53_record.staging_certificate_validation : record.fqdn]
+
+  timeouts {
+    create = "20m"
+  }
+
+  depends_on = [aws_route53_record.staging_certificate_validation]
 }
 
 # Route53 records for certificate validation
@@ -53,4 +90,35 @@ resource "aws_route53_record" "certificate_validation" {
   zone_id         = aws_route53_zone.main.zone_id
 
   depends_on = [aws_route53_zone.main]
+}
+
+# Route53 records for staging subdomain certificate validation
+resource "aws_route53_record" "staging_certificate_validation" {
+  for_each = var.environment == "staging" ? {
+    for dvo in aws_acm_certificate.staging_subdomain_cert[0].domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  } : {}
+
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = aws_route53_zone.main.zone_id
+
+  depends_on = [aws_route53_zone.main]
+}
+
+# Output values for staging subdomain certificate
+output "staging_subdomain_certificate_arn" {
+  description = "ARN of the staging subdomain SSL certificate"
+  value       = var.environment == "staging" ? aws_acm_certificate.staging_subdomain_cert[0].arn : null
+}
+
+output "staging_subdomain_certificate_domain" {
+  description = "Domain name of the staging subdomain certificate"
+  value       = var.environment == "staging" ? aws_acm_certificate.staging_subdomain_cert[0].domain_name : null
 }

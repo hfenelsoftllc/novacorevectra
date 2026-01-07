@@ -40,6 +40,38 @@ resource "aws_route53_record" "website_aaaa" {
   depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
 }
 
+# Dedicated staging subdomain A record (explicit for staging.novacorevectra.net)
+resource "aws_route53_record" "staging_subdomain_a" {
+  count   = var.environment == "staging" ? 1 : 0
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "staging.${var.domain_name}"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.website_ncv_cf_dist.domain_name
+    zone_id                = aws_cloudfront_distribution.website_ncv_cf_dist.hosted_zone_id
+    evaluate_target_health = false
+  }
+
+  depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
+}
+
+# Dedicated staging subdomain AAAA record (explicit for staging.novacorevectra.net)
+resource "aws_route53_record" "staging_subdomain_aaaa" {
+  count   = var.environment == "staging" ? 1 : 0
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "staging.${var.domain_name}"
+  type    = "AAAA"
+
+  alias {
+    name                   = aws_cloudfront_distribution.website_ncv_cf_dist.domain_name
+    zone_id                = aws_cloudfront_distribution.website_ncv_cf_dist.hosted_zone_id
+    evaluate_target_health = false
+  }
+
+  depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
+}
+
 # WWW redirect for production environment only
 resource "aws_route53_record" "website_www_a" {
   count   = var.environment == "production" ? 1 : 0
@@ -131,4 +163,14 @@ resource "aws_cloudwatch_metric_alarm" "website_health" {
     Project     = var.project_name
     Purpose     = "Health Monitoring"
   }
+}
+# Output values for staging subdomain
+output "staging_subdomain_fqdn" {
+  description = "Fully qualified domain name for staging subdomain"
+  value       = var.environment == "staging" ? "staging.${var.domain_name}" : null
+}
+
+output "staging_subdomain_zone_id" {
+  description = "Route53 zone ID for the staging subdomain"
+  value       = var.environment == "staging" ? aws_route53_zone.main.zone_id : null
 }
