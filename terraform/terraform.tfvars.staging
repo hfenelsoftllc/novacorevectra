@@ -6,3 +6,4 @@ project_name    = "novacorevectra"
 enable_versioning = true
 enable_logging   = false  # Disable logging for staging to reduce costs
 log_retention_days = 7    # Shorter retention for staging
+# slack_webhook_url is set via TF_VAR_slack_webhook_url environment variable

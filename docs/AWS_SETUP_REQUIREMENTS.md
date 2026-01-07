@@ -319,7 +319,7 @@ Configure the following secrets in your GitHub repository:
 - `AWS_ACCOUNT_ID` - Your AWS account ID
 - `AWS_REGION` - AWS region (e.g., us-east-1)
 - `AWS_ROLE_ARN` - ARN of the GitHub Actions execution role
-- `SLACK_WEBHOOK_URL` - Slack webhook for notifications (optional)
+- `SLACK_WEBHOOK_URL` - Slack webhook for notifications (set as GitHub secret)
 - `NOTIFICATION_EMAIL` - Email for deployment notifications
 
 ### OIDC Provider Setup

@@ -54,6 +54,6 @@ variable "alert_email" {
 variable "slack_webhook_url" {
   description = "Slack webhook URL for notifications"
   type        = string
-  default     = "support@novacorevectra.net"
+  default     = ""
   sensitive   = true
 }
