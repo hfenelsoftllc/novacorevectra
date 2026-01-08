@@ -189,23 +189,57 @@ tag_deployment_artifacts() {
     # Create deployment-specific directory
     local deployment_key="deployments/$version/"
     
-    # Copy artifacts to versioned location
+    # Copy artifacts to versioned location with metadata
     aws s3 sync "$artifacts_path" "s3://$bucket_name/$deployment_key" \
         --delete \
         --metadata "deployment-version=$version,environment=$environment,commit-sha=$commit_sha" \
         --metadata-directive REPLACE
     
-    # Tag the deployment directory
-    aws s3api put-object-tagging \
+    # Create a directory marker file to enable tagging
+    local marker_key="deployments/$version/.deployment-info"
+    local marker_content="{\"version\":\"$version\",\"environment\":\"$environment\",\"commitSha\":\"$commit_sha\",\"createdAt\":\"$(date --iso-8601=seconds)\"}"
+    
+    # Upload the marker file
+    echo "$marker_content" | aws s3 cp - "s3://$bucket_name/$marker_key" \
+        --content-type "application/json" \
+        --metadata "deployment-version=$version,environment=$environment,commit-sha=$commit_sha"
+    
+    # Tag the marker file instead of the directory
+    if aws s3api put-object-tagging \
         --bucket "$bucket_name" \
-        --key "$deployment_key" \
+        --key "$marker_key" \
         --tagging "TagSet=[
             {Key=DeploymentVersion,Value=$version},
             {Key=Environment,Value=$environment},
             {Key=CommitSha,Value=$commit_sha},
             {Key=CreatedAt,Value=$(date --iso-8601=seconds)},
             {Key=Type,Value=deployment-backup}
-        ]" || log "WARNING: Failed to tag deployment directory (may not exist as object)"
+        ]"; then
+        log "Deployment marker file tagged successfully: $marker_key"
+    else
+        log "WARNING: Failed to tag deployment marker file"
+    fi
+    
+    # Also tag the main files if they exist
+    log "Tagging individual deployment files..."
+    aws s3api list-objects-v2 \
+        --bucket "$bucket_name" \
+        --prefix "$deployment_key" \
+        --query 'Contents[?Size > `0`].Key' \
+        --output text | while read -r object_key; do
+        if [[ -n "$object_key" && "$object_key" != "None" ]]; then
+            aws s3api put-object-tagging \
+                --bucket "$bucket_name" \
+                --key "$object_key" \
+                --tagging "TagSet=[
+                    {Key=DeploymentVersion,Value=$version},
+                    {Key=Environment,Value=$environment},
+                    {Key=CommitSha,Value=$commit_sha},
+                    {Key=CreatedAt,Value=$(date --iso-8601=seconds)},
+                    {Key=Type,Value=deployment-artifact}
+                ]" 2>/dev/null || log "WARNING: Failed to tag object: $object_key"
+        fi
+    done
     
     log "Deployment artifacts tagged successfully"
 }
