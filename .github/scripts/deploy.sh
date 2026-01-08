@@ -7,7 +7,20 @@ set -euo pipefail
 
 # Source the comprehensive logging system
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/pipeline-logger.sh"
+if [[ -f "$SCRIPT_DIR/pipeline-logger.sh" ]]; then
+    source "$SCRIPT_DIR/pipeline-logger.sh"
+else
+    # Fallback logging functions if pipeline-logger.sh is not available
+    log_step_start() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] STEP_START: $1 - $2"; }
+    log_step_complete() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] STEP_COMPLETE: $1 - $2"; }
+    log_step_failure() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] STEP_FAILURE: $1 - $2"; }
+    log_info() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $1"; }
+    log_warn() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] WARN: $1"; }
+    log_error() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: $1"; }
+    log_debug() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] DEBUG: $1"; }
+    log_deployment_event() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] DEPLOYMENT: $1 - $2 - $3"; }
+    log_performance_metric() { echo "[$(date +'%Y-%m-%d %H:%M:%S')] METRIC: $1=$2 $3"; }
+fi
 
 # Function to load environment configuration
 load_environment_config() {
@@ -319,14 +332,30 @@ main() {
     local timestamp=$(date +%s)
     
     log_info "Creating deployment version and metadata" "deployment" "main"
+    log_info "Calling: .github/scripts/deployment-versioning.sh create $environment $commit_sha $timestamp $bucket_name $artifacts_dir $cloudfront_id" "deployment" "main"
+    
     local deployment_version
-    deployment_version=$(.github/scripts/deployment-versioning.sh create \
+    if ! deployment_version=$(.github/scripts/deployment-versioning.sh create \
         "$environment" \
         "$commit_sha" \
         "$timestamp" \
         "$bucket_name" \
         "$artifacts_dir" \
-        "$cloudfront_id")
+        "$cloudfront_id" 2>&1); then
+        log_step_failure "main" "Failed to create deployment version and metadata. Output: $deployment_version" "deployment"
+        exit 1
+    fi
+    
+    if [[ -z "$deployment_version" ]]; then
+        log_step_failure "main" "Deployment version is empty" "deployment"
+        exit 1
+    fi
+    
+    # Validate deployment version format
+    if [[ ! "$deployment_version" =~ ^v[0-9]{4}\.[0-9]{2}\.[0-9]{2}-[a-zA-Z]+-[a-f0-9]{8}-[0-9]+$ ]]; then
+        log_step_failure "main" "Invalid deployment version format: $deployment_version" "deployment"
+        exit 1
+    fi
     
     log_info "Deployment version created: $deployment_version" "deployment" "main"
     
@@ -401,314 +430,6 @@ EOF
         
         log_deployment_event "deployment_failed" "failed" "$environment" "$deployment_version" "{\"reason\": \"sync_or_content_type_failed\"}"
         log_error "❌ Deployment failed during S3 sync or content type setting" "deployment" "main"
-        exit 1
-    fi
-}
-
-# Run main function with all arguments
-main "$@"
-
-# Function to load environment configuration
-load_environment_config() {
-    local env_name="$1"
-    local config_file=".github/config/${env_name}.env"
-    
-    if [[ ! -f "$config_file" ]]; then
-        log "ERROR: Environment configuration file not found: $config_file"
-        exit 1
-    fi
-    
-    log "Loading environment configuration for: $env_name"
-    set -a  # automatically export all variables
-    source "$config_file"
-    set +a
-    
-    log "Environment configuration loaded successfully"
-}
-
-# Function to validate required environment variables
-validate_environment() {
-    local required_vars=(
-        "ENVIRONMENT"
-        "AWS_REGION"
-        "DOMAIN_NAME"
-        "PROJECT_NAME"
-        "S3_BUCKET_PREFIX"
-    )
-    
-    log "Validating required environment variables..."
-    
-    for var in "${required_vars[@]}"; do
-        if [[ -z "${!var:-}" ]]; then
-            log "ERROR: Required environment variable $var is not set"
-            exit 1
-        fi
-    done
-    
-    log "All required environment variables are set"
-}
-
-# Function to sync files to S3 with proper headers
-sync_to_s3() {
-    local bucket_name="$1"
-    local source_dir="$2"
-    
-    log "Starting S3 sync to bucket: $bucket_name"
-    
-    # Sync static assets (CSS, JS, images) with long cache
-    log "Syncing static assets with long cache control..."
-    aws s3 sync "$source_dir" "s3://$bucket_name/" \
-        --delete \
-        --cache-control "$STATIC_CACHE_CONTROL" \
-        --metadata-directive REPLACE \
-        --exclude "*.html" \
-        --exclude "*.xml" \
-        --exclude "*.txt" \
-        --exclude "*.json"
-    
-    # Sync HTML files with short cache
-    log "Syncing HTML files with short cache control..."
-    aws s3 sync "$source_dir" "s3://$bucket_name/" \
-        --cache-control "$HTML_CACHE_CONTROL" \
-        --content-type "text/html" \
-        --metadata-directive REPLACE \
-        --include "*.html" \
-        --exclude "*"
-    
-    # Sync API and metadata files
-    log "Syncing API and metadata files..."
-    aws s3 sync "$source_dir" "s3://$bucket_name/" \
-        --cache-control "$API_CACHE_CONTROL" \
-        --metadata-directive REPLACE \
-        --include "*.xml" \
-        --include "*.txt" \
-        --include "*.json" \
-        --exclude "*"
-    
-    log "S3 sync completed successfully"
-}
-
-# Function to set content types for specific file extensions
-set_content_types() {
-    local bucket_name="$1"
-    
-    log "Setting proper content types and headers..."
-    
-    # Set content type for CSS files
-    aws s3 cp "s3://$bucket_name/" "s3://$bucket_name/" \
-        --recursive \
-        --exclude "*" \
-        --include "*.css" \
-        --content-type "text/css" \
-        --cache-control "$STATIC_CACHE_CONTROL" \
-        --metadata-directive REPLACE
-    
-    # Set content type for JS files
-    aws s3 cp "s3://$bucket_name/" "s3://$bucket_name/" \
-        --recursive \
-        --exclude "*" \
-        --include "*.js" \
-        --content-type "application/javascript" \
-        --cache-control "$STATIC_CACHE_CONTROL" \
-        --metadata-directive REPLACE
-    
-    # Set content type for JSON files
-    aws s3 cp "s3://$bucket_name/" "s3://$bucket_name/" \
-        --recursive \
-        --exclude "*" \
-        --include "*.json" \
-        --content-type "application/json" \
-        --cache-control "$API_CACHE_CONTROL" \
-        --metadata-directive REPLACE
-    
-    # Set content type for image files
-    for ext in jpg jpeg png gif ico svg webp; do
-        aws s3 cp "s3://$bucket_name/" "s3://$bucket_name/" \
-            --recursive \
-            --exclude "*" \
-            --include "*.$ext" \
-            --content-type "image/$ext" \
-            --cache-control "$STATIC_CACHE_CONTROL" \
-            --metadata-directive REPLACE || true
-    done
-    
-    log "Content types set successfully"
-}
-
-# Function to invalidate CloudFront cache
-invalidate_cloudfront() {
-    local distribution_id="$1"
-    
-    if [[ -z "$distribution_id" ]]; then
-        log "WARNING: No CloudFront distribution ID provided, skipping invalidation"
-        return 0
-    fi
-    
-    log "Creating CloudFront invalidation for distribution: $distribution_id"
-    
-    local invalidation_id
-    invalidation_id=$(aws cloudfront create-invalidation \
-        --distribution-id "$distribution_id" \
-        --paths "/*" \
-        --query 'Invalidation.Id' \
-        --output text)
-    
-    log "CloudFront invalidation created with ID: $invalidation_id"
-    
-    if [[ "$ENVIRONMENT" == "production" ]]; then
-        log "Waiting for invalidation to complete (production environment)..."
-        timeout "$INVALIDATION_TIMEOUT" aws cloudfront wait invalidation-completed \
-            --distribution-id "$distribution_id" \
-            --id "$invalidation_id" || {
-            log "WARNING: Invalidation wait timed out, but invalidation is still in progress"
-        }
-        log "CloudFront cache invalidation completed"
-    else
-        log "Invalidation started for staging environment (not waiting for completion)"
-    fi
-}
-
-# Function to verify deployment
-verify_deployment() {
-    local bucket_name="$1"
-    local cloudfront_domain="${2:-}"
-    
-    log "Verifying deployment..."
-    
-    # Test S3 website endpoint
-    local s3_url="http://$bucket_name.s3-website-$AWS_REGION.amazonaws.com"
-    log "Testing S3 website endpoint: $s3_url"
-    
-    local http_status
-    http_status=$(curl -s -o /dev/null -w "%{http_code}" "$s3_url" || echo "000")
-    
-    if [[ "$http_status" == "200" ]]; then
-        log "✅ S3 website endpoint is accessible (HTTP $http_status)"
-    else
-        log "❌ S3 website endpoint verification failed (HTTP $http_status)"
-        return 1
-    fi
-    
-    # Test CloudFront domain if provided
-    if [[ -n "$cloudfront_domain" ]]; then
-        local cf_url="https://$cloudfront_domain"
-        log "Testing CloudFront domain: $cf_url"
-        
-        http_status=$(curl -s -o /dev/null -w "%{http_code}" "$cf_url" || echo "000")
-        
-        if [[ "$http_status" == "200" ]]; then
-            log "✅ CloudFront domain is accessible (HTTP $http_status)"
-        else
-            log "⚠️  CloudFront domain verification failed (HTTP $http_status) - may need time to propagate"
-        fi
-    fi
-    
-    log "Deployment verification completed"
-}
-
-# Main deployment function
-main() {
-    local environment="${1:-}"
-    local artifacts_dir="${2:-./artifacts/out}"
-    local bucket_name="${3:-}"
-    local cloudfront_id="${4:-}"
-    local cloudfront_domain="${5:-}"
-    
-    if [[ -z "$environment" ]]; then
-        log "ERROR: Environment parameter is required"
-        echo "Usage: $0 <environment> [artifacts_dir] [bucket_name] [cloudfront_id] [cloudfront_domain]"
-        exit 1
-    fi
-    
-    log "Starting deployment for environment: $environment"
-    
-    # Load environment-specific configuration
-    load_environment_config "$environment"
-    
-    # Validate environment
-    validate_environment
-    
-    # Use provided bucket name or construct from environment config
-    if [[ -z "$bucket_name" ]]; then
-        bucket_name="$S3_BUCKET_PREFIX"
-    fi
-    
-    # Verify artifacts directory exists
-    if [[ ! -d "$artifacts_dir" ]]; then
-        log "ERROR: Artifacts directory not found: $artifacts_dir"
-        exit 1
-    fi
-    
-    # Create deployment version and metadata
-    local commit_sha="${GITHUB_SHA:-$(git rev-parse HEAD 2>/dev/null || echo 'unknown')}"
-    local timestamp=$(date +%s)
-    
-    log "Creating deployment version and metadata..."
-    local deployment_version
-    deployment_version=$(.github/scripts/deployment-versioning.sh create \
-        "$environment" \
-        "$commit_sha" \
-        "$timestamp" \
-        "$bucket_name" \
-        "$artifacts_dir" \
-        "$cloudfront_id")
-    
-    log "Deployment version created: $deployment_version"
-    
-    log "Deployment configuration:"
-    log "  Environment: $ENVIRONMENT"
-    log "  Version: $deployment_version"
-    log "  Commit SHA: $commit_sha"
-    log "  AWS Region: $AWS_REGION"
-    log "  S3 Bucket: $bucket_name"
-    log "  Artifacts: $artifacts_dir"
-    log "  CloudFront ID: ${cloudfront_id:-'Not provided'}"
-    log "  CloudFront Domain: ${cloudfront_domain:-'Not provided'}"
-    
-    # Update deployment status to in-progress
-    .github/scripts/deployment-versioning.sh update-status \
-        "$bucket_name" \
-        "$deployment_version" \
-        "in-progress"
-    
-    # Perform deployment steps
-    if sync_to_s3 "$bucket_name" "$artifacts_dir" && \
-       set_content_types "$bucket_name"; then
-        
-        if [[ -n "$cloudfront_id" ]]; then
-            invalidate_cloudfront "$cloudfront_id"
-        fi
-        
-        if verify_deployment "$bucket_name" "$cloudfront_domain"; then
-            # Update deployment status to success
-            .github/scripts/deployment-versioning.sh update-status \
-                "$bucket_name" \
-                "$deployment_version" \
-                "success"
-            
-            log "🎉 Deployment completed successfully for $environment environment!"
-            log "Deployment version: $deployment_version"
-            
-            # Export deployment version for use in subsequent steps
-            echo "DEPLOYMENT_VERSION=$deployment_version" >> "${GITHUB_ENV:-/dev/null}"
-        else
-            # Update deployment status to failed
-            .github/scripts/deployment-versioning.sh update-status \
-                "$bucket_name" \
-                "$deployment_version" \
-                "failed"
-            
-            log "❌ Deployment verification failed"
-            exit 1
-        fi
-    else
-        # Update deployment status to failed
-        .github/scripts/deployment-versioning.sh update-status \
-            "$bucket_name" \
-            "$deployment_version" \
-            "failed"
-        
-        log "❌ Deployment failed during S3 sync or content type setting"
         exit 1
     fi
 }

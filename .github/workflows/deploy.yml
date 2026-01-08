@@ -421,6 +421,7 @@ jobs:
         run: |
           chmod +x .github/scripts/deploy.sh
           chmod +x .github/scripts/deployment-versioning.sh
+          chmod +x .github/scripts/pipeline-logger.sh
 
       - name: Deploy to staging using deployment script
         id: deploy
@@ -558,6 +559,7 @@ jobs:
         run: |
           chmod +x .github/scripts/deploy.sh
           chmod +x .github/scripts/deployment-versioning.sh
+          chmod +x .github/scripts/pipeline-logger.sh
 
       - name: Deploy to production using deployment script
         id: deploy

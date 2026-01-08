@@ -4,7 +4,6 @@ const nextConfig = {
   output: 'export',
   trailingSlash: true,
   skipTrailingSlashRedirect: true,
-  target: 'S3',
   
   // Enable App Router (default in Next.js 14)
   experimental: {

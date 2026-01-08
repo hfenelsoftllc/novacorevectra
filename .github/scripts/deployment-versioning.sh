@@ -7,7 +7,7 @@ set -euo pipefail
 
 # Function to log messages with timestamp
 log() {
-    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1"
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $1" >&2
 }
 
 # Function to generate deployment version
@@ -36,17 +36,60 @@ create_deployment_metadata() {
     local status="${8:-pending}"
     
     log "Creating deployment metadata for version: $version"
+    log "Parameters: environment=$environment, commit_sha=$commit_sha, timestamp=$timestamp"
+    log "Bucket: $bucket_name, Artifacts: $artifacts_path, CloudFront: ${cloudfront_id:-none}"
     
-    # Calculate build hash and size
+    # Verify artifacts path exists
+    if [[ ! -d "$artifacts_path" ]]; then
+        log "ERROR: Artifacts path does not exist: $artifacts_path"
+        return 1
+    fi
+    
+    # Check if artifacts path is readable
+    if [[ ! -r "$artifacts_path" ]]; then
+        log "ERROR: Artifacts path is not readable: $artifacts_path"
+        return 1
+    fi
+    
+    # Check if artifacts path contains files
+    if [[ -z "$(find "$artifacts_path" -type f -print -quit)" ]]; then
+        log "ERROR: No files found in artifacts path: $artifacts_path"
+        return 1
+    fi
+    
+    # Calculate build hash and size with error handling
     local build_hash
-    build_hash=$(find "$artifacts_path" -type f -exec sha256sum {} \; | sort | sha256sum | cut -d' ' -f1)
+    if ! build_hash=$(find "$artifacts_path" -type f -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1); then
+        log "ERROR: Failed to calculate build hash for artifacts in: $artifacts_path"
+        return 1
+    fi
     
     local build_size
-    build_size=$(du -sb "$artifacts_path" | cut -f1)
+    if ! build_size=$(du -sb "$artifacts_path" 2>/dev/null | cut -f1); then
+        log "ERROR: Failed to calculate build size for artifacts in: $artifacts_path"
+        return 1
+    fi
     
     # Create metadata JSON
     local metadata_file="/tmp/deployment-metadata-${version}.json"
-    cat > "$metadata_file" << EOF
+    log "Creating metadata file at: $metadata_file"
+    
+    # Ensure /tmp directory is writable
+    if [[ ! -w "/tmp" ]]; then
+        log "ERROR: /tmp directory is not writable"
+        return 1
+    fi
+    
+    # Try to create a test file first
+    local test_file="/tmp/test-write-${version}.tmp"
+    if ! echo "test" > "$test_file" 2>/dev/null; then
+        log "ERROR: Cannot write to /tmp directory"
+        return 1
+    fi
+    rm -f "$test_file"
+    
+    log "Creating metadata JSON content..."
+    if ! cat > "$metadata_file" << EOF
 {
   "id": "$version",
   "environment": "$environment",
@@ -77,7 +120,24 @@ create_deployment_metadata() {
   "updatedAt": "$(date --iso-8601=seconds)"
 }
 EOF
+    then
+        log "ERROR: Failed to write metadata JSON content to file"
+        return 1
+    fi
     
+    # Verify the metadata file was created successfully
+    if [[ ! -f "$metadata_file" ]]; then
+        log "ERROR: Failed to create metadata file: $metadata_file"
+        return 1
+    fi
+    
+    # Verify the file has content
+    if [[ ! -s "$metadata_file" ]]; then
+        log "ERROR: Metadata file is empty: $metadata_file"
+        return 1
+    fi
+    
+    log "Metadata file created successfully: $metadata_file ($(wc -c < "$metadata_file") bytes)"
     echo "$metadata_file"
 }
 
