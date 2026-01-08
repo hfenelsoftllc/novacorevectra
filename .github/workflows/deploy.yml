@@ -450,8 +450,17 @@ jobs:
           echo "Environment: staging"
           echo "Deployment Version: ${{ steps.deploy.outputs.deployment-version }}"
           echo "S3 Bucket: ${{ steps.get-bucket.outputs.bucket-name }}"
-          echo "Website URL: http://${{ steps.get-bucket.outputs.bucket-name }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
-          echo "Domain: staging.${{ vars.DOMAIN_NAME || 'novacorevectra.net' }}"
+          echo ""
+          echo "🌐 Access URLs:"
+          echo "  Primary: https://staging.${{ vars.DOMAIN_NAME || 'novacorevectra.net' }}"
+          echo ""
+          echo "📝 Notes:"
+          echo "  • S3 website endpoint is disabled for security (OAC setup)"
+          echo "  • All traffic should go through CloudFront"
+          echo "  • CloudFront propagation may take up to 15 minutes"
+          echo ""
+          echo "🔧 Troubleshooting:"
+          echo "  Run: ./.github/scripts/troubleshoot-deployment.sh ${{ steps.get-bucket.outputs.bucket-name }}"
 
   deploy-production:
     name: Deploy to Production
@@ -593,9 +602,18 @@ jobs:
           echo "S3 Bucket: ${{ steps.get-resources.outputs.bucket-name }}"
           echo "CloudFront Distribution: ${{ steps.get-resources.outputs.cloudfront-id }}"
           echo "CloudFront Domain: ${{ steps.get-resources.outputs.cloudfront-domain }}"
-          echo "Website URL: http://${{ steps.get-resources.outputs.bucket-name }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
-          echo "CDN URL: https://${{ steps.get-resources.outputs.cloudfront-domain }}"
-          echo "Custom Domain: https://${{ vars.DOMAIN_NAME || 'novacorevectra.net' }}"
+          echo ""
+          echo "🌐 Access URLs:"
+          echo "  Primary: https://${{ vars.DOMAIN_NAME || 'novacorevectra.net' }}"
+          echo "  CloudFront: https://${{ steps.get-resources.outputs.cloudfront-domain }}"
+          echo ""
+          echo "📝 Notes:"
+          echo "  • S3 website endpoint is disabled for security (OAC setup)"
+          echo "  • All traffic should go through CloudFront"
+          echo "  • CloudFront propagation may take up to 15 minutes"
+          echo ""
+          echo "🔧 Troubleshooting:"
+          echo "  Run: ./.github/scripts/troubleshoot-deployment.sh ${{ steps.get-resources.outputs.bucket-name }} ${{ steps.get-resources.outputs.cloudfront-id }} ${{ steps.get-resources.outputs.cloudfront-domain }} ${{ steps.deploy.outputs.deployment-version }}"
 
   health-check:
     name: Health Check

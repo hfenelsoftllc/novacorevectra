@@ -248,34 +248,16 @@ verify_deployment() {
     
     log_step_start "verify_deployment" "deployment" "{\"bucket\": \"$bucket_name\", \"cloudfront_domain\": \"$cloudfront_domain\"}"
     
-    # Test S3 website endpoint
-    local s3_url="http://$bucket_name.s3-website-$AWS_REGION.amazonaws.com"
-    log_info "Testing S3 website endpoint: $s3_url" "deployment" "verify_deployment"
-    
-    local http_status
-    local response_time
-    local start_request=$(date +%s%3N)
-    http_status=$(curl -s -o /dev/null -w "%{http_code}" "$s3_url" || echo "000")
-    local end_request=$(date +%s%3N)
-    response_time=$((end_request - start_request))
-    
-    log_performance_metric "s3_response_time" "$response_time" "milliseconds" "deployment"
-    
-    if [[ "$http_status" == "200" ]]; then
-        log_info "✅ S3 website endpoint is accessible (HTTP $http_status)" "deployment" "verify_deployment"
-    else
-        log_step_failure "verify_deployment" "S3 website endpoint verification failed (HTTP $http_status)" "deployment"
-        return 1
-    fi
-    
-    # Test CloudFront domain if provided
+    # Test CloudFront domain (primary method for OAC setup)
     if [[ -n "$cloudfront_domain" ]]; then
         local cf_url="https://$cloudfront_domain"
         log_info "Testing CloudFront domain: $cf_url" "deployment" "verify_deployment"
         
-        start_request=$(date +%s%3N)
-        http_status=$(curl -s -o /dev/null -w "%{http_code}" "$cf_url" || echo "000")
-        end_request=$(date +%s%3N)
+        local http_status
+        local response_time
+        local start_request=$(date +%s%3N)
+        http_status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$cf_url" || echo "000")
+        local end_request=$(date +%s%3N)
         response_time=$((end_request - start_request))
         
         log_performance_metric "cloudfront_response_time" "$response_time" "milliseconds" "deployment"
@@ -284,8 +266,49 @@ verify_deployment() {
             log_info "✅ CloudFront domain is accessible (HTTP $http_status)" "deployment" "verify_deployment"
         else
             log_warn "⚠️  CloudFront domain verification failed (HTTP $http_status) - may need time to propagate" "deployment" "verify_deployment"
+            
+            # For CloudFront, we should wait a bit and retry as it takes time to propagate
+            if [[ "$http_status" == "403" || "$http_status" == "404" ]]; then
+                log_info "Waiting 30 seconds for CloudFront to propagate..." "deployment" "verify_deployment"
+                sleep 30
+                
+                start_request=$(date +%s%3N)
+                http_status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$cf_url" || echo "000")
+                end_request=$(date +%s%3N)
+                response_time=$((end_request - start_request))
+                
+                if [[ "$http_status" == "200" ]]; then
+                    log_info "✅ CloudFront domain is accessible after retry (HTTP $http_status)" "deployment" "verify_deployment"
+                else
+                    log_warn "⚠️  CloudFront domain still not accessible (HTTP $http_status)" "deployment" "verify_deployment"
+                    # Don't fail deployment for CloudFront propagation delays
+                fi
+            fi
         fi
     fi
+    
+    # Test S3 bucket directly (only for debugging, not for OAC setup)
+    log_info "Testing S3 bucket access (for debugging only)" "deployment" "verify_deployment"
+    
+    # Check if objects exist in the bucket
+    local object_count
+    if object_count=$(aws s3 ls "s3://$bucket_name/" --recursive | wc -l); then
+        log_info "✅ S3 bucket contains $object_count objects" "deployment" "verify_deployment"
+        
+        # Check if index.html exists
+        if aws s3api head-object --bucket "$bucket_name" --key "index.html" >/dev/null 2>&1; then
+            log_info "✅ index.html exists in S3 bucket" "deployment" "verify_deployment"
+        else
+            log_warn "⚠️  index.html not found in S3 bucket" "deployment" "verify_deployment"
+        fi
+    else
+        log_step_failure "verify_deployment" "Failed to list S3 bucket contents" "deployment"
+        return 1
+    fi
+    
+    # Note about S3 website endpoint (expected to fail with OAC setup)
+    local s3_url="http://$bucket_name.s3-website-$AWS_REGION.amazonaws.com"
+    log_info "Note: S3 website endpoint ($s3_url) is expected to return 403 with OAC setup" "deployment" "verify_deployment"
     
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))
