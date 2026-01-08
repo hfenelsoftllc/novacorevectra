@@ -387,12 +387,17 @@ EOF
     log_info "Deployment configuration loaded" "deployment" "main" "$deployment_config"
     
     # Update deployment status to in-progress
-    .github/scripts/deployment-versioning.sh update-status \
+    log_deployment_event "deployment_in_progress" "in_progress" "$environment" "$deployment_version"
+    
+    # Small delay to ensure metadata is properly stored in S3
+    sleep 2
+    
+    if ! .github/scripts/deployment-versioning.sh update-status \
         "$bucket_name" \
         "$deployment_version" \
-        "in-progress"
-    
-    log_deployment_event "deployment_in_progress" "in_progress" "$environment" "$deployment_version"
+        "in-progress"; then
+        log_warn "Failed to update deployment status to in-progress, continuing..." "deployment" "main"
+    fi
     
     # Perform deployment steps
     if sync_to_s3 "$bucket_name" "$artifacts_dir" && \
@@ -404,10 +409,14 @@ EOF
         
         if verify_deployment "$bucket_name" "$cloudfront_domain"; then
             # Update deployment status to success
-            .github/scripts/deployment-versioning.sh update-status \
+            if .github/scripts/deployment-versioning.sh update-status \
                 "$bucket_name" \
                 "$deployment_version" \
-                "success"
+                "success"; then
+                log_info "Deployment status updated to success" "deployment" "main"
+            else
+                log_warn "Failed to update deployment status to success" "deployment" "main"
+            fi
             
             local end_time=$(date +%s)
             local total_duration=$((end_time - start_time))
@@ -422,10 +431,14 @@ EOF
             echo "DEPLOYMENT_VERSION=$deployment_version" >> "${GITHUB_ENV:-/dev/null}"
         else
             # Update deployment status to failed
-            .github/scripts/deployment-versioning.sh update-status \
+            if .github/scripts/deployment-versioning.sh update-status \
                 "$bucket_name" \
                 "$deployment_version" \
-                "failed"
+                "failed"; then
+                log_info "Deployment status updated to failed" "deployment" "main"
+            else
+                log_warn "Failed to update deployment status to failed" "deployment" "main"
+            fi
             
             log_deployment_event "deployment_failed" "failed" "$environment" "$deployment_version" "{\"reason\": \"verification_failed\"}"
             log_error "❌ Deployment verification failed" "deployment" "main"
@@ -433,10 +446,14 @@ EOF
         fi
     else
         # Update deployment status to failed
-        .github/scripts/deployment-versioning.sh update-status \
+        if .github/scripts/deployment-versioning.sh update-status \
             "$bucket_name" \
             "$deployment_version" \
-            "failed"
+            "failed"; then
+            log_info "Deployment status updated to failed" "deployment" "main"
+        else
+            log_warn "Failed to update deployment status to failed" "deployment" "main"
+        fi
         
         log_deployment_event "deployment_failed" "failed" "$environment" "$deployment_version" "{\"reason\": \"sync_or_content_type_failed\"}"
         log_error "❌ Deployment failed during S3 sync or content type setting" "deployment" "main"

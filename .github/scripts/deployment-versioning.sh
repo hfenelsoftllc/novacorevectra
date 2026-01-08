@@ -275,38 +275,76 @@ update_deployment_status() {
     
     local metadata_key="deployments/$version/metadata.json"
     local temp_file="/tmp/metadata-update-$version.json"
+    local max_retries=5
+    local retry_count=0
+    local download_success=false
     
-    # Download current metadata
-    if aws s3 cp "s3://$bucket_name/$metadata_key" "$temp_file" 2>/dev/null; then
+    # Retry downloading metadata with exponential backoff
+    while [[ $retry_count -lt $max_retries ]]; do
+        if aws s3 cp "s3://$bucket_name/$metadata_key" "$temp_file" 2>/dev/null; then
+            download_success=true
+            log "Successfully downloaded metadata file (attempt $((retry_count + 1)))"
+            break
+        else
+            retry_count=$((retry_count + 1))
+            if [[ $retry_count -lt $max_retries ]]; then
+                local wait_time=$((retry_count * 2))
+                log "Failed to download metadata, retrying in ${wait_time}s (attempt $retry_count/$max_retries)"
+                sleep $wait_time
+            fi
+        fi
+    done
+    
+    if [[ "$download_success" == "true" ]]; then
         # Update status and health checks
-        jq --arg status "$status" \
+        if jq --arg status "$status" \
            --argjson health_checks "$health_check_results" \
            --arg updated_at "$(date --iso-8601=seconds)" \
            '.status = $status | .healthChecks = $health_checks | .updatedAt = $updated_at' \
-           "$temp_file" > "${temp_file}.updated"
-        
-        # Upload updated metadata
-        aws s3 cp "${temp_file}.updated" "s3://$bucket_name/$metadata_key" \
-            --content-type "application/json" \
-            --cache-control "no-cache, no-store, must-revalidate"
-        
-        # Update latest pointer if successful
-        if [[ "$status" == "success" ]]; then
-            local environment
-            environment=$(jq -r '.environment' "${temp_file}.updated")
-            local latest_key="deployments/latest-$environment.json"
+           "$temp_file" > "${temp_file}.updated"; then
             
-            aws s3 cp "${temp_file}.updated" "s3://$bucket_name/$latest_key" \
+            # Upload updated metadata
+            if aws s3 cp "${temp_file}.updated" "s3://$bucket_name/$metadata_key" \
                 --content-type "application/json" \
-                --cache-control "no-cache, no-store, must-revalidate"
+                --cache-control "no-cache, no-store, must-revalidate"; then
+                
+                # Update latest pointer if successful
+                if [[ "$status" == "success" ]]; then
+                    local environment
+                    environment=$(jq -r '.environment' "${temp_file}.updated")
+                    local latest_key="deployments/latest-$environment.json"
+                    
+                    aws s3 cp "${temp_file}.updated" "s3://$bucket_name/$latest_key" \
+                        --content-type "application/json" \
+                        --cache-control "no-cache, no-store, must-revalidate" || \
+                        log "WARNING: Failed to update latest deployment pointer"
+                fi
+                
+                log "Deployment status updated successfully to: $status"
+            else
+                log "ERROR: Failed to upload updated metadata"
+                rm -f "$temp_file" "${temp_file}.updated"
+                return 1
+            fi
+        else
+            log "ERROR: Failed to update metadata JSON"
+            rm -f "$temp_file" "${temp_file}.updated"
+            return 1
         fi
         
         # Cleanup
         rm -f "$temp_file" "${temp_file}.updated"
-        
-        log "Deployment status updated successfully"
     else
-        log "ERROR: Failed to download deployment metadata for status update"
+        log "ERROR: Failed to download deployment metadata after $max_retries attempts"
+        log "This might indicate the metadata file was not created properly"
+        
+        # Check if the metadata file exists at all
+        if aws s3api head-object --bucket "$bucket_name" --key "$metadata_key" 2>/dev/null; then
+            log "Metadata file exists but cannot be downloaded - possible permissions issue"
+        else
+            log "Metadata file does not exist at s3://$bucket_name/$metadata_key"
+        fi
+        
         return 1
     fi
 }
@@ -402,6 +440,14 @@ main() {
                 log "ERROR: Failed to store deployment metadata"
                 exit 1
             fi
+            
+            # Verify metadata was stored successfully
+            local metadata_key="deployments/$version/metadata.json"
+            if ! aws s3api head-object --bucket "$bucket_name" --key "$metadata_key" >/dev/null 2>&1; then
+                log "ERROR: Metadata file was not stored successfully in S3"
+                exit 1
+            fi
+            log "Verified metadata file exists in S3: s3://$bucket_name/$metadata_key"
             
             if ! tag_deployment_artifacts "$bucket_name" "$version" "$environment" "$commit_sha" "$artifacts_path"; then
                 log "WARNING: Failed to tag deployment artifacts, continuing..."
