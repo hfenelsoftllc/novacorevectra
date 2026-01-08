@@ -335,19 +335,29 @@ main() {
     log_info "Calling: .github/scripts/deployment-versioning.sh create $environment $commit_sha $timestamp $bucket_name $artifacts_dir $cloudfront_id" "deployment" "main"
     
     local deployment_version
-    if ! deployment_version=$(.github/scripts/deployment-versioning.sh create \
+    local versioning_output
+    local versioning_exit_code
+    
+    # Capture stdout (version) and stderr (logs) separately
+    versioning_output=$(.github/scripts/deployment-versioning.sh create \
         "$environment" \
         "$commit_sha" \
         "$timestamp" \
         "$bucket_name" \
         "$artifacts_dir" \
-        "$cloudfront_id" 2>&1); then
-        log_step_failure "main" "Failed to create deployment version and metadata. Output: $deployment_version" "deployment"
+        "$cloudfront_id" 2>&1)
+    versioning_exit_code=$?
+    
+    if [[ $versioning_exit_code -ne 0 ]]; then
+        log_step_failure "main" "Failed to create deployment version and metadata. Output: $versioning_output" "deployment"
         exit 1
     fi
     
+    # Extract just the version (last line that matches version pattern)
+    deployment_version=$(echo "$versioning_output" | grep -E '^v[0-9]{4}\.[0-9]{2}\.[0-9]{2}-[a-zA-Z]+-[a-f0-9]{8}-[0-9]+$' | tail -1)
+    
     if [[ -z "$deployment_version" ]]; then
-        log_step_failure "main" "Deployment version is empty" "deployment"
+        log_step_failure "main" "Could not extract deployment version from output: $versioning_output" "deployment"
         exit 1
     fi
     

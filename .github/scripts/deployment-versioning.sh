@@ -138,6 +138,8 @@ EOF
     fi
     
     log "Metadata file created successfully: $metadata_file ($(wc -c < "$metadata_file") bytes)"
+    
+    # Return only the metadata file path to stdout, logs go to stderr
     echo "$metadata_file"
 }
 
@@ -222,26 +224,44 @@ tag_deployment_artifacts() {
     
     # Also tag the main files if they exist
     log "Tagging individual deployment files..."
-    aws s3api list-objects-v2 \
+    local tagged_count=0
+    
+    # Get list of objects and process them
+    local object_list
+    if object_list=$(aws s3api list-objects-v2 \
         --bucket "$bucket_name" \
         --prefix "$deployment_key" \
         --query 'Contents[?Size > `0`].Key' \
-        --output text | while read -r object_key; do
-        if [[ -n "$object_key" && "$object_key" != "None" ]]; then
-            aws s3api put-object-tagging \
-                --bucket "$bucket_name" \
-                --key "$object_key" \
-                --tagging "TagSet=[
-                    {Key=DeploymentVersion,Value=$version},
-                    {Key=Environment,Value=$environment},
-                    {Key=CommitSha,Value=$commit_sha},
-                    {Key=CreatedAt,Value=$(date --iso-8601=seconds)},
-                    {Key=Type,Value=deployment-artifact}
-                ]" 2>/dev/null || log "WARNING: Failed to tag object: $object_key"
+        --output text 2>/dev/null); then
+        
+        if [[ -n "$object_list" && "$object_list" != "None" ]]; then
+            echo "$object_list" | tr '\t' '\n' | while read -r object_key; do
+                if [[ -n "$object_key" && "$object_key" != "None" ]]; then
+                    if aws s3api put-object-tagging \
+                        --bucket "$bucket_name" \
+                        --key "$object_key" \
+                        --tagging "TagSet=[
+                            {Key=DeploymentVersion,Value=$version},
+                            {Key=Environment,Value=$environment},
+                            {Key=CommitSha,Value=$commit_sha},
+                            {Key=CreatedAt,Value=$(date --iso-8601=seconds)},
+                            {Key=Type,Value=deployment-artifact}
+                        ]" 2>/dev/null; then
+                        ((tagged_count++))
+                        log "Tagged object: $object_key"
+                    else
+                        log "WARNING: Failed to tag object: $object_key"
+                    fi
+                fi
+            done
+        else
+            log "No objects found to tag in deployment directory"
         fi
-    done
+    else
+        log "WARNING: Failed to list objects for tagging"
+    fi
     
-    log "Deployment artifacts tagged successfully"
+    log "Deployment artifacts tagged successfully ($tagged_count objects tagged)"
 }
 
 # Function to update deployment status
@@ -373,11 +393,21 @@ main() {
             version=$(generate_deployment_version "$environment" "$commit_sha" "$timestamp")
             
             local metadata_file
-            metadata_file=$(create_deployment_metadata "$environment" "$version" "$commit_sha" "$timestamp" "$bucket_name" "$artifacts_path" "$cloudfront_id")
+            if ! metadata_file=$(create_deployment_metadata "$environment" "$version" "$commit_sha" "$timestamp" "$bucket_name" "$artifacts_path" "$cloudfront_id"); then
+                log "ERROR: Failed to create deployment metadata"
+                exit 1
+            fi
             
-            store_deployment_metadata "$bucket_name" "$metadata_file" "$version" "$environment"
-            tag_deployment_artifacts "$bucket_name" "$version" "$environment" "$commit_sha" "$artifacts_path"
+            if ! store_deployment_metadata "$bucket_name" "$metadata_file" "$version" "$environment"; then
+                log "ERROR: Failed to store deployment metadata"
+                exit 1
+            fi
             
+            if ! tag_deployment_artifacts "$bucket_name" "$version" "$environment" "$commit_sha" "$artifacts_path"; then
+                log "WARNING: Failed to tag deployment artifacts, continuing..."
+            fi
+            
+            # Only output the version to stdout
             echo "$version"
             ;;
         
