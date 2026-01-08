@@ -65,7 +65,7 @@ resource "aws_lambda_function" "slack_notifier" {
   function_name = "${var.project_name}-${var.environment}-slack-notifier"
   role          = aws_iam_role.slack_lambda_role[0].arn
   handler       = "index.handler"
-  runtime       = "python3.9"
+  runtime       = "python3.12"
   timeout       = 30
 
   environment {
@@ -128,7 +128,7 @@ data "archive_file" "slack_notifier_zip" {
   count       = var.slack_webhook_url != "" ? 1 : 0
   type        = "zip"
   output_path = "slack_notifier.zip"
-  
+
   source {
     content = templatefile("${path.module}/lambda/slack_notifier.py", {
       slack_webhook_url = var.slack_webhook_url
@@ -168,7 +168,7 @@ resource "aws_lambda_function" "pipeline_slack_notifier" {
   function_name = "${var.project_name}-${var.environment}-pipeline-slack-notifier"
   role          = aws_iam_role.slack_lambda_role[0].arn
   handler       = "index.handler"
-  runtime       = "python3.9"
+  runtime       = "python3.12"
   timeout       = 30
 
   environment {
@@ -231,7 +231,7 @@ data "archive_file" "pipeline_slack_notifier_zip" {
   count       = var.slack_webhook_url != "" ? 1 : 0
   type        = "zip"
   output_path = "pipeline_slack_notifier.zip"
-  
+
   source {
     content = templatefile("${path.module}/lambda/pipeline_slack_notifier.py", {
       slack_webhook_url = var.slack_webhook_url

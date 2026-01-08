@@ -187,9 +187,9 @@ resource "aws_cloudwatch_log_metric_filter" "deployment_success" {
   pattern        = "[timestamp, request_id, level=\"SUCCESS\", ...]"
 
   metric_transformation {
-    name      = "DeploymentSuccess"
-    namespace = "Custom/Deployment"
-    value     = "1"
+    name          = "DeploymentSuccess"
+    namespace     = "Custom/Deployment"
+    value         = "1"
     default_value = "0"
   }
 }
@@ -200,9 +200,9 @@ resource "aws_cloudwatch_log_metric_filter" "deployment_failure" {
   pattern        = "[timestamp, request_id, level=\"ERROR\", ...]"
 
   metric_transformation {
-    name      = "DeploymentFailure"
-    namespace = "Custom/Deployment"
-    value     = "1"
+    name          = "DeploymentFailure"
+    namespace     = "Custom/Deployment"
+    value         = "1"
     default_value = "0"
   }
 }

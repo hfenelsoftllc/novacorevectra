@@ -11,7 +11,7 @@ resource "aws_cloudfront_origin_access_control" "website_ncv_cf" {
 resource "aws_cloudfront_cache_policy" "static_assets" {
   name        = "${var.project_name}-${var.environment}-static-assets"
   comment     = "Cache policy for static assets"
-  default_ttl = 86400   # 1 day
+  default_ttl = 86400    # 1 day
   max_ttl     = 31536000 # 1 year
   min_ttl     = 0
 
@@ -239,8 +239,8 @@ resource "aws_s3_bucket_policy" "website_cloudfront" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "AllowCloudFrontServicePrincipal"
-        Effect    = "Allow"
+        Sid    = "AllowCloudFrontServicePrincipal"
+        Effect = "Allow"
         Principal = {
           Service = "cloudfront.amazonaws.com"
         }

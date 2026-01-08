@@ -40,38 +40,6 @@ resource "aws_route53_record" "website_aaaa" {
   depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
 }
 
-# Dedicated staging subdomain A record (explicit for staging.novacorevectra.net)
-resource "aws_route53_record" "staging_subdomain_a" {
-  count   = var.environment == "staging" ? 1 : 0
-  zone_id = aws_route53_zone.main.zone_id
-  name    = "staging.${var.domain_name}"
-  type    = "A"
-
-  alias {
-    name                   = aws_cloudfront_distribution.website_ncv_cf_dist.domain_name
-    zone_id                = aws_cloudfront_distribution.website_ncv_cf_dist.hosted_zone_id
-    evaluate_target_health = false
-  }
-
-  depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
-}
-
-# Dedicated staging subdomain AAAA record (explicit for staging.novacorevectra.net)
-resource "aws_route53_record" "staging_subdomain_aaaa" {
-  count   = var.environment == "staging" ? 1 : 0
-  zone_id = aws_route53_zone.main.zone_id
-  name    = "staging.${var.domain_name}"
-  type    = "AAAA"
-
-  alias {
-    name                   = aws_cloudfront_distribution.website_ncv_cf_dist.domain_name
-    zone_id                = aws_cloudfront_distribution.website_ncv_cf_dist.hosted_zone_id
-    evaluate_target_health = false
-  }
-
-  depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
-}
-
 # WWW redirect for production environment only
 resource "aws_route53_record" "website_www_a" {
   count   = var.environment == "production" ? 1 : 0
@@ -103,33 +71,29 @@ resource "aws_route53_record" "website_www_aaaa" {
   depends_on = [aws_cloudfront_distribution.website_ncv_cf_dist]
 }
 
-# MX record for Google SMTP
+# MX record for Google Workspace (updated 2024)
 resource "aws_route53_record" "mx" {
   zone_id = aws_route53_zone.main.zone_id
   name    = var.domain_name
   type    = "MX"
-  ttl     = 300  #3600 1 hour
+  ttl     = 3600 # 1 hour (recommended by Google)
 
   records = [
-    "1 ASPMX.L.GOOGLE.COM.",
-    "5 ALT1.ASPMX.L.GOOGLE.COM.",
-    "5 ALT2.ASPMX.L.GOOGLE.COM.",
-    "10 ALT3.ASPMX.L.GOOGLE.COM.",
-    "10 ALT4.ASPMX.L.GOOGLE.COM."
+    "1 smtp.google.com."
   ]
 }
 
 # Health check for the website (production only)
 resource "aws_route53_health_check" "website" {
-  count                           = var.environment == "production" ? 1 : 0
-  fqdn                           = var.domain_name
-  port                           = 443
-  type                           = "HTTPS"
-  resource_path                  = "/"
-  failure_threshold              = 3
-  request_interval               = 30
-  measure_latency                = true
-  enable_sni                     = true
+  count             = var.environment == "production" ? 1 : 0
+  fqdn              = var.domain_name
+  port              = 443
+  type              = "HTTPS"
+  resource_path     = "/"
+  failure_threshold = 3
+  request_interval  = 30
+  measure_latency   = true
+  enable_sni        = true
 
   tags = {
     Name        = "${var.project_name}-health-check"
@@ -151,7 +115,7 @@ resource "aws_cloudwatch_metric_alarm" "website_health" {
   statistic           = "Minimum"
   threshold           = "1"
   alarm_description   = "This metric monitors website health"
-  alarm_actions       = [] # Add SNS topic ARN for notifications
+  alarm_actions       = [aws_sns_topic.cloudwatch_alerts.arn]
 
   dimensions = {
     HealthCheckId = aws_route53_health_check.website[0].id
@@ -164,6 +128,7 @@ resource "aws_cloudwatch_metric_alarm" "website_health" {
     Purpose     = "Health Monitoring"
   }
 }
+
 # Output values for staging subdomain
 output "staging_subdomain_fqdn" {
   description = "Fully qualified domain name for staging subdomain"

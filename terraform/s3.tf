@@ -30,14 +30,14 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "website" {
   }
 }
 
-# S3 bucket public access block (initially restrictive, will be modified for website hosting)
+# S3 bucket public access block (restrictive for security)
 resource "aws_s3_bucket_public_access_block" "website" {
   bucket = aws_s3_bucket.website.id
 
-  block_public_acls       = false
-  block_public_policy     = false
-  ignore_public_acls      = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 # S3 bucket website configuration
@@ -71,25 +71,8 @@ resource "aws_s3_bucket_cors_configuration" "website" {
   }
 }
 
-# S3 bucket policy for public read access
-resource "aws_s3_bucket_policy" "website" {
-  bucket = aws_s3_bucket.website.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid       = "PublicReadGetObject"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.website.arn}/*"
-      }
-    ]
-  })
-
-  depends_on = [aws_s3_bucket_public_access_block.website]
-}
+# S3 bucket policy for CloudFront OAC access only
+# Note: Removed public access policy as CloudFront OAC provides secure access
 
 # S3 bucket lifecycle configuration for cost optimization
 resource "aws_s3_bucket_lifecycle_configuration" "website" {
