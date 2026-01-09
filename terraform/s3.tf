@@ -30,14 +30,15 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "website" {
   }
 }
 
-# S3 bucket public access block (restrictive for security)
+# S3 bucket public access block (configured for CloudFront OAC)
 resource "aws_s3_bucket_public_access_block" "website" {
   bucket = aws_s3_bucket.website.id
 
+  # Block public ACLs but allow bucket policies for CloudFront OAC
   block_public_acls       = true
-  block_public_policy     = true
+  block_public_policy     = false  # Allow bucket policy for CloudFront OAC
   ignore_public_acls      = true
-  restrict_public_buckets = true
+  restrict_public_buckets = false  # Allow CloudFront service principal access
 }
 
 # S3 bucket website configuration

@@ -432,6 +432,18 @@ jobs:
           # Capture deployment version from environment variable
           echo "deployment-version=$DEPLOYMENT_VERSION" >> $GITHUB_OUTPUT
 
+      - name: Diagnose deployment if verification fails
+        if: failure()
+        run: |
+          echo "🔍 Running deployment diagnostics..."
+          chmod +x .github/scripts/diagnose-access-denied.sh
+          ./.github/scripts/diagnose-access-denied.sh \
+            ${{ steps.get-bucket.outputs.bucket-name }} || true
+          
+          echo ""
+          echo "🔧 To fix access issues, run:"
+          echo "  ./.github/scripts/fix-cloudfront-access.sh staging apply ${{ steps.get-bucket.outputs.bucket-name }}"
+
       - name: Send deployment success notification
         if: success()
         run: |
@@ -581,6 +593,20 @@ jobs:
           
           # Capture deployment version from environment variable
           echo "deployment-version=$DEPLOYMENT_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Diagnose deployment if verification fails
+        if: failure()
+        run: |
+          echo "🔍 Running deployment diagnostics..."
+          chmod +x .github/scripts/diagnose-access-denied.sh
+          ./.github/scripts/diagnose-access-denied.sh \
+            ${{ steps.get-resources.outputs.bucket-name }} \
+            ${{ steps.get-resources.outputs.cloudfront-id }} \
+            ${{ steps.get-resources.outputs.cloudfront-domain }} || true
+          
+          echo ""
+          echo "🔧 To fix access issues, run:"
+          echo "  ./.github/scripts/fix-cloudfront-access.sh production apply ${{ steps.get-resources.outputs.bucket-name }} ${{ steps.get-resources.outputs.cloudfront-id }}"
 
       - name: Send deployment success notification
         if: success()

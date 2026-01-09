@@ -59,17 +59,39 @@ User Request → Route53 → CloudFront → S3 Bucket (via OAC)
 
 ### Common Issues
 
-#### 1. HTTP 403 on S3 Website Endpoint
+#### 1. CloudFront Access Denied Error
+**Symptoms**: Website shows `<Error><Code>AccessDenied</Code><Message>Access Denied</Message></Error>`
+
+**Root Cause**: S3 bucket public access block settings prevent CloudFront OAC access
+
+**Solution**:
+```bash
+# Quick fix with automated script
+./.github/scripts/fix-cloudfront-access.sh production apply <bucket-name> <distribution-id>
+
+# Or diagnose first
+./.github/scripts/diagnose-access-denied.sh <bucket-name> <distribution-id> <cloudfront-domain>
+```
+
+**Manual Fix**: Update `terraform/s3.tf`:
+```hcl
+resource "aws_s3_bucket_public_access_block" "website" {
+  block_public_policy     = false  # Allow CloudFront OAC
+  restrict_public_buckets = false  # Allow service principal access
+}
+```
+
+#### 2. HTTP 403 on S3 Website Endpoint
 **Status**: ✅ Expected behavior
 **Reason**: S3 website endpoint is disabled for security
 **Solution**: Use CloudFront domain instead
 
-#### 2. CloudFront Returns 403/404
+#### 3. CloudFront Returns 403/404
 **Status**: ⚠️ Temporary issue
 **Reason**: CloudFront propagation in progress
 **Solution**: Wait up to 15 minutes for propagation
 
-#### 3. Custom Domain Not Working
+#### 4. Custom Domain Not Working
 **Status**: ❌ Configuration issue
 **Reason**: DNS not pointing to CloudFront or certificate issues
 **Solution**: Check Route53 and ACM certificate
