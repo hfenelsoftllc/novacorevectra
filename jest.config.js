@@ -44,6 +44,12 @@ const customJestConfig = {
       statements: 70,
     },
   },
+  coverageReporters: [
+    'text',
+    'lcov',
+    'html',
+    'json-summary'
+  ],
   testTimeout: 15000,
   // Support for property-based testing with fast-check
   globals: {

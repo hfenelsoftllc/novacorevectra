@@ -84,6 +84,7 @@
   "author": "NovaCoreVectra",
   "license": "MIT",
   "overrides": {
-    "glob": "^10.4.6"
+    "glob": "^10.4.6",
+    "test-exclude": "^7.0.1"
   }
 }
