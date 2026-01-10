@@ -36,20 +36,22 @@ const customJestConfig = {
     '!app/**/error.{js,jsx,ts,tsx}',
     '!app/**/not-found.{js,jsx,ts,tsx}',
   ],
-  coverageThreshold: {
-    global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70,
-    },
-  },
-  coverageReporters: [
-    'text',
-    'lcov',
-    'html',
-    'json-summary'
-  ],
+  // Disable Jest's built-in coverage collection to use c8 instead
+  collectCoverage: false,
+  // coverageThreshold: {
+  //   global: {
+  //     branches: 70,
+  //     functions: 70,
+  //     lines: 70,
+  //     statements: 70,
+  //   },
+  // },
+  // coverageReporters: [
+  //   'text',
+  //   'lcov',
+  //   'html',
+  //   'json-summary'
+  // ],
   testTimeout: 15000,
   // Support for property-based testing with fast-check
   globals: {

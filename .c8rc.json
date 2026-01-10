@@ -1,0 +1,38 @@
+{
+  "reporter": ["text", "html", "lcov"],
+  "reports-dir": "coverage",
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.js",
+    "**/__tests__/**",
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/.next/**",
+    "**/coverage/**",
+    "**/*.config.js",
+    "**/*.config.ts",
+    "**/jest.setup.js",
+    "**/next.config.js",
+    "**/tailwind.config.js",
+    "**/*.d.ts",
+    "**/index.ts",
+    "**/index.js"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.tsx",
+    "src/**/*.jsx",
+    "app/**/*.ts",
+    "app/**/*.js",
+    "app/**/*.tsx",
+    "app/**/*.jsx"
+  ],
+  "all": true,
+  "check-coverage": true,
+  "lines": 70,
+  "functions": 70,
+  "branches": 70,
+  "statements": 70
+}
