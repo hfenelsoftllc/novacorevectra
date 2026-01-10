@@ -81,6 +81,10 @@ const customJestConfig = {
   },
   // Enhanced test environment setup
   setupFiles: ['<rootDir>/jest.env.js'],
+  // Ensure __mocks__ directory is used
+  clearMocks: true,
+  resetMocks: true,
+  restoreMocks: true,
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
