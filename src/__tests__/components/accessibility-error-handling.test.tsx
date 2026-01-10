@@ -317,7 +317,35 @@ describe('Accessibility and Error Handling Tests', () => {
 
       const image = screen.getByRole('img');
       
-      // Simulate image load error
+      // Simulate first image load error (should try fallback)
+      fireEvent.error(image);
+
+      // Wait for fallback to be attempted
+      await waitFor(() => {
+        expect(image).toHaveAttribute('src', '/fallback-image.jpg');
+      });
+
+      // Simulate fallback image error (should show error state)
+      fireEvent.error(image);
+
+      await waitFor(() => {
+        expect(screen.getByText(/failed to load image/i)).toBeInTheDocument();
+      });
+    });
+
+    test('should handle image load errors without fallback', async () => {
+      render(
+        <OptimizedImage
+          src="/invalid-image.jpg"
+          alt="Test image"
+          width={400}
+          height={300}
+        />
+      );
+
+      const image = screen.getByRole('img');
+      
+      // Simulate image load error (should show error state immediately)
       fireEvent.error(image);
 
       await waitFor(() => {

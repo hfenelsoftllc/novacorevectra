@@ -44,7 +44,6 @@ const OptimizedImage = React.forwardRef<HTMLImageElement, OptimizedImageProps>(
 
     const handleError = React.useCallback((event: React.SyntheticEvent<HTMLImageElement>) => {
       setIsLoading(false);
-      setHasError(true);
       
       // Try fallback image if available and not already using it
       if (fallbackSrc && currentSrc !== fallbackSrc) {
@@ -54,6 +53,8 @@ const OptimizedImage = React.forwardRef<HTMLImageElement, OptimizedImageProps>(
         return;
       }
       
+      // If no fallback or fallback also failed, show error state
+      setHasError(true);
       onError?.(event);
     }, [onError, fallbackSrc, currentSrc]);
 

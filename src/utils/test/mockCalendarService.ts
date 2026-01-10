@@ -23,7 +23,7 @@ export const createMockCalendarService = (overrides: Partial<any> = {}) => {
       return true;
     }),
     
-    getAvailableTimeSlots: jest.fn().mockImplementation(async (date: string, timezone: string = 'UTC'): Promise<string[]> => {
+    getAvailableTimeSlots: jest.fn().mockImplementation(async (date: string, _timezone: string = 'UTC'): Promise<string[]> => {
       const targetDate = new Date(date);
       const dayOfWeek = targetDate.getDay();
       
@@ -38,7 +38,7 @@ export const createMockCalendarService = (overrides: Partial<any> = {}) => {
       ];
     }),
     
-    isTimeSlotAvailable: jest.fn().mockImplementation(async (dateTime: string, timezone: string = 'UTC'): Promise<boolean> => {
+    isTimeSlotAvailable: jest.fn().mockImplementation(async (dateTime: string, _timezone: string = 'UTC'): Promise<boolean> => {
       const date = new Date(dateTime);
       const hour = date.getHours();
       const dayOfWeek = date.getDay();
@@ -58,7 +58,7 @@ export const createMockCalendarService = (overrides: Partial<any> = {}) => {
     
     cancelEvent: jest.fn().mockResolvedValue(true),
     
-    rescheduleEvent: jest.fn().mockImplementation(async (eventId: string, newDateTime: string): Promise<boolean> => {
+    rescheduleEvent: jest.fn().mockImplementation(async (_eventId: string, newDateTime: string): Promise<boolean> => {
       // Check if new time slot is available
       const isAvailable = await defaultMock.isTimeSlotAvailable(newDateTime);
       return isAvailable;
