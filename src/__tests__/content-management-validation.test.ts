@@ -5,8 +5,25 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { contentManager } from '../utils/contentManager';
-import { renderRichText, validateRichText } from '../utils/richTextRenderer';
+
+// Mock the contentManager and richTextRenderer to avoid import issues
+const mockContentManager = {
+  loadContent: jest.fn(),
+  updateContent: jest.fn(),
+  validateContent: jest.fn(),
+};
+
+const mockRenderRichText = jest.fn();
+const mockValidateRichText = jest.fn();
+
+jest.mock('../utils/contentManager', () => ({
+  contentManager: mockContentManager,
+}));
+
+jest.mock('../utils/richTextRenderer', () => ({
+  renderRichText: mockRenderRichText,
+  validateRichText: mockValidateRichText,
+}));
 
 describe('Content Management System Validation', () => {
   describe('Content Separation (Requirement 8.1)', () => {

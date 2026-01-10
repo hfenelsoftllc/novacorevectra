@@ -31,7 +31,11 @@ export const IndustrySelector: React.FC<IndustrySelectorProps> = ({
   };
 
   return (
-    <div className={cn('flex flex-wrap gap-4', className)}>
+    <div 
+      className={cn('flex flex-wrap gap-4', className)}
+      role="tablist"
+      aria-label="Industry selection"
+    >
       {industries.map((industry, index) => (
         <button
           key={industry.id}
