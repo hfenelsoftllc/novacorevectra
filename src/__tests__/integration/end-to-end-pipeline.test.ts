@@ -224,8 +224,8 @@ class PipelineTestRunner {
    * Mock file existence check
    */
   private mockFileExists(filePath: string): boolean {
-    // Mock file existence for testing
-    const commonFiles = [
+    // Mock file existence for testing - simulate that all required files exist
+    const requiredFiles = [
       'out/index.html',
       'out/_next/static/',
       'terraform/main.tf',
@@ -235,7 +235,12 @@ class PipelineTestRunner {
       'next.config.js',
     ];
     
-    return commonFiles.some(file => path.normalize(filePath).includes(file));
+    // Check if the file path matches any of the required files
+    return requiredFiles.some(file => {
+      const normalizedPath = path.normalize(filePath);
+      const normalizedFile = path.normalize(file);
+      return normalizedPath === normalizedFile || normalizedPath.includes(normalizedFile);
+    });
   }
 
   /**

@@ -133,37 +133,104 @@ jest.mock('lucide-react', () => ({
   Loader2: ({ className, ...props }) => <div data-testid="loader2-icon" className={className} {...props} />,
 }));
 
-// Mock calendar service
-jest.mock('@/services/calendarService', () => ({
-  calendarService: {
-    createConsultationEvent: jest.fn().mockResolvedValue(true),
-    getAvailableTimeSlots: jest.fn().mockResolvedValue(['09:00', '10:00', '14:00', '15:00']),
-    isTimeSlotAvailable: jest.fn().mockResolvedValue(true),
-    cancelEvent: jest.fn().mockResolvedValue(true),
-    rescheduleEvent: jest.fn().mockResolvedValue(true),
-    getBusinessDaysBetween: jest.fn().mockReturnValue([]),
+// Mock progressive profiling utilities
+jest.mock('@/utils/progressiveProfiling', () => ({
+  isReturningVisitor: jest.fn().mockReturnValue(false),
+  getVisitorData: jest.fn().mockReturnValue(null),
+  saveVisitorData: jest.fn(),
+  trackVisit: jest.fn(),
+  getVisitCount: jest.fn().mockReturnValue(1),
+  getProgressiveFields: jest.fn().mockReturnValue([]),
+  getRecommendedFormVariant: jest.fn().mockReturnValue('consultation'),
+  clearVisitorData: jest.fn(),
+  getDaysSinceLastVisit: jest.fn().mockReturnValue(0),
+}));
+
+// Mock analytics hook
+jest.mock('@/hooks/useAnalytics', () => ({
+  useAnalytics: jest.fn().mockReturnValue({
+    // Core tracking
+    trackEvent: jest.fn(),
+    trackPageView: jest.fn(),
+    trackEngagement: jest.fn(),
+    trackScrollDepth: jest.fn(),
+    
+    // CTA and conversion tracking
+    trackCTAClick: jest.fn(),
+    trackConversionEvent: jest.fn(),
+    
+    // Form tracking
+    trackFormEvent: jest.fn(),
+    trackFormSubmission: jest.fn(),
+    trackFormStart: jest.fn(),
+    trackFormFieldCompletion: jest.fn(),
+    
+    // Funnel tracking
+    trackFunnelStep: jest.fn(),
+    
+    // Session tracking
+    trackSessionStart: jest.fn(),
+    trackSessionEnd: jest.fn(),
+    
+    // A/B Testing
+    getTestVariant: jest.fn().mockReturnValue(null),
+    trackTestConversion: jest.fn(),
+    
+    // User and session IDs
+    getUserId: jest.fn().mockReturnValue('test-user-id'),
+    getSessionId: jest.fn().mockReturnValue('test-session-id'),
+  }),
+}));
+
+// Mock performance hook
+jest.mock('@/hooks/usePerformance', () => ({
+  usePerformance: jest.fn().mockReturnValue({
+    calculateAnimationDelay: jest.fn((index) => index * 0.1),
+    prefersReducedMotion: false,
+    getAnimationConfig: jest.fn((duration, delay) => ({
+      duration,
+      delay,
+      ease: [0.25, 0.46, 0.45, 0.94],
+    })),
+  }),
+}));
+
+// Mock framer-motion
+jest.mock('framer-motion', () => ({
+  motion: {
+    div: 'div',
+    section: 'section',
+    header: 'header',
+    h1: 'h1',
+    h2: 'h2',
+    h3: 'h3',
+    h4: 'h4',
+    h5: 'h5',
+    h6: 'h6',
+    p: 'p',
+    span: 'span',
+    button: 'button',
+    form: 'form',
+    input: 'input',
+    textarea: 'textarea',
+    select: 'select',
+    label: 'label',
+    ul: 'ul',
+    li: 'li',
+    img: 'img',
+    a: 'a',
   },
-  CalendarService: {
-    getInstance: jest.fn().mockReturnValue({
-      createConsultationEvent: jest.fn().mockResolvedValue(true),
-      getAvailableTimeSlots: jest.fn().mockResolvedValue(['09:00', '10:00', '14:00', '15:00']),
-      isTimeSlotAvailable: jest.fn().mockResolvedValue(true),
-      cancelEvent: jest.fn().mockResolvedValue(true),
-      rescheduleEvent: jest.fn().mockResolvedValue(true),
-      getBusinessDaysBetween: jest.fn().mockReturnValue([]),
-    }),
-  },
+  AnimatePresence: ({ children }) => children,
+  useAnimation: () => ({
+    start: jest.fn(),
+    stop: jest.fn(),
+    set: jest.fn(),
+  }),
+  useInView: () => [React.createRef(), true],
 }));
 
 // Global test utilities
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
-}));
-
-// Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
@@ -183,6 +250,26 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+// Mock IntersectionObserver
+global.IntersectionObserver = class IntersectionObserver {
+  constructor(callback) {
+    this.callback = callback;
+  }
+  observe() {
+    // Simulate intersection for testing
+    if (this.callback) {
+      this.callback([{ isIntersecting: true, target: {} }]);
+    }
+    return null;
+  }
+  disconnect() {
+    return null;
+  }
+  unobserve() {
+    return null;
+  }
+};
 
 // Mock window.scrollTo
 Object.defineProperty(window, 'scrollTo', {
