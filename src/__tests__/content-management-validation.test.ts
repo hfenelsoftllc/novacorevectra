@@ -18,7 +18,7 @@ const mockContentManager = {
   getCacheStatus: jest.fn().mockReturnValue({}),
 };
 
-const mockRenderRichText = jest.fn().mockImplementation((content: string, options: any) => {
+const mockRenderRichText = jest.fn().mockImplementation((content: string) => {
   // Mock implementation that processes basic markdown
   let processedContent = content
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -184,7 +184,7 @@ describe('Content Management System Validation', () => {
   describe('Rich Text Formatting and Media Embedding (Requirement 8.3)', () => {
     test('rich text rendering supports markdown formatting', () => {
       const testContent = 'This is **bold** text with *italic* and `code` formatting.';
-      const rendered = mockRenderRichText(testContent, { allowMarkdown: true, allowHtml: true });
+      const rendered = mockRenderRichText(testContent);
       
       expect(rendered).toBeDefined();
       expect(rendered.props.dangerouslySetInnerHTML.__html).toContain('<strong>bold</strong>');
@@ -204,7 +204,7 @@ describe('Content Management System Validation', () => {
 
     test('rich text supports links and media references', () => {
       const contentWithLinks = 'Check out [our services](/services) for more information.';
-      const rendered = mockRenderRichText(contentWithLinks, { allowMarkdown: true, allowHtml: true });
+      const rendered = mockRenderRichText(contentWithLinks);
       
       expect(rendered.props.dangerouslySetInnerHTML.__html).toContain('<a href="/services"');
       expect(rendered.props.dangerouslySetInnerHTML.__html).toContain('our services</a>');
@@ -218,10 +218,7 @@ describe('Content Management System Validation', () => {
       expect(homeContent.hero.title).toContain('**');
       
       // Verify rich text can be rendered from actual content
-      const renderedTitle = mockRenderRichText(homeContent.hero.title, { 
-        allowMarkdown: true, 
-        allowHtml: true 
-      });
+      const renderedTitle = mockRenderRichText(homeContent.hero.title);
       expect(renderedTitle).toBeDefined();
       expect(renderedTitle.props.dangerouslySetInnerHTML.__html).toContain('<strong>');
     });

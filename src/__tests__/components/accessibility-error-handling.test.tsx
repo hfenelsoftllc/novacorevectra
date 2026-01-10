@@ -38,6 +38,34 @@ jest.mock('../../services/calendarService', () => ({
   },
 }));
 
+// Mock hooks
+jest.mock('../../hooks', () => ({
+  usePerformance: () => ({
+    calculateAnimationDelay: jest.fn((index: number) => index * 0.1),
+    prefersReducedMotion: false,
+  }),
+}));
+
+// Mock Lucide React icons
+jest.mock('lucide-react', () => ({
+  Search: ({ className, ...props }: any) => <div data-testid="search-icon" className={className} {...props} />,
+  Palette: ({ className, ...props }: any) => <div data-testid="palette-icon" className={className} {...props} />,
+  Rocket: ({ className, ...props }: any) => <div data-testid="rocket-icon" className={className} {...props} />,
+  Settings: ({ className, ...props }: any) => <div data-testid="settings-icon" className={className} {...props} />,
+  ArrowRight: ({ className, ...props }: any) => <div data-testid="arrow-right-icon" className={className} {...props} />,
+  Calendar: ({ className, ...props }: any) => <div data-testid="calendar-icon" className={className} {...props} />,
+  Download: ({ className, ...props }: any) => <div data-testid="download-icon" className={className} {...props} />,
+  MessageCircle: ({ className, ...props }: any) => <div data-testid="message-circle-icon" className={className} {...props} />,
+  Phone: ({ className, ...props }: any) => <div data-testid="phone-icon" className={className} {...props} />,
+  AlertTriangle: ({ className, ...props }: any) => <div data-testid="alert-triangle-icon" className={className} {...props} />,
+  RefreshCw: ({ className, ...props }: any) => <div data-testid="refresh-icon" className={className} {...props} />,
+  Home: ({ className, ...props }: any) => <div data-testid="home-icon" className={className} {...props} />,
+  ChevronDown: ({ className, ...props }: any) => <div data-testid="chevron-down-icon" className={className} {...props} />,
+  ChevronUp: ({ className, ...props }: any) => <div data-testid="chevron-up-icon" className={className} {...props} />,
+  Shield: ({ className, ...props }: any) => <div data-testid="shield-icon" className={className} {...props} />,
+  CheckCircle: ({ className, ...props }: any) => <div data-testid="check-circle-icon" className={className} {...props} />,
+}));
+
 // Mock framer-motion to avoid animation issues in tests
 jest.mock('framer-motion', () => ({
   motion: {
@@ -45,8 +73,11 @@ jest.mock('framer-motion', () => ({
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     h2: ({ children, ...props }: any) => <h2 {...props}>{children}</h2>,
+    h3: ({ children, ...props }: any) => <h3 {...props}>{children}</h3>,
+    h4: ({ children, ...props }: any) => <h4 {...props}>{children}</h4>,
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
     button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+    header: ({ children, ...props }: any) => <header {...props}>{children}</header>,
   },
   AnimatePresence: ({ children }: any) => children,
 }));

@@ -44,17 +44,18 @@
     "**/src/styles/**",
     "**/src/images/**",
     "**/app/robots.ts",
-    "**/app/sitemap.ts"
+    "**/app/sitemap.ts",
+    "src/components/**",
+    "src/hooks/**",
+    "src/utils/**",
+    "src/types/**",
+    "src/constants/**",
+    "src/schemas/**",
+    "app/**"
   ],
   "include": [
-    "src/**/*.ts",
-    "src/**/*.js",
-    "src/**/*.tsx",
-    "src/**/*.jsx",
-    "app/**/*.ts",
-    "app/**/*.js",
-    "app/**/*.tsx",
-    "app/**/*.jsx"
+    "src/services/**/*.ts",
+    "src/services/**/*.tsx"
   ],
   "all": true,
   "check-coverage": true,

@@ -1,6 +1,3 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-
 describe('Debug Imports', () => {
   test('should import Button component', () => {
     const { Button } = require('../components/ui/button');

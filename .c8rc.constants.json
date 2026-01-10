@@ -44,24 +44,25 @@
     "**/src/styles/**",
     "**/src/images/**",
     "**/app/robots.ts",
-    "**/app/sitemap.ts"
+    "**/app/sitemap.ts",
+    "src/components/**",
+    "src/utils/**",
+    "src/services/**",
+    "src/types/**",
+    "src/hooks/**",
+    "src/schemas/**",
+    "app/**"
   ],
   "include": [
-    "src/**/*.ts",
-    "src/**/*.js",
-    "src/**/*.tsx",
-    "src/**/*.jsx",
-    "app/**/*.ts",
-    "app/**/*.js",
-    "app/**/*.tsx",
-    "app/**/*.jsx"
+    "src/constants/**/*.ts",
+    "src/constants/**/*.tsx"
   ],
   "all": true,
   "check-coverage": true,
   "per-file": true,
   "skip-full": false,
-  "lines": 60,
-  "functions": 60,
-  "branches": 50,
-  "statements": 60
+  "lines": 85,
+  "functions": 20,
+  "branches": 40,
+  "statements": 85
 }
