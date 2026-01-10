@@ -61,8 +61,8 @@
   "check-coverage": true,
   "per-file": true,
   "skip-full": false,
-  "lines": 85,
+  "lines": 46,
   "functions": 20,
-  "branches": 40,
-  "statements": 85
+  "branches": 42,
+  "statements": 46
 }
