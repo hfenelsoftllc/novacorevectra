@@ -95,7 +95,7 @@ const ServicesOverview: React.FC = () => {
           {/* Hero Section */}
           <HeroSection
             title='Trusted AI for Business Process Transformation'
-            subtitle='NovaCoreVectra delivers strategy-led, standards-aligned AI solutions that integrate seamlessly into enterprise operations—securely, responsibly, and at scale.'
+            subtitle='NovaCoreVectra delivers strategy led, standards aligned AI solutions that integrate seamlessly into enterprise operations—securely, responsibly, and at scale.'
             primaryAction={{
               text: 'Explore Our Services',
               onClick: handleExploreServices,

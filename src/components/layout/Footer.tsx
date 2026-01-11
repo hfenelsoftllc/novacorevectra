@@ -51,8 +51,7 @@ export const Footer: React.FC<FooterProps> = ({ className }) => {
               <Logo size="md" />
             </Link>
             <p className="text-muted-foreground text-sm max-w-md mb-4">
-              Leading AI consulting and governance solutions for enterprise. 
-              Empowering organizations to lead the AI era through ethical innovation 
+             Empowering organizations to lead the AI era through ethical innovation 
               and world-class strategy.
             </p>
             <nav aria-label="Social media links">

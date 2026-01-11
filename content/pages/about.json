@@ -10,13 +10,7 @@
   "hero": {
     "title": "About **NovaCoreVectra**",
     "subtitle": "Pioneering responsible AI transformation for enterprise",
-    "description": "We are a team of AI experts, governance specialists, and industry veterans dedicated to helping organizations harness the power of artificial intelligence responsibly and effectively.",
-    "image": {
-      "src": "/images/about-team.jpg",
-      "alt": "NovaCoreVectra team",
-      "width": 800,
-      "height": 500
-    }
+    "description": "We are a team of AI experts, governance specialists, and industry veterans dedicated to helping organizations harness the power of artificial intelligence responsibly and effectively."
   },
   "sections": [
     {
@@ -157,22 +151,22 @@
         {
           "name": "ISO 42001 Certified",
           "description": "Certified AI Management System implementation",
-          "logo": "/images/certifications/iso-42001.png"
+          "logo": "/images/NCV-Logo-Web.png"
         },
         {
           "name": "ISO 27001 Aligned",
           "description": "Information security management alignment",
-          "logo": "/images/certifications/iso-27001.png"
+          "logo": "/images/NCV-Logo-Web.png"
         },
         {
           "name": "SOC 2 Type II",
           "description": "Service organization controls compliance",
-          "logo": "/images/certifications/soc2.png"
+          "logo": "/images/NCV-Logo-Web.png"
         },
         {
           "name": "NIST Framework",
           "description": "AI Risk Management Framework implementation",
-          "logo": "/images/certifications/nist.png"
+          "logo": "/images/NCV-Logo-Web.png"
         }
       ]
     },

@@ -10,13 +10,7 @@
   "hero": {
     "title": "Get in **Touch**",
     "subtitle": "Ready to transform your business with responsible AI?",
-    "description": "Our team of AI experts is here to help you navigate your AI journey. Schedule a consultation to discuss your specific needs and goals.",
-    "image": {
-      "src": "/images/contact-consultation.jpg",
-      "alt": "AI consultation meeting",
-      "width": 800,
-      "height": 500
-    }
+    "description": "Our team of AI experts is here to help you navigate your AI journey. Schedule a consultation to discuss your specific needs and goals."
   },
   "sections": [
     {

@@ -45,6 +45,7 @@ export default function RootLayout({
                 <a href="/" className="text-white hover:text-blue-400 transition-colors">Home</a>
                 <a href="/services" className="text-white hover:text-blue-400 transition-colors">Services</a>
                 <a href="/governance" className="text-white hover:text-blue-400 transition-colors">Governance</a>
+                <a href="/compliance" className="text-white hover:text-blue-400 transition-colors">Compliance</a>
                 <a href="/about" className="text-white hover:text-blue-400 transition-colors">About</a>
                 <a href="/contact" className="text-white hover:text-blue-400 transition-colors">Contact</a>
               </nav>
@@ -92,6 +93,7 @@ export default function RootLayout({
                 <a href="/" className="text-white hover:text-blue-400 text-sm transition-colors">Home</a>
                 <a href="/services" className="text-white hover:text-blue-400 text-sm transition-colors">Services</a>
                 <a href="/governance" className="text-white hover:text-blue-400 text-sm transition-colors">Governance</a>
+                <a href="/compliance" className="text-white hover:text-blue-400 text-sm transition-colors">Compliance</a>
                 <a href="/about" className="text-white hover:text-blue-400 text-sm transition-colors">About</a>
                 <a href="/contact" className="text-white hover:text-blue-400 text-sm transition-colors">Contact</a>
               </div>

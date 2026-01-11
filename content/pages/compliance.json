@@ -1,0 +1,133 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2024-01-04T00:00:00Z",
+  "page": "compliance",
+  "meta": {
+    "title": "AI Compliance - NovaCoreVectra",
+    "description": "ISO 42001 compliance frameworks and regulatory alignment for AI systems",
+    "keywords": ["AI compliance", "ISO 42001", "regulatory compliance", "AI standards"]
+  },
+  "hero": {
+    "title": "**AI Compliance** & Standards",
+    "subtitle": "ISO 42001 certified compliance frameworks for regulatory alignment",
+    "description": "Navigate the complex landscape of AI regulations with our comprehensive compliance frameworks. Ensure your AI systems meet global standards and regulatory requirements."
+  },
+  "sections": [
+    {
+      "id": "compliance-overview",
+      "type": "text-content",
+      "title": "Why AI Compliance **Matters**",
+      "content": "As AI regulations evolve globally, organizations must proactively ensure their AI systems comply with emerging standards. Our compliance frameworks provide the structure and documentation needed to meet regulatory requirements across different jurisdictions.",
+      "highlights": [
+        "**Regulatory Readiness**: Stay ahead of evolving AI regulations including the EU AI Act, NIST AI RMF, and sector-specific requirements with proactive compliance strategies.",
+        "**Global Standards Alignment**: Ensure your AI systems meet international standards including ISO/IEC 42001, ISO 27001, and SOC 2 requirements for comprehensive compliance coverage.",
+        "**Audit Preparation**: Maintain audit-ready documentation and processes that demonstrate compliance with regulatory requirements and industry best practices.",
+        "**Risk Mitigation**: Reduce legal and financial risks through systematic compliance monitoring and proactive identification of regulatory gaps."
+      ]
+    },
+    {
+      "id": "iso-42001-compliance",
+      "type": "compliance-section",
+      "title": "**ISO 42001** Compliance Framework",
+      "description": "Our comprehensive mapping of services to ISO 42001 clauses ensures full compliance",
+      "showFramework": "iso-42001",
+      "showMappings": true,
+      "showDocumentation": true
+    },
+    {
+      "id": "regulatory-landscape",
+      "type": "text-content",
+      "title": "Global **Regulatory Landscape**",
+      "content": "The AI regulatory environment is rapidly evolving across different regions and industries. Our compliance expertise spans multiple frameworks and jurisdictions.",
+      "highlights": [
+        "**EU AI Act**: Comprehensive compliance strategies for the European Union's AI regulation, including risk categorization and conformity assessments.",
+        "**NIST AI Risk Management Framework**: Implementation of the US National Institute of Standards and Technology's AI RMF for systematic risk management.",
+        "**Sector-Specific Regulations**: Specialized compliance for healthcare (FDA), financial services (SEC, FINRA), and other regulated industries.",
+        "**International Standards**: Alignment with ISO/IEC standards, IEEE guidelines, and other international AI governance frameworks."
+      ]
+    },
+    {
+      "id": "compliance-services",
+      "type": "service-cards",
+      "title": "Compliance **Services**",
+      "description": "Comprehensive compliance solutions for every regulatory requirement",
+      "services": [
+        {
+          "id": "regulatory-readiness-assessment",
+          "title": "Regulatory Readiness Assessment",
+          "description": "Comprehensive evaluation of your AI systems against EU AI Act, NIST AI RMF, and ISO 42001 requirements",
+          "features": [
+            "Multi-framework compliance gap analysis",
+            "Risk categorization (EU AI Act high-risk assessment)",
+            "NIST AI RMF maturity evaluation",
+            "ISO 42001 readiness scorecard"
+          ]
+        },
+        {
+          "id": "compliance-framework-implementation",
+          "title": "Compliance Framework Implementation",
+          "description": "End-to-end deployment of compliance controls and management systems for regulatory adherence",
+          "features": [
+            "ISO 42001 AIMS implementation",
+            "NIST AI RMF integration",
+            "EU AI Act conformity preparation",
+            "Automated compliance monitoring setup"
+          ]
+        },
+        {
+          "id": "certification-audit-support",
+          "title": "Certification & Audit Support",
+          "description": "Expert guidance through formal certification processes and regulatory audit preparation",
+          "features": [
+            "ISO 42001 certification support",
+            "EU AI Act conformity assessment",
+            "Third-party audit preparation",
+            "Continuous compliance validation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "compliance-process",
+      "type": "process-lifecycle",
+      "title": "Our Compliance **Implementation Process**",
+      "description": "Industry-proven approach to achieving AI compliance with regulatory frameworks",
+      "showAnimation": true,
+      "showDetails": true,
+      "steps": [
+        {
+          "title": "Regulatory Assessment",
+          "description": "Comprehensive evaluation of applicable regulations (EU AI Act, NIST AI RMF, ISO 42001) and current compliance posture",
+          "duration": "3-4 weeks"
+        },
+        {
+          "title": "Gap Analysis & Planning",
+          "description": "Identify compliance gaps, develop remediation roadmap, and establish documentation frameworks",
+          "duration": "4-6 weeks"
+        },
+        {
+          "title": "Controls Implementation",
+          "description": "Deploy compliance controls, risk management processes, and audit-ready documentation systems",
+          "duration": "3-6 months"
+        },
+        {
+          "title": "Certification & Monitoring",
+          "description": "Achieve formal certification (ISO 42001) and establish ongoing compliance monitoring",
+          "duration": "2-4 months + Ongoing"
+        }
+      ]
+    },
+    {
+      "id": "cta-compliance",
+      "type": "cta",
+      "variant": "consultation",
+      "title": "Ensure Your AI Compliance",
+      "description": "Schedule a compliance assessment to evaluate your regulatory readiness",
+      "cta": {
+        "text": "Schedule Assessment",
+        "href": "/contact?type=compliance",
+        "variant": "primary"
+      }
+    }
+  ]
+}

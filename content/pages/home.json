@@ -24,7 +24,7 @@
       }
     },
     "image": {
-      "src": "/images/hero-ai-transformation.jpg",
+      "src": "/images/services-overview.jpeg",
       "alt": "AI transformation visualization",
       "width": 800,
       "height": 600
@@ -51,7 +51,7 @@
         }
       ],
       "image": {
-        "src": "/images/ai-governance-framework.jpg",
+        "src": "/images/services-overview.jpeg",
         "alt": "AI governance framework visualization",
         "width": 600,
         "height": 400

@@ -12,7 +12,7 @@
     "subtitle": "ISO 42001 certified governance frameworks for responsible AI",
     "description": "Ensure your AI systems meet the highest standards of governance, compliance, and risk management with our comprehensive frameworks and ongoing support.",
     "image": {
-      "src": "/images/governance-framework.jpg",
+      "src": "/images/governance-overview.jpeg",
       "alt": "AI governance framework",
       "width": 800,
       "height": 500
@@ -25,20 +25,11 @@
       "title": "Why AI Governance **Matters**",
       "content": "As AI systems become more prevalent in business operations, proper governance becomes critical for managing risks, ensuring compliance, and maintaining stakeholder trust. Our governance frameworks provide the structure and processes needed for responsible AI deployment.",
       "highlights": [
-        "**Risk Mitigation**: Identify and manage AI-related risks before they impact your business",
-        "**Regulatory Compliance**: Stay ahead of evolving AI regulations and standards",
-        "**Stakeholder Trust**: Build confidence through transparent and accountable AI practices",
-        "**Operational Excellence**: Optimize AI performance while maintaining governance standards"
+        "**Risk Mitigation and Asset Protection**: Unchecked AI can lead to \"algorithmic drift,\" where models become less accurate over time, or \"data poisoning,\" where sensitive IP is leaked. By implementing NIST AI RMF standards, NovaCoreVectra protects a company's most valuable assets: its data and its reputation. Governance acts as a financial insurance policy against litigation, regulatory fines, and the massive costs associated with \"unplugging\" a failed, non-compliant system.",
+        "**Future-Proofing for Global Regulation**: The regulatory landscape is shifting rapidly (e.g., the EU AI Act). Companies that ignore governance today will be forced into expensive, chaotic retrofitting tomorrow. By adopting a governance-first model now, organizations ensure their AI infrastructure is \"legally interoperable\" across different borders. This foresight prevents business disruptions and ensures that your AI investment continues to deliver ROI regardless of new legislative changes.",
+        "**Stakeholder Trust and Accelerated Speed to Market**: It sounds counterintuitive, but governance actually makes you faster. When a framework like ISO/IEC 42001 (AIMS) is already in place, the \"rules of the road\" are clear. Developers and strategists don't have to pause for ethical debates or legal reviews at every stage because the guardrails are pre-installed. This \"compliance-by-design\" approach allows enterprises to move from Pilot to Production with far higher velocity and confidence.",
+        "**Enhanced Brand Trust and Market Value**: In the modern economy, Trust is a Currency. Customers and B2B partners are increasingly scrutinizing how companies handle their data. A business that can prove its AI is transparent, unbiased, and auditable gains a significant competitive advantage. For NovaCoreVectra's clients, superior governance becomes a key marketing differentiator that justifies premium pricing and builds long-term customer loyalty."
       ]
-    },
-    {
-      "id": "iso-42001-compliance",
-      "type": "compliance-section",
-      "title": "**ISO 42001** Compliance Framework",
-      "description": "Our comprehensive mapping of services to ISO 42001 clauses ensures full compliance",
-      "showFramework": "iso-42001",
-      "showMappings": true,
-      "showDocumentation": true
     },
     {
       "id": "governance-services",
@@ -83,9 +74,11 @@
     },
     {
       "id": "governance-process",
-      "type": "process-steps",
+      "type": "process-lifecycle",
       "title": "Our Governance **Implementation Process**",
       "description": "Systematic approach to implementing AI governance in your organization",
+      "showAnimation": true,
+      "showDetails": true,
       "steps": [
         {
           "title": "Assessment",

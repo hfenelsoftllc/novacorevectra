@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Content renderer component for dynamic content sections
  */
@@ -41,16 +43,16 @@ function ContentSectionRenderer({ section }: ContentSectionRendererProps) {
 
   // Common section wrapper
   const SectionWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-    <section id={id} className="py-16 px-4 sm:px-6 lg:px-8">
+    <section id={id} className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-900">
       <div className="max-w-7xl mx-auto">
         {title && (
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
-              {renderRichText(title, { allowMarkdown: true, className: 'inline' })}
+              {renderRichText(title, { allowMarkdown: true, allowHtml: true, className: 'inline' })}
             </h2>
             {description && (
               <p className="mt-4 text-xl text-white max-w-3xl mx-auto">
-                {renderRichText(description, { allowMarkdown: true, className: 'inline' })}
+                {renderRichText(description, { allowMarkdown: true, allowHtml: true, className: 'inline' })}
               </p>
             )}
           </div>
@@ -210,7 +212,7 @@ function TextImageSection({ section }: { section: any }) {
       <div>
         {section.content && (
           <div className="prose prose-lg text-white mb-8">
-            {renderRichText(section.content, { allowMarkdown: true })}
+            {renderRichText(section.content, { allowMarkdown: true, allowHtml: true })}
           </div>
         )}
         {section.features && (
@@ -251,7 +253,7 @@ function TextContentSection({ section }: { section: any }) {
     <div className="max-w-4xl mx-auto">
       {section.content && (
         <div className="prose prose-lg text-white mb-8">
-          {renderRichText(section.content, { allowMarkdown: true })}
+          {renderRichText(section.content, { allowMarkdown: true, allowHtml: true })}
         </div>
       )}
       {section.highlights && (
@@ -259,7 +261,7 @@ function TextContentSection({ section }: { section: any }) {
           {section.highlights.map((highlight: string, index: number) => (
             <div key={index} className="bg-slate-800 p-6 rounded-lg">
               <div className="prose text-white">
-                {renderRichText(highlight, { allowMarkdown: true })}
+                {renderRichText(highlight, { allowMarkdown: true, allowHtml: true })}
               </div>
             </div>
           ))}
@@ -276,7 +278,7 @@ function TextColumnsSection({ section }: { section: any }) {
         <div key={index}>
           <h3 className="text-2xl font-bold text-white mb-4">{column.title}</h3>
           <div className="prose text-white">
-            {renderRichText(column.content, { allowMarkdown: true })}
+            {renderRichText(column.content, { allowMarkdown: true, allowHtml: true })}
           </div>
         </div>
       ))}
@@ -435,7 +437,7 @@ function FAQSection({ section }: { section: any }) {
           <div key={index} className="bg-slate-800 p-6 rounded-lg shadow-lg border border-slate-700">
             <h3 className="text-lg font-semibold text-white mb-3">{faq.question}</h3>
             <div className="prose text-white">
-              {renderRichText(faq.answer, { allowMarkdown: true })}
+              {renderRichText(faq.answer, { allowMarkdown: true, allowHtml: true })}
             </div>
           </div>
         ))}
