@@ -47,7 +47,7 @@ jest.mock('framer-motion', () => ({
 }));
 
 // Global state to track which error components have thrown
-let errorCounter = 0;
+// let errorCounter = 0;
 
 // Component that throws an error for testing ErrorBoundary
 const ThrowError = ({ shouldThrow, message = 'Test error' }: { shouldThrow: boolean; message?: string }) => {
@@ -79,6 +79,7 @@ const InteractiveTestComponent = () => {
       document.addEventListener('keydown', handleEscapeKey);
       return () => document.removeEventListener('keydown', handleEscapeKey);
     }
+    return undefined;
   }, [showModal]);
 
   return (
@@ -124,7 +125,7 @@ const InteractiveTestComponent = () => {
 describe('Accessibility and Keyboard Navigation Tests', () => {
   beforeEach(() => {
     // Reset error counter before each test
-    errorCounter = 0;
+    // errorCounter = 0;
   });
   describe('ErrorBoundary Accessibility', () => {
     test('should have no accessibility violations in error state', async () => {
@@ -298,8 +299,13 @@ describe('Accessibility and Keyboard Navigation Tests', () => {
     test('should show development error details in development mode', () => {
       const originalEnv = process.env.NODE_ENV;
       
-      // Set NODE_ENV to development
-      process.env.NODE_ENV = 'development';
+      // Create a copy of process.env and modify NODE_ENV
+      const testEnv = { ...process.env, NODE_ENV: 'development' };
+      Object.defineProperty(process, 'env', {
+        value: testEnv,
+        writable: true,
+        configurable: true
+      });
 
       const error = new Error('Development error');
       error.stack = 'Error stack trace';
@@ -323,7 +329,11 @@ describe('Accessibility and Keyboard Navigation Tests', () => {
       expect(errorTexts[0]).toBeInTheDocument();
 
       // Restore original NODE_ENV
-      process.env.NODE_ENV = originalEnv;
+      Object.defineProperty(process, 'env', {
+        value: { ...process.env, NODE_ENV: originalEnv },
+        writable: true,
+        configurable: true
+      });
     });
   });
 

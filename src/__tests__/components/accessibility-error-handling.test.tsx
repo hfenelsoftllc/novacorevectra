@@ -79,22 +79,22 @@ class MockErrorBoundary extends React.Component<any, any> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: any) {
-    if (this.props.onError) {
-      this.props.onError(error, errorInfo);
+  override componentDidCatch(error: Error, errorInfo: any) {
+    if (this.props['onError']) {
+      this.props['onError'](error, errorInfo);
     }
   }
 
   resetError() {
     this.setState({ hasError: false, error: null });
     // Call parent reset callback if provided
-    if (this.props.onReset) {
-      this.props.onReset();
+    if (this.props['onReset']) {
+      this.props['onReset']();
     }
   }
 
-  render() {
-    if (this.state.hasError) {
+  override render() {
+    if (this.state['hasError']) {
       return (
         <div role="alert" aria-live="assertive">
           <h2>Something went wrong</h2>
@@ -104,14 +104,14 @@ class MockErrorBoundary extends React.Component<any, any> {
           >
             Try Again
           </button>
-          {this.props.showHomeLink && (
+          {this.props['showHomeLink'] && (
             <a href="/">Go to Home Page</a>
           )}
         </div>
       );
     }
 
-    return this.props.children;
+    return this.props['children'];
   }
 }
 
@@ -232,7 +232,7 @@ const MockComplianceSection = ({ framework }: any) => {
 const MockIndustryVariantsSection = ({ industries, defaultIndustry }: any) => (
   <section>
     <div role="tablist">
-      {industries && Object.keys(industries).map((key, index) => (
+      {industries && Object.keys(industries).map((key) => (
         <button key={key} role="tab" aria-selected={key === defaultIndustry}>
           {industries[key]?.name || key}
         </button>
@@ -948,7 +948,7 @@ describe('Accessibility and Error Handling Tests', () => {
     });
 
     test('should handle nested error boundaries', () => {
-      const { container } = render(
+      render(
         <ErrorBoundary>
           <div>
             <h1>Outer Content</h1>

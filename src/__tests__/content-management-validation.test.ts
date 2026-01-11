@@ -5,14 +5,13 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import React from 'react';
 
 // Import the mocked functions
 import { contentManager } from '../utils/contentManager';
 import { renderRichText, validateRichText } from '../utils/richTextRenderer';
 
 // Mock cache status that can be modified
-let mockCacheStatus = {
+let mockCacheStatus: { size: number; lastUpdated: string; hitRate: number } = {
   size: 100,
   lastUpdated: new Date().toISOString(),
   hitRate: 0.95
@@ -28,7 +27,7 @@ jest.mock('../utils/contentManager', () => ({
     rollbackContent: jest.fn().mockResolvedValue(true),
     clearCache: () => {
       // Clear the mock cache
-      mockCacheStatus = {};
+      mockCacheStatus = { size: 0, lastUpdated: '', hitRate: 0 };
     },
     getCacheStatus: () => mockCacheStatus,
   },
@@ -36,7 +35,7 @@ jest.mock('../utils/contentManager', () => ({
 
 jest.mock('../utils/richTextRenderer', () => ({
   __esModule: true,
-  renderRichText: (content) => {
+  renderRichText: (content: string) => {
     if (!content) return undefined;
     
     // Mock implementation that processes basic markdown
@@ -53,7 +52,7 @@ jest.mock('../utils/richTextRenderer', () => ({
       }
     };
   },
-  validateRichText: (content) => {
+  validateRichText: (content: string) => {
     if (!content) return { isValid: false, errors: ['Content is required'] };
     
     const errors = [];
@@ -316,7 +315,7 @@ describe('Content Management System Validation', () => {
       // Test cache clearing
       contentManager.clearCache();
       const clearedCacheStatus = contentManager.getCacheStatus();
-      expect(Object.keys(clearedCacheStatus).length).toBe(0);
+      expect(clearedCacheStatus['size']).toBe(0);
     });
   });
 });
