@@ -3,44 +3,41 @@
  */
 
 import { renderHook, act } from '@testing-library/react';
-import { useAnalytics } from '@/hooks/useAnalytics';
 
-// Mock the analytics utilities
+// Mock all the dependencies first
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    refresh: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+  }),
+}));
+
 jest.mock('@/utils/analytics', () => ({
   trackEvent: jest.fn(),
   trackPageView: jest.fn(),
   trackConversion: jest.fn(),
-  getUserId: jest.fn(() => 'test-user-id'),
-  getSessionId: jest.fn(() => 'test-session-id'),
-  getABTestVariant: jest.fn(),
+  getUserId: jest.fn().mockReturnValue('test-user-id'),
+  getSessionId: jest.fn().mockReturnValue('test-session-id'),
+  getABTestVariant: jest.fn().mockReturnValue(null),
   trackABTestConversion: jest.fn(),
 }));
 
-// Mock Next.js router
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    pathname: '/',
-  }),
-}));
+// Now import the hook
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 describe('useAnalytics', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Mock localStorage and sessionStorage
+    // Mock localStorage
     Object.defineProperty(window, 'localStorage', {
       value: {
         getItem: jest.fn(),
         setItem: jest.fn(),
         removeItem: jest.fn(),
-      },
-      writable: true,
-    });
-    Object.defineProperty(window, 'sessionStorage', {
-      value: {
-        getItem: jest.fn(),
-        setItem: jest.fn(),
-        removeItem: jest.fn(),
+        clear: jest.fn(),
       },
       writable: true,
     });
@@ -54,6 +51,9 @@ describe('useAnalytics', () => {
     expect(result.current).toHaveProperty('trackFormSubmission');
     expect(result.current).toHaveProperty('trackPageView');
     expect(result.current).toHaveProperty('trackEngagement');
+    expect(result.current).toHaveProperty('trackConversionEvent');
+    expect(result.current).toHaveProperty('getUserId');
+    expect(result.current).toHaveProperty('getSessionId');
   });
 
   test('should track CTA clicks', () => {
@@ -69,8 +69,8 @@ describe('useAnalytics', () => {
       });
     });
 
-    // Verify that trackEvent was called with correct parameters
-    expect(result.current.trackEvent).toBeDefined();
+    // Verify that CTA click tracking was called
+    expect(result.current.trackCTAClick).toBeDefined();
   });
 
   test('should track form submissions', () => {
@@ -126,5 +126,7 @@ describe('useAnalytics', () => {
 
     expect(result.current.getUserId).toBeDefined();
     expect(result.current.getSessionId).toBeDefined();
+    expect(typeof result.current.getUserId()).toBe('string');
+    expect(typeof result.current.getSessionId()).toBe('string');
   });
 });

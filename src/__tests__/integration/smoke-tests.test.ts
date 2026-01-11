@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { generateMetadata, generateStructuredData, pageConfigs } from '../../utils/seo';
 
@@ -134,20 +134,29 @@ describe('Smoke Test Suite', () => {
     test('form submission flow works end-to-end', async () => {
       const user = userEvent.setup();
       
-      // Mock window.alert for form submission
-      const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+      // Mock fetch for this specific test
+      const mockFetch = jest.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ success: true, message: 'Form submitted successfully' }),
+      });
+      global.fetch = mockFetch;
       
       render(React.createElement(ContactPage));
       
       // Fill out the form
-      await user.type(screen.getByLabelText(/First Name/i), 'John');
-      await user.type(screen.getByLabelText(/Last Name/i), 'Doe');
-      await user.type(screen.getByLabelText(/Email Address/i), 'john.doe@example.com');
-      await user.type(screen.getByLabelText(/Company/i), 'Test Company');
-      await user.type(screen.getByLabelText(/Message/i), 'Test message');
+      await act(async () => {
+        await user.type(screen.getByLabelText(/First Name/i), 'John');
+        await user.type(screen.getByLabelText(/Last Name/i), 'Doe');
+        await user.type(screen.getByLabelText(/Email Address/i), 'john.doe@example.com');
+        await user.type(screen.getByLabelText(/Company/i), 'Test Company');
+        await user.type(screen.getByLabelText(/Message/i), 'Test message');
+      });
       
       // Submit the form
-      await user.click(screen.getByRole('button', { name: /Send Message/i }));
+      await act(async () => {
+        await user.click(screen.getByRole('button', { name: /Send Message/i }));
+      });
       
       // Verify form submission success message appears
       await waitFor(() => {
@@ -159,7 +168,22 @@ describe('Smoke Test Suite', () => {
         expect(screen.queryByLabelText(/First Name/i)).not.toBeInTheDocument();
       });
       
-      alertSpy.mockRestore();
+      // Verify fetch was called
+      expect(mockFetch).toHaveBeenCalledWith('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          company: 'Test Company',
+          industry: '',
+          projectType: '',
+          message: 'Test message'
+        }),
+      });
     });
   });
 

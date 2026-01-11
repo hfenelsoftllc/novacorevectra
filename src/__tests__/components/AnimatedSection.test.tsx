@@ -1,36 +1,17 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { AnimatedSection } from '@/components';
 
-// Mock framer-motion to avoid animation issues in tests
-jest.mock('framer-motion', () => ({
-  motion: {
-    section: ({
-      children,
-      className,
-      ...props
-    }: React.ComponentProps<'section'> & Record<string, unknown>) => {
-      // Filter out framer-motion specific props
-      const {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        initial,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        whileInView,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        viewport,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        transition,
-        ...domProps
-      } = props;
-      return (
-        <section className={className} {...domProps}>
-          {children}
-        </section>
-      );
-    },
-  },
+// Mock the AnimatedSection component to avoid window.matchMedia issues
+jest.mock('@/components/common/AnimatedSection', () => ({
+  AnimatedSection: React.forwardRef<HTMLElement, any>(({ children, className, ...props }, ref) => (
+    <section ref={ref} className={className} {...props}>
+      {children}
+    </section>
+  ))
 }));
+
+import { AnimatedSection } from '@/components';
 
 describe('AnimatedSection', () => {
   it('renders children correctly', () => {

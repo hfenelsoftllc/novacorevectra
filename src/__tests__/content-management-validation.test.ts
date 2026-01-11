@@ -7,52 +7,73 @@ import * as fs from 'fs';
 import * as path from 'path';
 import React from 'react';
 
-// Mock the contentManager and richTextRenderer to avoid import issues
-const mockContentManager = {
-  loadContent: jest.fn(),
-  updateContent: jest.fn(),
-  validateContent: jest.fn(),
-  getContentHistory: jest.fn(),
-  rollbackContent: jest.fn(),
-  clearCache: jest.fn(),
-  getCacheStatus: jest.fn().mockReturnValue({}),
+// Import the mocked functions
+import { contentManager } from '../utils/contentManager';
+import { renderRichText, validateRichText } from '../utils/richTextRenderer';
+
+// Mock cache status that can be modified
+let mockCacheStatus = {
+  size: 100,
+  lastUpdated: new Date().toISOString(),
+  hitRate: 0.95
 };
 
-const mockRenderRichText = jest.fn().mockImplementation((content: string) => {
-  // Mock implementation that processes basic markdown
-  let processedContent = content
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/`(.*?)`/g, '<code>$1</code>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-  
-  return React.createElement('div', {
-    dangerouslySetInnerHTML: { __html: processedContent }
-  });
-});
-
-const mockValidateRichText = jest.fn().mockImplementation((content: string) => {
-  const errors: string[] = [];
-  
-  // Check for unclosed markdown tags
-  const boldMatches = (content.match(/\*\*/g) || []).length;
-  if (boldMatches % 2 !== 0) {
-    errors.push('Unclosed bold markdown tags');
-  }
-  
-  return {
-    isValid: errors.length === 0,
-    errors
-  };
-});
-
 jest.mock('../utils/contentManager', () => ({
-  contentManager: mockContentManager,
+  __esModule: true,
+  contentManager: {
+    loadContent: jest.fn().mockResolvedValue({}),
+    updateContent: jest.fn().mockResolvedValue(true),
+    validateContent: jest.fn().mockReturnValue({ isValid: true, errors: [] }),
+    getContentHistory: jest.fn().mockReturnValue([]),
+    rollbackContent: jest.fn().mockResolvedValue(true),
+    clearCache: () => {
+      // Clear the mock cache
+      mockCacheStatus = {};
+    },
+    getCacheStatus: () => mockCacheStatus,
+  },
 }));
 
 jest.mock('../utils/richTextRenderer', () => ({
-  renderRichText: mockRenderRichText,
-  validateRichText: mockValidateRichText,
+  __esModule: true,
+  renderRichText: (content) => {
+    if (!content) return undefined;
+    
+    // Mock implementation that processes basic markdown
+    let processedContent = content
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code>$1</code>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    
+    return {
+      type: 'div',
+      props: {
+        dangerouslySetInnerHTML: { __html: processedContent }
+      }
+    };
+  },
+  validateRichText: (content) => {
+    if (!content) return { isValid: false, errors: ['Content is required'] };
+    
+    const errors = [];
+    
+    // Check for unclosed markdown tags
+    const boldMatches = (content.match(/\*\*/g) || []).length;
+    if (boldMatches % 2 !== 0) {
+      errors.push('Unclosed bold markdown tags');
+    }
+    
+    const italicMatches = (content.match(/(?<!\*)\*(?!\*)/g) || []).length;
+    if (italicMatches % 2 !== 0) {
+      errors.push('Unclosed italic markdown tags');
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  },
 }));
 
 describe('Content Management System Validation', () => {
@@ -167,16 +188,16 @@ describe('Content Management System Validation', () => {
 
     test('content manager supports programmatic updates', async () => {
       // Test that content manager has update functionality
-      expect(typeof mockContentManager.updateContent).toBe('function');
-      expect(typeof mockContentManager.getContentHistory).toBe('function');
-      expect(typeof mockContentManager.rollbackContent).toBe('function');
+      expect(typeof contentManager.updateContent).toBe('function');
+      expect(typeof contentManager.getContentHistory).toBe('function');
+      expect(typeof contentManager.rollbackContent).toBe('function');
       
       // Test cache management
-      expect(typeof mockContentManager.clearCache).toBe('function');
-      expect(typeof mockContentManager.getCacheStatus).toBe('function');
+      expect(typeof contentManager.clearCache).toBe('function');
+      expect(typeof contentManager.getCacheStatus).toBe('function');
       
       // Verify cache status functionality
-      const cacheStatus = mockContentManager.getCacheStatus();
+      const cacheStatus = contentManager.getCacheStatus();
       expect(typeof cacheStatus).toBe('object');
     });
   });
@@ -184,7 +205,7 @@ describe('Content Management System Validation', () => {
   describe('Rich Text Formatting and Media Embedding (Requirement 8.3)', () => {
     test('rich text rendering supports markdown formatting', () => {
       const testContent = 'This is **bold** text with *italic* and `code` formatting.';
-      const rendered = mockRenderRichText(testContent);
+      const rendered = renderRichText(testContent);
       
       expect(rendered).toBeDefined();
       expect(rendered.props.dangerouslySetInnerHTML.__html).toContain('<strong>bold</strong>');
@@ -195,7 +216,7 @@ describe('Content Management System Validation', () => {
     test('rich text validation catches formatting errors', () => {
       // Test unclosed markdown tags
       const invalidContent = 'This has **unclosed bold tag';
-      const validation = mockValidateRichText(invalidContent);
+      const validation = validateRichText(invalidContent);
       
       expect(validation.isValid).toBe(false);
       expect(validation.errors.length).toBeGreaterThan(0);
@@ -204,7 +225,7 @@ describe('Content Management System Validation', () => {
 
     test('rich text supports links and media references', () => {
       const contentWithLinks = 'Check out [our services](/services) for more information.';
-      const rendered = mockRenderRichText(contentWithLinks);
+      const rendered = renderRichText(contentWithLinks);
       
       expect(rendered.props.dangerouslySetInnerHTML.__html).toContain('<a href="/services"');
       expect(rendered.props.dangerouslySetInnerHTML.__html).toContain('our services</a>');
@@ -218,7 +239,7 @@ describe('Content Management System Validation', () => {
       expect(homeContent.hero.title).toContain('**');
       
       // Verify rich text can be rendered from actual content
-      const renderedTitle = mockRenderRichText(homeContent.hero.title);
+      const renderedTitle = renderRichText(homeContent.hero.title);
       expect(renderedTitle).toBeDefined();
       expect(renderedTitle.props.dangerouslySetInnerHTML.__html).toContain('<strong>');
     });
@@ -289,12 +310,12 @@ describe('Content Management System Validation', () => {
 
     test('content management supports caching and performance', () => {
       // Test cache functionality
-      const initialCacheStatus = mockContentManager.getCacheStatus();
+      const initialCacheStatus = contentManager.getCacheStatus();
       expect(typeof initialCacheStatus).toBe('object');
       
       // Test cache clearing
-      mockContentManager.clearCache();
-      const clearedCacheStatus = mockContentManager.getCacheStatus();
+      contentManager.clearCache();
+      const clearedCacheStatus = contentManager.getCacheStatus();
       expect(Object.keys(clearedCacheStatus).length).toBe(0);
     });
   });

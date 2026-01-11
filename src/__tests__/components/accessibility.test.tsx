@@ -75,7 +75,7 @@ describe('Accessibility Features', () => {
       );
 
       const tryAgainButton = screen.getByRole('button', { name: /try again/i });
-      const homeLink = screen.getByRole('link', { name: /go home/i });
+      const homeLink = screen.getByRole('link', { name: /go to home page/i });
 
       // Tab navigation should work
       await user.tab();
