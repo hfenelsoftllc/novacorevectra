@@ -107,6 +107,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({
   className,
   existingData,
 }) => {
+  console.log('LeadCaptureForm component START - variant:', variant);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [returningVisitor, setReturningVisitor] = React.useState(false);
   const [visitCount, setVisitCount] = React.useState(1);
@@ -235,7 +236,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({
         transition={{ duration: 0.3 }}
         className='space-y-2'
       >
-        <label htmlFor={name} className='block text-sm font-medium text-gray-700'>
+        <label htmlFor={name} className='block text-sm font-medium text-white'>
           {label} {required && <span className='text-red-500'>*</span>}
         </label>
         
@@ -279,7 +280,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({
                   onChange={() => handleFieldComplete(name)}
                   className='rounded border-gray-300 text-blue-600 focus:ring-blue-500'
                 />
-                <span className='text-sm text-gray-700'>{option.label}</span>
+                <span className='text-sm text-white'>{option.label}</span>
               </label>
             ))}
           </div>

@@ -46,12 +46,14 @@ export function renderRichText(
 
   // Render as HTML if allowed, otherwise as text
   if (allowHtml) {
-    return React.createElement('div', {
+    const Element = className.includes('inline') ? 'span' : 'div';
+    return React.createElement(Element, {
       className,
       dangerouslySetInnerHTML: { __html: processedContent }
     });
   } else {
-    return React.createElement('div', { className }, processedContent);
+    const Element = className.includes('inline') ? 'span' : 'div';
+    return React.createElement(Element, { className }, processedContent);
   }
 }
 

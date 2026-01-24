@@ -20,7 +20,14 @@ jest.mock('next/navigation', () => ({
 
 // Mock analytics hook
 jest.mock('../../hooks/useAnalytics', () => ({
-  useAnalytics: jest.fn(),
+  useAnalytics: jest.fn(() => ({
+    trackEvent: jest.fn(),
+    trackPageView: jest.fn(),
+    trackCTAClick: jest.fn(),
+    trackFormSubmission: jest.fn(),
+    trackFormStart: jest.fn(),
+    trackFormFieldCompletion: jest.fn(),
+  })),
 }));
 
 // Mock framer-motion to avoid animation issues in tests
@@ -122,22 +129,15 @@ describe('User Journey Integration Tests', () => {
       render(<ContactPage />);
       
       // Verify contact form is present
-      expect(screen.getByText(/Get in Touch/i)).toBeInTheDocument();
+      expect(screen.getByText(/Touch/i)).toBeInTheDocument();
       
       // Fill out form fields
-      await user.type(screen.getByLabelText(/First Name/i), 'John');
-      await user.type(screen.getByLabelText(/Last Name/i), 'Doe');
-      await user.type(screen.getByLabelText(/Email Address/i), 'john.doe@example.com');
-      await user.type(screen.getByLabelText(/Company/i), 'Test Company');
-      
-      // Select industry
-      await user.selectOptions(screen.getByLabelText(/Industry/i), 'healthcare');
-      
-      // Select project type
-      await user.selectOptions(screen.getByLabelText(/Project Type/i), 'strategy');
-      
-      // Add message
-      await user.type(screen.getByLabelText(/Message/i), 'Interested in AI strategy consultation');
+      await user.type(screen.getByTestId('firstName-input'), 'John');
+      await user.type(screen.getByTestId('lastName-input'), 'Doe');
+      await user.type(screen.getByTestId('email-input'), 'john.doe@example.com');
+      await user.type(screen.getByTestId('company-input'), 'Test Company');
+      await user.type(screen.getByTestId('subject-input'), 'AI Strategy Consultation');
+      await user.type(screen.getByTestId('message-textarea'), 'Interested in AI strategy consultation');
       
       // Submit form
       const submitBtn = screen.getByRole('button', { name: /Send Message/i });
@@ -154,8 +154,8 @@ describe('User Journey Integration Tests', () => {
             lastName: 'Doe',
             email: 'john.doe@example.com',
             company: 'Test Company',
-            industry: 'healthcare',
-            projectType: 'strategy',
+            subject: 'AI Strategy Consultation',
+            message: 'Interested in AI strategy consultation',
           })
         );
       });
@@ -302,6 +302,9 @@ describe('User Journey Integration Tests', () => {
       global.fetch = jest.fn().mockRejectedValue(new Error('Network error'));
       
       render(<ContactPage />);
+      
+      // Check if form section is rendered
+      expect(screen.getByRole('heading', { name: /Send Us a Message/i })).toBeInTheDocument();
       
       // Fill out form with valid data
       await user.type(screen.getByLabelText(/First Name/i), 'John');

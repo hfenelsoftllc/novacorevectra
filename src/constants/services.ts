@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Workflow, Cpu, ShieldCheck } from 'lucide-react';
+import { Settings, Cpu, ShieldCheck } from 'lucide-react';
 import { Service } from '../types/services';
 
 /**
@@ -8,7 +8,7 @@ import { Service } from '../types/services';
 export const SERVICES: Service[] = [
   {
     id: 'business-process-strategy',
-    icon: React.createElement(Workflow, { className: 'h-8 w-8' }),
+    icon: React.createElement(Settings, { className: 'h-8 w-8' }),
     title: 'Business Process Strategy',
     description:
       'Align AI initiatives with operational priorities through process discovery, value-stream optimization, and AI-enabled target operating models.',

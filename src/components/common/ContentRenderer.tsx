@@ -15,6 +15,9 @@ import { ComplianceSection } from '../sections/ComplianceSection';
 import { ServicesSection } from '../sections/ServicesSection';
 import { StandardsSection } from '../sections/StandardsSection';
 import { CTASection } from '../sections/CTASection';
+import { LeadCaptureForm } from '../forms/LeadCaptureForm';
+
+console.log('LeadCaptureForm imported:', LeadCaptureForm);
 
 interface ContentRendererProps {
   sections: ContentSection[];
@@ -41,8 +44,9 @@ interface ContentSectionRendererProps {
 function ContentSectionRenderer({ section }: ContentSectionRendererProps) {
   const { type, id, title, description } = section;
 
-  // Common section wrapper
-  const SectionWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  try {
+    // Common section wrapper
+    const SectionWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <section id={id} className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-900">
       <div className="max-w-7xl mx-auto">
         {title && (
@@ -201,6 +205,20 @@ function ContentSectionRenderer({ section }: ContentSectionRendererProps) {
     default:
       console.warn(`Unknown section type: ${type}`);
       return null;
+  }
+  } catch (error) {
+    console.error(`Error rendering section ${type}:`, error);
+    return (
+      <section id={id} className="py-16 px-4 sm:px-6 lg:px-8 bg-red-900">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-white mb-4">Error rendering section</h2>
+            <p className="text-white">Type: {type}</p>
+            <p className="text-white">Error: {error instanceof Error ? error.message : 'Unknown error'}</p>
+          </div>
+        </div>
+      </section>
+    );
   }
 }
 
@@ -418,15 +436,40 @@ function ContactInfoSection({ section: _section }: { section: any }) {
   );
 }
 
-function LeadCaptureFormSection({ section: _section }: { section: any }) {
-  // This would render the lead capture form component
-  return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-slate-800 p-8 rounded-lg shadow-lg border border-slate-700">
-        <p className="text-white">Lead capture form would be rendered here.</p>
+function LeadCaptureFormSection({ section }: { section: any }) {
+  console.log('Rendering LeadCaptureFormSection', section);
+  // Render the actual lead capture form component
+  const variant = section.variant || 'contact';
+  const showProgressiveFields = section.showProgressiveFields || false;
+
+  const handleSubmit = async (data: any) => {
+    // Handle form submission - in a real app this would send to an API
+    console.log('Form submitted:', data);
+  };
+
+  console.log('About to render LeadCaptureForm with variant:', variant);
+
+  try {
+    console.log('Creating LeadCaptureForm JSX');
+    const formElement = (
+      <div className="max-w-2xl mx-auto">
+        <LeadCaptureForm
+          variant={variant}
+          onSubmit={handleSubmit}
+          showProgressiveFields={showProgressiveFields}
+        />
       </div>
-    </div>
-  );
+    );
+    console.log('LeadCaptureForm JSX created successfully');
+    return formElement;
+  } catch (error) {
+    console.error('Error rendering LeadCaptureForm:', error);
+    return (
+      <div className="max-w-2xl mx-auto p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        Error rendering form: {error instanceof Error ? error.message : 'Unknown error'}
+      </div>
+    );
+  }
 }
 
 function FAQSection({ section }: { section: any }) {

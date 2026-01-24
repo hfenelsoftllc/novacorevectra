@@ -15,6 +15,7 @@ export const LeadCaptureForm: React.FC<LeadCaptureFormProps> = ({
   className,
   existingData,
 }) => {
+  console.log('MOCK LeadCaptureForm component called with variant:', variant);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
