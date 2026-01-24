@@ -6,16 +6,15 @@
  */
 
 import React from 'react';
-import { PageContent, SiteConfig } from '../../types/content';
+import { PageContent } from '../../types/content';
 import { ContentRenderer } from '../common/ContentRenderer';
 import { renderRichText } from '../../utils/richTextRenderer';
 
 interface StaticContentPageProps {
   pageContent: PageContent;
-  siteConfig: SiteConfig;
 }
 
-export function StaticContentPage({ pageContent, siteConfig }: StaticContentPageProps) {
+export function StaticContentPage({ pageContent }: StaticContentPageProps) {
   return (
     <div className="min-h-screen bg-slate-900">
       {/* Hero Section */}
