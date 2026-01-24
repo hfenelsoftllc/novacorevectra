@@ -13,7 +13,7 @@ describe('Footer', () => {
   it('renders company description', () => {
     render(<Footer />);
     
-    expect(screen.getByText(/Leading AI consulting and governance solutions/)).toBeInTheDocument();
+    expect(screen.getByText(/Leading AI consulting and governance solutionsfor enterprise./)).toBeInTheDocument();
   });
 
   it('renders quick links section', () => {

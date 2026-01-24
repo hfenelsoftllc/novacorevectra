@@ -90,67 +90,7 @@ export function StaticContentPage({ pageContent, siteConfig }: StaticContentPage
       {/* Dynamic Content Sections */}
       <ContentRenderer sections={pageContent.sections} />
 
-      {/* Footer with Site Config */}
-      <footer className="bg-slate-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <div className="flex items-center mb-4">
-                <img
-                  src={siteConfig.site.logo.src}
-                  alt={siteConfig.site.logo.alt}
-                  width={siteConfig.site.logo.width}
-                  height={siteConfig.site.logo.height}
-                  className="h-8 w-auto"
-                />
-              </div>
-              <p className="text-slate-300 mb-4">{siteConfig.site.description}</p>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Contact</h3>
-              <div className="space-y-2 text-slate-300">
-                <p>{siteConfig.contact.email}</p>
-                <p>{siteConfig.contact.phone}</p>
-                <p>
-                  {siteConfig.contact.address.street}<br />
-                  {siteConfig.contact.address.city}, {siteConfig.contact.address.state} {siteConfig.contact.address.zip}
-                </p>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
-              <div className="flex space-x-4">
-                <a
-                  href={siteConfig.contact.social.linkedin}
-                  className="text-slate-300 hover:text-white"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  LinkedIn
-                </a>
-                <a
-                  href={siteConfig.contact.social.twitter}
-                  className="text-slate-300 hover:text-white"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Twitter
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t border-slate-700 mt-8 pt-8 text-center text-slate-400">
-            <p>&copy; 2024 {siteConfig.site.name}. All rights reserved.</p>
-            <p className="text-sm mt-2">
-              Content Version: {pageContent.version} | 
-              Last Updated: {new Date(pageContent.lastUpdated).toLocaleDateString()}
-            </p>
-          </div>
-        </div>
-      </footer>
+      
     </div>
   );
 }
